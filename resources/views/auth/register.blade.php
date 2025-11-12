@@ -1,14 +1,14 @@
 @extends('layouts.auth')
 
 @section('title', 'Register')
-@section('body-class', 'min-h-screen bg-gradient-to-br from-blue-50 to-purple-50')
+@section('body-class', 'min-h-screen bg-linear-to-br from-blue-50 to-purple-50')
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center p-4" x-data="{ role: '{{ old('role','buyer') }}' }">
     <div class="max-w-5xl w-full bg-white/90 backdrop-blur-lg shadow-2xl rounded-2xl overflow-hidden flex flex-col md:flex-row">
 
         {{-- Left Side --}}
-        <div class="md:w-1/2 bg-gradient-to-br from-blue-600 to-purple-600 p-8 flex flex-col justify-center text-white">
+        <div class="md:w-1/2 bg-linear-to-br from-blue-600 to-purple-600 p-8 flex flex-col justify-center text-white">
             <div class="text-center">
                 <h1 class="text-5xl font-bold mb-4">🛒 CampusMarket</h1>
                 <p class="text-xl mb-6">Your Campus Marketplace</p>
@@ -189,7 +189,7 @@
 
                 {{-- Submit (fix duplikasi tombol) --}}
                 <button type="submit"
-                        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:scale-105 transform transition-all shadow-lg font-semibold">
+                        class="w-full bg-linear-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:scale-105 transform transition-all shadow-lg font-semibold">
                     Create Account
                 </button>
             </form>

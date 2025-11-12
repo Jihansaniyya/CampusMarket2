@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
@@ -16,55 +17,68 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $data = $request->validate([
-            'store_name'      => 'required|string|max:255',
-            'description'     => 'nullable|string|max:1000',
-            'pic_name'        => 'required|string|max:255',
-            'pic_phone'       => 'required|string|max:30',
-            'pic_email'       => 'required|email|max:255|unique:users,email',
-            'pic_address'     => 'required|string|max:500',
-            'rt'              => 'nullable|string|max:10',
-            'rw'              => 'nullable|string|max:10',
-            'kelurahan'       => 'nullable|string|max:255',
-            'kabupaten'       => 'nullable|string|max:255',
-            'provinsi'        => 'nullable|string|max:255',
-            'ktp_number'      => 'nullable|string|max:100',
-            'password'        => 'required|string|min:6|confirmed',
-            'photo_pic'       => 'nullable|image|max:2048',
-            'ktp_file'        => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:4096',
+        $validated = $request->validate([
+            'name'                => 'required|string|max:255',
+            'email'               => 'required|email|max:255|unique:users,email',
+            'phone'               => 'required|string|max:20',
+            'password'            => 'required|string|min:8|confirmed',
+            'role'                => 'required|in:buyer,seller',
+            'terms'               => 'required|accepted',
+            
+            // Seller specific fields (conditional validation)
+            'store_name'          => 'required_if:role,seller|nullable|string|max:255',
+            'store_description'   => 'nullable|string|max:1000',
+            'pic_name'            => 'nullable|string|max:255',
+            'pic_phone'           => 'nullable|string|max:20',
+            'pic_address'         => 'nullable|string|max:500',
+            'rt'                  => 'nullable|string|max:10',
+            'rw'                  => 'nullable|string|max:10',
+            'kelurahan'           => 'nullable|string|max:255',
+            'kecamatan'           => 'nullable|string|max:255',
+            'kota_kab'            => 'nullable|string|max:255',
+            'provinsi'            => 'nullable|string|max:255',
+            'kode_pos'            => 'nullable|string|max:10',
+            'no_ktp'              => 'nullable|string|max:20',
+            'file_ktp'            => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
-        // handle uploads
-        if ($request->hasFile('photo_pic')) {
-            $data['photo_pic'] = $request->file('photo_pic')->store('uploads/pics', 'public');
-        }
-        if ($request->hasFile('ktp_file')) {
-            $data['ktp_file'] = $request->file('ktp_file')->store('uploads/ktp', 'public');
+        // Handle file upload
+        if ($request->hasFile('file_ktp')) {
+            $validated['file_ktp'] = $request->file('file_ktp')->store('ktp', 'public');
         }
 
-        // create user (seller). Pastikan kolom di users table ada sesuai array di bawah atau sesuaikan model/migration.
+        // Create user
         $user = User::create([
-            'name'        => $data['pic_name'],
-            'email'       => $data['pic_email'],
-            'password'    => Hash::make($data['password']),
-            'store_name'  => $data['store_name'] ?? null,
-            'description' => $data['description'] ?? null,
-            'pic_phone'   => $data['pic_phone'] ?? null,
-            'pic_address' => $data['pic_address'] ?? null,
-            'rt'          => $data['rt'] ?? null,
-            'rw'          => $data['rw'] ?? null,
-            'kelurahan'   => $data['kelurahan'] ?? null,
-            'kabupaten'   => $data['kabupaten'] ?? null,
-            'provinsi'    => $data['provinsi'] ?? null,
-            'ktp_number'  => $data['ktp_number'] ?? null,
-            'photo_pic'   => $data['photo_pic'] ?? null,
-            'ktp_file'    => $data['ktp_file'] ?? null,
-            'role'        => 'seller',
+            'name'                => $validated['name'],
+            'email'               => $validated['email'],
+            'phone'               => $validated['phone'],
+            'password'            => Hash::make($validated['password']),
+            'role'                => $validated['role'],
+            'store_name'          => $validated['store_name'] ?? null,
+            'store_description'   => $validated['store_description'] ?? null,
+            'pic_name'            => $validated['pic_name'] ?? null,
+            'pic_phone'           => $validated['pic_phone'] ?? null,
+            'pic_address'         => $validated['pic_address'] ?? null,
+            'rt'                  => $validated['rt'] ?? null,
+            'rw'                  => $validated['rw'] ?? null,
+            'kelurahan'           => $validated['kelurahan'] ?? null,
+            'kecamatan'           => $validated['kecamatan'] ?? null,
+            'kota_kab'            => $validated['kota_kab'] ?? null,
+            'provinsi'            => $validated['provinsi'] ?? null,
+            'kode_pos'            => $validated['kode_pos'] ?? null,
+            'no_ktp'              => $validated['no_ktp'] ?? null,
+            'file_ktp'            => $validated['file_ktp'] ?? null,
         ]);
 
+        // Trigger the Registered event (this will send verification email)
+        event(new Registered($user));
+
+        // Login user
         Auth::login($user);
 
-        return redirect()->route('dashboard')->with('success', 'Registrasi berhasil. Selamat datang!');
+        // Redirect to email verification notice
+        return redirect()->route('verification.notice')
+            ->with('success', 'Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.');
     }
 
     public function showLogin()
@@ -81,7 +95,24 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('dashboard'));
+            
+            // Check if email is verified
+            if (!Auth::user()->hasVerifiedEmail()) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Email Anda belum diverifikasi. Silakan cek email untuk link verifikasi.'
+                ])->onlyInput('email');
+            }
+            
+            // Redirect based on role
+            $user = Auth::user();
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif ($user->role === 'seller') {
+                return redirect()->route('seller.dashboard');
+            } else {
+                return redirect()->route('buyer.dashboard');
+            }
         }
 
         return back()->withErrors(['email' => 'Email atau password salah'])->onlyInput('email');

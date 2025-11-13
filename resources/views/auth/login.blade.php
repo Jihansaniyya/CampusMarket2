@@ -3,9 +3,8 @@
 @section('title', 'Login')
 
 
-
 @section('content')
-    {{-- Tambahkan font Lato --}}
+   
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>

@@ -1,323 +1,487 @@
 @extends('layouts.auth')
 
 @section('title','Registrasi Penjual (Toko)')
-@section('body-class','min-h-screen bg-gradient-to-b from-gray-50 to-white')
 
 @section('content')
-<div class="min-h-screen">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    {{-- FONT & BACKGROUND SAMA DENGAN LOGIN --}}
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    {{-- Header Halaman --}}
-    <header class="mb-6">
-      <nav class="text-sm text-gray-500 mb-3" aria-label="Breadcrumb">
-        <ol class="flex items-center gap-2">
-          <li><a href="/" class="hover:text-gray-700">Home</a></li>
-          <li aria-hidden="true" class="text-gray-300">/</li>
-          <li class="text-gray-700 font-medium">Pendaftaran Toko</li>
-        </ol>
-      </nav>
+    <style>
+        * {
+            font-family: 'Rubik', sans-serif;
+        }
 
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
-            Pendaftaran Toko
-          </h1>
-          <p class="mt-2 text-gray-600">
-            Lengkapi data di bawah ini. Setelah dikirim akan dilakukan
-            <span class="font-semibold">verifikasi administrasi</span>.
-          </p>
+        body {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-color: #e7f0ff;
+        }
+
+          html, body {
+            height: 100%;
+            overflow-y: auto !important;
+        }
+
+        body {
+            display: block !important;
+        }
+
+        .background-blur {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("{{ asset('assets/bg2.png') }}") no-repeat center center/cover;
+            filter: blur(5px);
+            z-index: -1;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(255, 255, 255, 0.35);
+            z-index: -1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.7s ease-out;
+        }
+
+        /* === Custom checkbox Terms & Conditions === */
+        .cm-terms {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .cm-checkbox-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 0.45rem;
+            border: 1px solid #9ca3af; /* gray-400 */
+            background-color: #ffffff;
+            box-sizing: border-box;
+            position: relative;
+            transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
+        }
+
+        .cm-checkbox-box::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 10px;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            transform: rotate(45deg) scale(0);
+            transform-origin: center;
+            transition: transform 0.15s ease-out;
+        }
+
+        .cm-terms:checked + .cm-checkbox-box {
+            background-color: #2563eb; /* blue-600 */
+            border-color: #2563eb;
+        }
+
+        .cm-terms:checked + .cm-checkbox-box::after {
+            transform: rotate(45deg) scale(1);
+        }
+    </style>
+
+    {{-- BACKGROUND --}}
+    <div class="background-blur"></div>
+    <div class="overlay"></div>
+
+    {{-- SEMUA KONTEN --}}
+    <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 fade-in">
+
+      {{-- Header Halaman --}}
+      <header class="mb-6">
+        <nav class="text-sm text-gray-500 mb-3" aria-label="Breadcrumb">
+          <ol class="flex items-center gap-2">
+            <li><a href="{{ route('login') }}" class="hover:text-gray-700">Login</a></li>
+            <li aria-hidden="true" class="text-gray-500 font-semibold">/</li>
+            <li class="text-gray-700 font-medium">Pendaftaran Toko</li>
+          </ol>
+        </nav>
+
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
+              Pendaftaran Toko
+            </h1>
+            <p class="mt-2 text-gray-600">
+              Lengkapi data di bawah ini. Setelah dikirim akan dilakukan
+              <span class="font-semibold">verifikasi administrasi</span>.
+            </p>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
 
-    {{-- Card --}}
-    <div class="relative bg-white/90 backdrop-blur rounded-3xl shadow-xl ring-1 ring-black/5 overflow-hidden">
-      <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-rose-500"></div>
+      {{-- Card --}}
+      <div class="relative bg-white/90 backdrop-blur rounded-3xl shadow-xl ring-1 ring-black/5 overflow-hidden">
+        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600"></div>
 
-      {{-- Alerts --}}
-      @if(session('success'))
-        <div class="mx-6 mt-6 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800">{{ session('success') }}</div>
-      @endif
-      @if($errors->any())
-        <div class="mx-6 mt-6 rounded-xl border border-rose-200 bg-rose-50">
-          <div class="px-4 py-3 text-rose-800 font-semibold">Periksa kembali input kamu:</div>
-          <ul class="px-6 pb-3 list-disc text-sm text-rose-700 space-y-1">
-            @foreach($errors->all() as $err)
-              <li>{{ $err }}</li>
-            @endforeach
-          </ul>
-        </div>
-      @endif
+        {{-- Alerts --}}
+        @if(session('success'))
+          <div class="mx-6 mt-6 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800">{{ session('success') }}</div>
+        @endif
+        @if($errors->any())
+          <div class="mx-6 mt-6 rounded-xl border border-rose-200 bg-rose-50">
+            <div class="px-4 py-3 text-rose-800 font-semibold">Periksa kembali input kamu:</div>
+            <ul class="px-6 pb-3 list-disc text-sm text-rose-700 space-y-1">
+              @foreach($errors->all() as $err)
+                <li>{{ $err }}</li>
+              @endforeach
+            </ul>
+          </div>
+        @endif
 
-      <form action="{{ route('register') }}" method="POST" enctype="multipart/form-data" novalidate id="sellerForm">
-        @csrf
+        <form action="{{ route('register') }}" method="POST" enctype="multipart/form-data" novalidate id="sellerForm">
+          @csrf
 
-        {{-- ================== AKUN ================== --}}
-        <section class="px-6 pt-8">
+          {{-- ================== AKUN ================== --}}
+          <section class="px-6 pt-8">
           <div class="mb-2">
-            <h2 class="text-lg font-semibold text-gray-900">Data Akun</h2>
+              <h2 class="text-lg font-semibold text-gray-900">Data Akun</h2>
           </div>
           <p class="text-sm text-gray-500 mb-4">Data ini digunakan untuk login ke aplikasi.</p>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {{-- Nama --}}
-            <div class="relative">
-              <input autofocus type="text" name="name" value="{{ old('name') }}" required minlength="3" autocomplete="name"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                placeholder=" ">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                Nama Lengkap <span class="text-rose-600">*</span>
-              </label>
-              @error('name') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
-            </div>
 
-            {{-- HP --}}
-            <div class="relative">
-              <input type="tel" name="phone" value="{{ old('phone') }}" required
-                pattern="^(\+62|62|0)[0-9]{9,12}$" inputmode="numeric" autocomplete="tel"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                placeholder=" " oninput="maskNumber(this, 13)">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                No. Handphone <span class="text-rose-600">*</span>
-              </label>
-              <p class="text-[11px] text-gray-400 mt-1">Format: 08xxxxxxxxxx</p>
-              @error('phone') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            {{-- Email --}}
-            <div class="relative">
-              <input type="email" name="email" value="{{ old('email') }}" required autocomplete="email"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                placeholder=" ">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                Email <span class="text-rose-600">*</span>
-              </label>
-              @error('email') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            {{-- Password --}}
-            <div class="relative">
-              <input type="password" id="password" name="password" required minlength="8" onkeyup="checkStrength()"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 pr-11 bg-white"
-                placeholder=" ">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                Password <span class="text-rose-600">*</span>
-              </label>
-              <button type="button" onclick="togglePwd('password')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" aria-label="toggle password"><i id="password-icon" class="fas fa-eye"></i></button>
-              <div class="mt-2 flex gap-1" aria-hidden="true">
-                <div id="p1" class="h-1 flex-1 bg-gray-200 rounded"></div>
-                <div id="p2" class="h-1 flex-1 bg-gray-200 rounded"></div>
-                <div id="p3" class="h-1 flex-1 bg-gray-200 rounded"></div>
-                <div id="p4" class="h-1 flex-1 bg-gray-200 rounded"></div>
+              {{-- NAMA LENGKAP — FULL WIDTH --}}
+              <div class="relative md:col-span-2">
+                  <input autofocus type="text" name="name" value="{{ old('name') }}" required minlength="3"
+                        class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                        placeholder=" ">
+                  <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                                peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                                peer-focus:top-2 peer-focus:text-xs transition-all">
+                      Nama Lengkap <span class="text-rose-600">*</span>
+                  </label>
               </div>
-              <p id="ptext" class="text-[11px] text-gray-500">Gunakan huruf besar, kecil, dan angka.</p>
-              @error('password') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
-            </div>
 
-            {{-- Confirm --}}
-            <div class="relative md:col-span-2">
-              <input type="password" id="password_confirmation" name="password_confirmation" required
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 pr-11 bg-white"
-                placeholder=" ">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                Konfirmasi Password <span class="text-rose-600">*</span>
-              </label>
-              <button type="button" onclick="togglePwd('password_confirmation')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" aria-label="toggle confirm"><i id="password_confirmation-icon" class="fas fa-eye"></i></button>
-            </div>
+              {{-- EMAIL --}}
+              <div class="relative">
+                  <input type="email" name="email" value="{{ old('email') }}" required
+                        class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                        placeholder=" ">
+                  <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                                peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                                peer-focus:top-2 peer-focus:text-xs transition-all">
+                      Email <span class="text-rose-600">*</span>
+                  </label>
+              </div>
+
+              {{-- NO HP --}}
+              <div class="relative">
+                  <input type="tel" name="phone" value="{{ old('phone') }}" required pattern="^(\+62|62|0)[0-9]{9,12}$"
+                        class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                        placeholder=" " oninput="maskNumber(this, 13)">
+                  <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                                peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                                peer-focus:top-2 peer-focus:text-xs transition-all">
+                      No. Handphone <span class="text-rose-600">*</span>
+                  </label>
+                  <p class="text-[11px] text-gray-400 mt-1">Format: 08xxxxxxxxxx</p>
+              </div>
+
+              {{-- PASSWORD --}}
+              <div class="relative">
+                  <input type="password" id="password" name="password" required minlength="8"
+                        class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 pr-11 bg-white"
+                        placeholder=" ">
+                  <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                                peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                                peer-focus:top-2 peer-focus:text-xs transition-all">
+                      Password <span class="text-rose-600">*</span>
+                  </label>
+                  <button type="button" onclick="togglePwd('password')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                      <i id="password-icon" class="fas fa-eye"></i>
+                  </button>
+              </div>
+
+              {{-- KONFIRMASI PASSWORD --}}
+              <div class="relative">
+                  <input type="password" id="password_confirmation" name="password_confirmation" required
+                        class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 pr-11 bg-white"
+                        placeholder=" ">
+                  <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                                peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                                peer-focus:top-2 peer-focus:text-xs transition-all">
+                      Konfirmasi Password <span class="text-rose-600">*</span>
+                  </label>
+                  <button type="button" onclick="togglePwd('password_confirmation')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                      <i id="password_confirmation-icon" class="fas fa-eye"></i>
+                  </button>
+              </div>
+
           </div>
-        </section>
+      </section>
 
-        {{-- Divider --}}
-        <div class="px-6 py-6"><div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div></div>
+          {{-- Divider --}}
+          <div class="px-6 py-6"><div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div></div>
 
-        {{-- ================== DATA TOKO ================== --}}
-        <section class="px-6">
-          <div class="mb-2">
-            <h2 class="text-lg font-semibold text-gray-900">Data Toko</h2>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {{-- 1 Nama Toko --}}
-            <div class="relative">
-              <input type="text" name="store_name" value="{{ old('store_name') }}" required
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                placeholder=" ">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                Nama Toko <span class="text-rose-600">*</span>
-              </label>
-              @error('store_name') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
+          {{-- ================== DATA TOKO ================== --}}
+          <section class="px-6">
+            <div class="mb-2">
+              <h2 class="text-lg font-semibold text-gray-900">Data Toko</h2>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {{-- 1 Nama Toko --}}
+              <div class="relative">
+                <input type="text" name="store_name" value="{{ old('store_name') }}" required
+                  class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                  placeholder=" ">
+                <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
+                  Nama Toko <span class="text-rose-600">*</span>
+                </label>
+                @error('store_name') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
+              </div>
 
-            {{-- 2 Deskripsi singkat --}}
-            <div class="relative">
-              <input type="text" name="store_description" id="store_description" value="{{ old('store_description') }}" required maxlength="120"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                placeholder=" " oninput="countChars('store_description','descCounter',120)">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                Deskripsi Singkat <span class="text-rose-600">*</span>
-              </label>
-              <div class="flex justify-end"><span id="descCounter" class="text-[11px] text-gray-400 mt-1">0/120</span></div>
-              @error('store_description') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
+              {{-- 2 Deskripsi singkat --}}
+              <div class="relative">
+                <input type="text" name="store_description" id="store_description" value="{{ old('store_description') }}" required maxlength="120"
+                  class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                  placeholder=" " oninput="countChars('store_description','descCounter',120)">
+                <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
+                  Deskripsi Singkat <span class="text-rose-600">*</span>
+                </label>
+                <div class="flex justify-end"><span id="descCounter" class="text-[11px] text-gray-400 mt-1">0/120</span></div>
+                @error('store_description') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <div class="px-6 py-6"><div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div></div>
+          <div class="px-6 py-6"><div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div></div>
 
-        {{-- ================== PIC ================== --}}
-        <section class="px-6">
-          <div class="mb-2">
-            <h2 class="text-lg font-semibold text-gray-900">Data Penanggung Jawab</h2>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {{-- 3 Nama PIC --}}
-            <div class="relative">
-              <input type="text" name="pic_name" value="{{ old('pic_name') }}" required
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                placeholder=" ">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                Nama PIC <span class="text-rose-600">*</span>
-              </label>
+          {{-- ================== PIC ================== --}}
+          <section class="px-6">
+            <div class="mb-2">
+              <h2 class="text-lg font-semibold text-gray-900">Data Penanggung Jawab</h2>
             </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {{-- 3 Nama PIC --}}
+              <div class="relative">
+                <input type="text" name="pic_name" value="{{ old('pic_name') }}" required
+                  class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                  placeholder=" ">
+                <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
+                  Nama PIC <span class="text-rose-600">*</span>
+                </label>
+              </div>
 
-            {{-- 4 No HP PIC --}}
-            <div class="relative">
-              <input type="tel" name="pic_phone" value="{{ old('pic_phone') }}" required
-                pattern="^(\+62|62|0)[0-9]{9,12}$" inputmode="numeric"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                placeholder=" " oninput="maskNumber(this, 13)">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                No Handphone PIC <span class="text-rose-600">*</span>
-              </label>
+              {{-- 4 No HP PIC --}}
+              <div class="relative">
+                <input type="tel" name="pic_phone" value="{{ old('pic_phone') }}" required
+                  pattern="^(\+62|62|0)[0-9]{9,12}$" inputmode="numeric"
+                  class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                  placeholder=" " oninput="maskNumber(this, 13)">
+                <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
+                  No Handphone PIC <span class="text-rose-600">*</span>
+                </label>
+              </div>
+
+              {{-- 5 Email PIC --}}
+              <div class="relative md:col-span-2">
+                <input type="email" name="pic_email" value="{{ old('pic_email') }}" required
+                  class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                  placeholder=" ">
+                <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
+                  Email PIC <span class="text-rose-600">*</span>
+                </label>
+              </div>
             </div>
+          </section>
 
-            {{-- 5 Email PIC --}}
-            <div class="relative md:col-span-2">
-              <input type="email" name="pic_email" value="{{ old('pic_email') }}" required
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                placeholder=" ">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                email PIC <span class="text-rose-600">*</span>
-              </label>
-            </div>
-          </div>
-        </section>
+          <div class="px-6 py-6"><div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div></div>
 
-        <div class="px-6 py-6"><div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div></div>
-
-        {{-- ================== ALAMAT ================== --}}
-        <section class="px-6">
-          <div class="mb-2">
+          {{-- ================== ALAMAT ================== --}}
+         <section class="px-6">
+        <div class="mb-2">
             <h2 class="text-lg font-semibold text-gray-900">Alamat PIC</h2>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {{-- 6 Alamat --}}
-            <div class="relative md:col-span-2">
-              <input type="text" name="pic_address" value="{{ old('pic_address') }}"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                placeholder=" ">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                Alamat PIC
-              </label>
-            </div>
-            {{-- 7–11 --}}
-            <div class="relative">
-              <input type="text" name="rt" value="{{ old('rt') }}" maxlength="3" inputmode="numeric"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                placeholder=" " oninput="digitsOnly(this,3)">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">RT</label>
-            </div>
-            <div class="relative">
-              <input type="text" name="rw" value="{{ old('rw') }}" maxlength="3" inputmode="numeric"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                placeholder=" " oninput="digitsOnly(this,3)">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">RW</label>
-            </div>
-            <div class="relative">
-              <input type="text" name="kelurahan" value="{{ old('kelurahan') }}"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white" placeholder=" ">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">Nama kelurahan</label>
-            </div>
-            <div class="relative">
-              <input type="text" name="kota_kab" value="{{ old('kota_kab') }}"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white" placeholder=" ">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">Kabupaten/Kota</label>
-            </div>
-            <div class="relative">
-              <input type="text" name="provinsi" value="{{ old('provinsi') }}"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white" placeholder=" ">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">Propinsi</label>
-            </div>
-          </div>
-        </section>
-
-        <div class="px-6 py-6"><div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div></div>
-
-        {{-- ================== IDENTITAS & UPLOAD ================== --}}
-        <section class="px-6 pb-24 md:pb-10">
-          <div class="mb-2">
-            <h2 class="text-lg font-semibold text-gray-900">Identitas & Dokumen</h2>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {{-- 12 No KTP --}}
-            <div class="relative">
-              <input type="text" name="no_ktp" value="{{ old('no_ktp') }}" inputmode="numeric" pattern="^[0-9]{16}$" maxlength="16"
-                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white" placeholder=" "
-                oninput="digitsOnly(this,16)">
-              <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">No. KTP PIC (16 digit)</label>
-            </div>
-
-            {{-- 13 Foto PIC --}}
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Foto PIC (jpg/png, max 2MB)</label>
-              <div class="flex items-center gap-4">
-                <div id="foto-pic-preview" class="h-20 w-20 rounded-2xl ring-1 ring-gray-200 bg-gray-100 grid place-items-center text-gray-400">
-                  <i class="fas fa-user"></i>
-                </div>
-                <input type="file" name="foto_pic" id="foto_pic" accept=".jpg,.jpeg,.png"
-                       class="w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 py-2 bg-white"
-                       onchange="previewImage('foto_pic','foto-pic-preview')">
-              </div>
-              @error('foto_pic') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            {{-- 14 File KTP --}}
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1">File upload KTP PIC (jpg/png/pdf, max 2MB) <span class="text-rose-600">*</span></label>
-              <input type="file" name="file_ktp" id="file_ktp" accept=".jpg,.jpeg,.png,.pdf" required
-                     class="w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 py-2 bg-white"
-                     onchange="previewKTP(this)">
-              <div id="ktp-preview" class="mt-2 text-sm text-gray-600"></div>
-              @error('file_ktp') <p class="text-xs text-rose-600 mt-1">{{ $message }}</p> @enderror
-            </div>
-
-            {{-- Terms --}}
-            <div class="md:col-span-2 mt-2">
-              <label class="flex items-start gap-3">
-                <input type="checkbox" name="terms" value="1" {{ old('terms') ? 'checked' : '' }} required
-                       class="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                <span class="text-sm text-gray-600">Saya setuju dengan <a href="#" class="text-indigo-600 hover:underline">Syarat & Ketentuan</a> dan <a href="#" class="text-indigo-600 hover:underline">Kebijakan Privasi</a>.</span>
-              </label>
-            </div>
-          </div>
-        </section>
-
-        {{-- Sticky Action (mobile-friendly) --}}
-        <div class="fixed md:static inset-x-0 bottom-0 bg-white/95 backdrop-blur border-t md:border-t-0 border-gray-200 p-4 flex items-center justify-between gap-3">
-          <div class="hidden md:flex items-center gap-2 text-sm text-gray-500">
-            <i class="fas fa-shield-alt text-indigo-600"></i>
-            <span>Data terenkripsi & tidak dibagikan tanpa izin.</span>
-          </div>
-          <button type="submit" class="w-full md:w-auto inline-flex justify-center items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-indigo-600 to-fuchsia-600 text-white font-semibold shadow hover:shadow-lg hover:scale-[1.01] transition">
-            <i class="fas fa-paper-plane"></i> Kirim Pendaftaran
-          </button>
         </div>
-      </form>
-    </div>
 
-    {{-- Footer help --}}
-    <p class="mt-4 text-center text-sm text-gray-500">Butuh bantuan? <a href="#" class="text-indigo-600 hover:underline">Hubungi admin</a>.</p>
-  </div>
-</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            {{-- Alamat PIC--}}
+            <div class="relative md:col-span-2">
+                <input type="text" name="pic_address" value="{{ old('pic_address') }}" required
+                      class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                      placeholder=" ">
+                <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                              peer-focus:top-2 peer-focus:text-xs transition-all">
+                    Alamat PIC <span class="text-rose-600">*</span>
+                </label>
+            </div>
+
+            {{-- RT --}}
+            <div class="relative">
+                <input type="text" name="rt" value="{{ old('rt') }}" required maxlength="3" inputmode="numeric"
+                      class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                      placeholder=" " oninput="digitsOnly(this,3)">
+                <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                              peer-focus:top-2 peer-focus:text-xs transition-all">
+                    RT <span class="text-rose-600">*</span>
+                </label>
+            </div>
+
+            {{-- RW --}}
+            <div class="relative">
+                <input type="text" name="rw" value="{{ old('rw') }}" required maxlength="3" inputmode="numeric"
+                      class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                      placeholder=" " oninput="digitsOnly(this,3)">
+                <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                              peer-focus:top-2 peer-focus:text-xs transition-all">
+                    RW <span class="text-rose-600">*</span>
+                </label>
+            </div>
+
+            {{-- Nama Kelurahan --}}
+            <div class="relative">
+                <input type="text" name="kelurahan" value="{{ old('kelurahan') }}" required
+                      class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                      placeholder=" ">
+                <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                              peer-focus:top-2 peer-focus:text-xs transition-all">
+                    Nama Kelurahan <span class="text-rose-600">*</span>
+                </label>
+            </div>
+
+            {{-- Kabupaten / Kota --}}
+            <div class="relative">
+                <input type="text" name="kota_kab" value="{{ old('kota_kab') }}" required
+                      class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                      placeholder=" ">
+                <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                              peer-focus:top-2 peer-focus:text-xs transition-all">
+                    Kabupaten/Kota <span class="text-rose-600">*</span>
+                </label>
+            </div>
+
+            {{-- Provinsi --}}
+            <div class="relative md:col-span-2">
+                <input type="text" name="provinsi" value="{{ old('provinsi') }}" required
+                      class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                      placeholder=" ">
+                <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                              peer-focus:top-2 peer-focus:text-xs transition-all">
+                    Provinsi <span class="text-rose-600">*</span>
+                </label>
+            </div>
+
+        </div>
+    </section>
+
+
+          <div class="px-6 py-6"><div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div></div>
+
+          {{-- ================== IDENTITAS & UPLOAD ================== --}}
+          <section class="px-6 pb-20 md:pb-10">
+          <div class="mb-2">
+              <h2 class="text-lg font-semibold text-gray-900">Identitas</h2>
+          </div>
+
+          <div class="grid grid-cols-1 gap-5">
+
+              {{-- BARIS 1 — No KTP --}}
+              <div class="relative">
+                  <input type="text" name="no_ktp" value="{{ old('no_ktp') }}" required inputmode="numeric" pattern="^[0-9]{16}$" maxlength="16"
+                        class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                        placeholder=" " oninput="digitsOnly(this,16)">
+                  <label class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                                peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                                peer-focus:top-2 peer-focus:text-xs transition-all">
+                      No. KTP PIC (16 digit) <span class="text-rose-600">*</span>
+                  </label>
+              </div>
+
+              {{-- BARIS 2 — Foto PIC --}}
+              <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Foto PIC (jpg/png, max 2MB) <span class="text-rose-600">*</span></label>
+                  <div class="flex items-center gap-4">
+                      <div id="foto-pic-preview"
+                          class="h-20 w-20 rounded-2xl ring-1 ring-gray-200 bg-gray-100 grid place-items-center text-gray-400">
+                          <i class="fas fa-user"></i>
+                      </div>
+                      <input type="file" name="foto_pic" id="foto_pic" required
+                            accept=".jpg,.jpeg,.png"
+                            class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
+                            onchange="previewImage('foto_pic','foto-pic-preview')">
+                  </div>
+              </div>
+
+              {{-- BARIS 3 — File KTP --}}
+              <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">
+                      File upload KTP PIC (jpg/png/pdf, max 2MB) <span class="text-rose-600">*</span>
+                  </label>
+                  <input type="file" name="file_ktp" id="file_ktp" required
+                        accept=".jpg,.jpeg,.png,.pdf"
+                        class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
+                        onchange="previewKTP(this)">
+                  <div id="ktp-preview" class="mt-2 text-sm text-gray-600"></div>
+              </div>
+
+          </div>
+      </section>
+
+
+       {{-- ================== TERMS & CONDITIONS ================== --}}
+      <section class="px-6 pb-4">
+      <div class="px-6 pb-6">
+          <label class="flex items-center gap-3 cursor-pointer select-none">
+              <input type="checkbox" name="terms" value="1" {{ old('terms') ? 'checked' : '' }} required
+                    class="cm-terms">
+              <span class="cm-checkbox-box"></span>
+              <span class="text-sm text-gray-700">
+                  Saya setuju dengan
+                  <a href="#" class="text-blue-600 hover:underline">Syarat &amp; Ketentuan</a>
+                  dan
+                  <a href="#" class="text-blue-600 hover:underline">Kebijakan Privasi</a>.
+              </span>
+          </label>
+      </div>
+      </section>
+
+
+          {{-- Sticky Action (mobile-friendly) --}}
+          <div class="fixed md:static inset-x-0 bottom-0 bg-white/95 backdrop-blur border-t md:border-t-0 border-gray-200 p-4 flex items-center justify-between gap-3">
+            <div class="hidden md:flex items-center gap-2 text-sm text-gray-500">
+              <i class="fas fa-shield-alt text-blue-600"></i>
+              <span>Data terenkripsi & tidak dibagikan tanpa izin.</span>
+            </div>
+            <button type="submit" class="w-full md:w-auto inline-flex justify-center items-center gap-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold shadow hover:shadow-lg hover:scale-[1.01] transition">
+              <i class="fas fa-paper-plane"></i> Kirim Pendaftaran
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {{-- Footer help --}}
+      <footer class="mt-10 text-center text-gray-600 text-sm pb-6">
+        <p>© 2025 <span class="font-semibold text-blue-600">CampusMarket</span>. All rights reserved.</p>
+      </footer>
+    </div>
 @endsection
 
 @push('scripts')

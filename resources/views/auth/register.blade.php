@@ -114,14 +114,14 @@
           <ol class="flex items-center gap-2">
             <li><a href="{{ route('login') }}" class="hover:text-gray-700">Login</a></li>
             <li aria-hidden="true" class="text-gray-500 font-semibold">/</li>
-            <li class="text-gray-700 font-medium">Pendaftaran Toko</li>
+            <li class="text-gray-700 font-medium">Registrasi</li>
           </ol>
         </nav>
 
         <div class="flex items-start justify-between gap-3">
           <div>
             <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
-              Pendaftaran Toko
+              Registrasi
             </h1>
             <p class="mt-2 text-gray-600">
               Lengkapi data di bawah ini. Setelah dikirim akan dilakukan
@@ -455,9 +455,9 @@
               <span class="cm-checkbox-box"></span>
               <span class="text-sm text-gray-700">
                   Saya setuju dengan
-                  <a href="#" class="text-blue-600 hover:underline">Syarat &amp; Ketentuan</a>
+                  <a href="{{ route('terms.seller') }}" class="text-blue-600 hover:underline">Syarat &amp; Ketentuan</a>
                   dan
-                  <a href="#" class="text-blue-600 hover:underline">Kebijakan Privasi</a>.
+                  <a href="{{ route('privacy.policy') }}"  class="text-blue-600 hover:underline">Kebijakan Privasi</a>.
               </span>
           </label>
       </div>
@@ -476,12 +476,9 @@
           </div>
         </form>
       </div>
+{{-- Footer --}}
+@include('components.footer')
 
-      {{-- Footer help --}}
-      <footer class="mt-10 text-center text-gray-600 text-sm pb-6">
-        <p>© 2025 <span class="font-semibold text-blue-600">CampusMarket</span>. All rights reserved.</p>
-      </footer>
-    </div>
 @endsection
 
 @push('scripts')

@@ -54,6 +54,17 @@ Route::middleware('auth')->group(function () {
     })->middleware(['throttle:6,1'])->name('verification.send');
 });
 
+// Terms and Conditions Routes
+Route::get('/terms-seller', function () {
+    return view('auth.termsseller'); // Sesuaikan dengan path file Blade yang kamu buat
+})->name('terms.seller');
+
+//Privacy Policy Route
+Route::get('/privacy-policy', function () {
+    return view('auth.privacypolicy'); // Sesuaikan dengan nama file Blade yang kamu buat
+})->name('privacy.policy');
+
+
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');

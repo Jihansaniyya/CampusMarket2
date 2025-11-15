@@ -18,33 +18,44 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
+            // Data Akun
             'name'                => 'required|string|max:255',
             'email'               => 'required|email|max:255|unique:users,email',
             'phone'               => 'required|string|max:20',
             'password'            => 'required|string|min:8|confirmed',
-            'role'                => 'required|in:buyer,seller',
+            'role'                => 'nullable|in:seller', // Form ini khusus seller only
             'terms'               => 'required|accepted',
             
-            // Seller specific fields (conditional validation)
-            'store_name'          => 'required_if:role,seller|nullable|string|max:255',
-            'store_description'   => 'nullable|string|max:1000',
-            'pic_name'            => 'nullable|string|max:255',
-            'pic_phone'           => 'nullable|string|max:20',
-            'pic_address'         => 'nullable|string|max:500',
-            'rt'                  => 'nullable|string|max:10',
-            'rw'                  => 'nullable|string|max:10',
-            'kelurahan'           => 'nullable|string|max:255',
-            'kecamatan'           => 'nullable|string|max:255',
-            'kota_kab'            => 'nullable|string|max:255',
-            'provinsi'            => 'nullable|string|max:255',
-            'kode_pos'            => 'nullable|string|max:10',
-            'no_ktp'              => 'nullable|string|max:20',
-            'file_ktp'            => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            // Data Toko (required karena ini form seller)
+            'store_name'          => 'required|string|max:255',
+            'store_description'   => 'required|string|max:1000',
+            
+            // Data PIC (required)
+            'pic_name'            => 'required|string|max:255',
+            'pic_phone'           => 'required|string|max:20',
+            'pic_email'           => 'required|email|max:255',
+            'pic_address'         => 'required|string|max:500',
+            
+            // Alamat PIC (required)
+            'rt'                  => 'required|string|max:10',
+            'rw'                  => 'required|string|max:10',
+            'kelurahan'           => 'required|string|max:255',
+            'kota_kab'            => 'required|string|max:255',
+            'provinsi'            => 'required|string|max:255',
+            
+            // Identitas (required)
+            'no_ktp'              => 'required|string|max:20',
+            'file_ktp'            => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'foto_pic'            => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Handle file upload
+        // Handle file uploads
         if ($request->hasFile('file_ktp')) {
             $validated['file_ktp'] = $request->file('file_ktp')->store('ktp', 'public');
+        }
+        
+        if ($request->hasFile('foto_pic')) {
+            $validated['foto_pic'] = $request->file('foto_pic')->store('foto_pic', 'public');
         }
 
         // Create user
@@ -53,21 +64,21 @@ class AuthController extends Controller
             'email'               => $validated['email'],
             'phone'               => $validated['phone'],
             'password'            => Hash::make($validated['password']),
-            'role'                => $validated['role'],
+            'role'                => $validated['role'] ?? 'seller', // Default to seller for this form
             'store_name'          => $validated['store_name'] ?? null,
             'store_description'   => $validated['store_description'] ?? null,
             'pic_name'            => $validated['pic_name'] ?? null,
             'pic_phone'           => $validated['pic_phone'] ?? null,
+            'pic_email'           => $validated['pic_email'] ?? null,
             'pic_address'         => $validated['pic_address'] ?? null,
             'rt'                  => $validated['rt'] ?? null,
             'rw'                  => $validated['rw'] ?? null,
             'kelurahan'           => $validated['kelurahan'] ?? null,
-            'kecamatan'           => $validated['kecamatan'] ?? null,
             'kota_kab'            => $validated['kota_kab'] ?? null,
             'provinsi'            => $validated['provinsi'] ?? null,
-            'kode_pos'            => $validated['kode_pos'] ?? null,
             'no_ktp'              => $validated['no_ktp'] ?? null,
             'file_ktp'            => $validated['file_ktp'] ?? null,
+            'avatar'              => $validated['foto_pic'] ?? null,
         ]);
 
         // Trigger the Registered event (this will send verification email)
@@ -96,16 +107,30 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
             
+            $user = Auth::user();
+            
             // Check if email is verified
-            if (!Auth::user()->hasVerifiedEmail()) {
+            if (!$user->hasVerifiedEmail()) {
                 Auth::logout();
                 return back()->withErrors([
                     'email' => 'Email Anda belum diverifikasi. Silakan cek email untuk link verifikasi.'
                 ])->onlyInput('email');
             }
             
+            // Check approval status for sellers
+            if ($user->role === 'seller') {
+                if ($user->approval_status === 'pending') {
+                    // Seller still waiting for approval
+                    return redirect()->route('waiting.approval');
+                } elseif ($user->approval_status === 'rejected') {
+                    Auth::logout();
+                    return back()->withErrors([
+                        'email' => 'Pendaftaran Anda ditolak. Alasan: ' . ($user->rejection_reason ?? 'Tidak ada keterangan.')
+                    ])->onlyInput('email');
+                }
+            }
+            
             // Redirect based on role
-            $user = Auth::user();
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($user->role === 'seller') {
@@ -123,7 +148,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return redirect()->route('login');
     }
 }
 

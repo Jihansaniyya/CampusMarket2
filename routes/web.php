@@ -7,15 +7,16 @@ use Illuminate\Support\Facades\Route;
 
 // Public Routes
 Route::get('/', function () {
-    // Redirect ke login jika belum login, atau ke dashboard jika sudah login
+    // Jika sudah login, redirect ke dashboard sesuai role
     if (auth()->check()) {
         if (auth()->user()->role === 'admin') {
             return redirect()->route('admin.dashboard');
         } elseif (auth()->user()->role === 'seller') {
             return redirect()->route('seller.dashboard');
         }
-        return redirect()->route('welcome.home');
+        return redirect()->route('buyer.dashboard');
     }
+    // Jika belum login, redirect ke halaman login
     return redirect()->route('login');
 })->name('welcome');
 
@@ -42,11 +43,17 @@ Route::middleware('auth')->group(function () {
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard')->with('success', 'Email berhasil diverifikasi!');
         } elseif ($user->role === 'seller') {
-            return redirect()->route('seller.dashboard')->with('success', 'Email berhasil diverifikasi!');
+            // Redirect seller to waiting approval page after email verification
+            return redirect()->route('waiting.approval')->with('success', 'Email berhasil diverifikasi! Menunggu persetujuan admin.');
         } else {
             return redirect()->route('buyer.dashboard')->with('success', 'Email berhasil diverifikasi!');
         }
     })->middleware(['signed'])->name('verification.verify');
+    
+    // Waiting Approval Page (for sellers)
+    Route::get('/waiting-approval', function () {
+        return view('auth.waiting-approval');
+    })->name('waiting.approval');
 
     Route::post('/email/verification-notification', function (Illuminate\Http\Request $request) {
         $request->user()->sendEmailVerificationNotification();
@@ -70,11 +77,23 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->name('ad
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
     Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    
+    // Seller Approval Routes
+    Route::prefix('sellers/approval')->name('sellers.approval.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\SellerApprovalController::class, 'index'])->name('index');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\SellerApprovalController::class, 'show'])->name('show');
+        Route::post('/{id}/approve', [\App\Http\Controllers\Admin\SellerApprovalController::class, 'approve'])->name('approve');
+        Route::post('/{id}/reject', [\App\Http\Controllers\Admin\SellerApprovalController::class, 'reject'])->name('reject');
+    });
 });
 
 // Seller Routes
 Route::prefix('seller')->middleware(['auth', 'verified', 'role:seller'])->name('seller.')->group(function () {
     Route::get('/dashboard', function() {
+        // Check if seller is approved
+        if (Auth::user()->approval_status !== 'approved') {
+            return redirect()->route('waiting.approval');
+        }
         return view('seller.dashboard');
     })->name('dashboard');
 });

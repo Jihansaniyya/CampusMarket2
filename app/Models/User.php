@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\CustomVerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -28,17 +29,19 @@ class User extends Authenticatable implements MustVerifyEmail
         'store_description',
         'pic_name',
         'pic_phone',
+        'pic_email',
         'pic_address',
         'rt',
         'rw',
         'kelurahan',
-        'kecamatan',
         'kota_kab',
         'provinsi',
-        'kode_pos',
         'no_ktp',
         'file_ktp',
         'avatar',
+        'approval_status',
+        'approved_at',
+        'rejection_reason',
     ];
 
     /**
@@ -60,7 +63,18 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return [
             'email_verified_at' => 'datetime',
+            'approved_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Send the email verification notification (CUSTOM).
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new CustomVerifyEmail);
     }
 }

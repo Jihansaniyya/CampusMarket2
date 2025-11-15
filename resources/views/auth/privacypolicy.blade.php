@@ -81,7 +81,7 @@
 
         {{-- Card --}}
         <div class="bg-white/90 backdrop-blur rounded-3xl shadow-xl ring-1 ring-black/5 overflow-hidden">
-            <div class="h-1 w-full bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600"></div>
+            <div class="h-1 w-full bg-linear-to-r from-blue-600 via-blue-500 to-blue-600"></div>
 
             <div class="px-6 md:px-8 py-8 space-y-6 text-sm md:text-[15px] leading-relaxed text-gray-700">
 

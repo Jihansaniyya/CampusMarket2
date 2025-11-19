@@ -3,22 +3,11 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes
-Route::get('/', function () {
-    // Jika sudah login, redirect ke dashboard sesuai role
-    if (auth()->check()) {
-        if (auth()->user()->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } elseif (auth()->user()->role === 'seller') {
-            return redirect()->route('seller.dashboard');
-        }
-        return redirect()->route('buyer.dashboard');
-    }
-    // Jika belum login, redirect ke halaman login
-    return redirect()->route('login');
-})->name('welcome');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {

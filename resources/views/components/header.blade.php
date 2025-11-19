@@ -24,8 +24,9 @@
                     <label for="search" class="sr-only">Cari produk</label>
                     <input id="search" type="text" x-model="search" @focus="showSuggestions = true"
                         @input.debounce.200ms="showSuggestions = true" placeholder="Cari produk, toko, dan kategori"
-                        class="w-full h-12 rounded-full border border-gray-200 px-5 pr-14 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" />
-                    <svg class="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none"
+                        class="w-full h-14 rounded-full border border-gray-200 pl-28 pr-14 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
+                        style="text-indent: 1.5rem;" />
+                    <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400" fill="none"
                         stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-4.35-4.35m0-5.4a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" />
@@ -52,9 +53,9 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <button class="relative p-2.5 text-gray-600 hover:text-blue-600 transition">
+                <button class="relative p-3 text-gray-600 hover:text-blue-600 transition">
                     <span class="sr-only">Keranjang</span>
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.436M7.5 14.25a3 3 0 1 0 5.999.001A3 3 0 0 0 7.5 14.25Zm8.25 0a3 3 0 1 0 5.999.001A3 3 0 0 0 15.75 14.25Zm.75-5.25h-9m12 0h-1.5m-9.75 0L6.75 5.25m0 0H19.5m-12.75 0L5.25 3" />
                     </svg>
@@ -72,8 +73,9 @@
             <div class="relative">
                 <label for="search-mobile" class="sr-only">Cari produk</label>
                 <input id="search-mobile" type="text" placeholder="Cari produk..."
-                    class="w-full h-12 rounded-full border border-gray-200 px-5 pr-14 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none" />
-                <svg class="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none"
+                    class="w-full h-14 rounded-full border border-gray-200 pl-28 pr-14 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
+                    style="text-indent: 0.5rem;" />
+                <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400" fill="none"
                     stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M21 21l-4.35-4.35m0-5.4a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" />

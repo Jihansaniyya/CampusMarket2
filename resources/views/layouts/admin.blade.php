@@ -77,13 +77,6 @@
                     @endif
                 </a>
 
-                {{-- Kelola User --}}
-                <a href="{{ route('admin.users.index') }}"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.users.*') ? 'sidebar-active shadow-lg' : 'text-gray-700 hover:bg-blue-50' }}">
-                    <i
-                        class="fas fa-users w-5 {{ request()->routeIs('admin.users.*') ? 'text-white' : 'text-blue-600' }}"></i>
-                    <span class="font-medium">Kelola User</span>
-                </a>
 
                 {{-- Divider --}}
                 <div class="pt-4 pb-2">

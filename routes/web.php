@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\SellerApprovalController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -77,10 +79,17 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->name('ad
 
     // Seller Approval
     Route::prefix('sellers/approval')->name('sellers.approval.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\SellerApprovalController::class, 'index'])->name('index');
-        Route::get('/{id}', [\App\Http\Controllers\Admin\SellerApprovalController::class, 'show'])->name('show');
-        Route::post('/{id}/approve', [\App\Http\Controllers\Admin\SellerApprovalController::class, 'approve'])->name('approve');
-        Route::post('/{id}/reject', [\App\Http\Controllers\Admin\SellerApprovalController::class, 'reject'])->name('reject');
+        Route::get('/', [SellerApprovalController::class, 'index'])->name('index');
+        Route::get('/{id}', [SellerApprovalController::class, 'show'])->name('show');
+        Route::post('/{id}/approve', [SellerApprovalController::class, 'approve'])->name('approve');
+        Route::post('/{id}/reject', [SellerApprovalController::class, 'reject'])->name('reject');
+    });
+
+    // Reports (PDF)
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/sellers/status', [ReportController::class, 'sellerStatus'])->name('sellers.status');
+        Route::get('/sellers/provinces', [ReportController::class, 'sellerProvince'])->name('sellers.provinces');
+        Route::get('/products/ratings', [ReportController::class, 'productRatings'])->name('products.ratings');
     });
 });
 

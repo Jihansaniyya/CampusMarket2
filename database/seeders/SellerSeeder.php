@@ -33,6 +33,7 @@ class SellerSeeder extends Seeder
             'approval_status' => 'approved',
             'approved_at' => now(),
             'rejection_reason' => null,
+            'email_verified_at' => now(),
         ]);
     }
 }

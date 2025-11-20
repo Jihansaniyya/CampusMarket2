@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+{{-- ini yg aku ubah --}}
+
 @section('title', 'CampusMarket | Homepage')
 
 @push('head')

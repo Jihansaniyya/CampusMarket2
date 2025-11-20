@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -72,6 +73,7 @@ Route::get('/privacy-policy', fn () => view('auth.privacypolicy'))->name('privac
 // =============================
 Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
 
     // Seller Approval
     Route::prefix('sellers/approval')->name('sellers.approval.')->group(function () {

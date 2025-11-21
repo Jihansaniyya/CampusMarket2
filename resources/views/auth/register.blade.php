@@ -7,109 +7,120 @@
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            font-family: 'Rubik', sans-serif;
-        }
+    * {
+        font-family: 'Rubik', sans-serif;
+    }
 
-        body {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background-color: #e7f0ff;
-        }
+    body {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background-color: #e7f0ff;
+    }
 
-        html,
-        body {
-            height: 100%;
-            overflow-y: auto !important;
-        }
+    html,
+    body {
+        height: 100%;
+        overflow-y: auto !important;
+    }
 
-        body {
-            display: block !important;
-        }
+    body {
+        display: block !important;
+    }
 
-        .background-blur {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url("{{ asset('assets/bg2.png') }}") no-repeat center center/cover;
-            filter: blur(5px);
-            z-index: -1;
-        }
+    .background-blur {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url("{{ asset('assets/bg2.png') }}") no-repeat center center/cover;
+        filter: blur(5px);
+        z-index: -1;
+    }
 
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(255, 255, 255, 0.35);
-            z-index: -1;
-        }
+    .overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(255, 255, 255, 0.35);
+        z-index: -1;
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.7s ease-out;
-        }
-
-        /* === Custom checkbox Terms & Conditions === */
-        .cm-terms {
-            position: absolute;
+    @keyframes fadeIn {
+        from {
             opacity: 0;
-            pointer-events: none;
+            transform: translateY(20px);
         }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
-        .cm-checkbox-box {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            border-radius: 0.45rem;
-            border: 1px solid #9ca3af;
-            /* gray-400 */
-            background-color: #ffffff;
-            box-sizing: border-box;
-            position: relative;
-            transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
-        }
+    .fade-in {
+        animation: fadeIn 0.7s ease-out;
+    }
 
-        .cm-checkbox-box::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 10px;
-            border-right: 2px solid #ffffff;
-            border-bottom: 2px solid #ffffff;
-            transform: rotate(45deg) scale(0);
-            transform-origin: center;
-            transition: transform 0.15s ease-out;
-        }
+    /* === Custom checkbox Terms & Conditions === */
+    .cm-terms {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
 
-        .cm-terms:checked+.cm-checkbox-box {
-            background-color: #2563eb;
-            /* blue-600 */
-            border-color: #2563eb;
-        }
+    .cm-checkbox-box {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 0.45rem;
+        border: 1px solid #9ca3af;
+        background-color: #ffffff;
+        box-sizing: border-box;
+        position: relative;
+        transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
+    }
 
-        .cm-terms:checked+.cm-checkbox-box::after {
-            transform: rotate(45deg) scale(1);
-        }
+    .cm-checkbox-box::after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        height: 10px;
+        border-right: 2px solid #ffffff;
+        border-bottom: 2px solid #ffffff;
+        transform: rotate(45deg) scale(0);
+        transform-origin: center;
+        transition: transform 0.15s ease-out;
+    }
+
+    .cm-terms:checked + .cm-checkbox-box {
+        background-color: #2563eb;
+        border-color: #2563eb;
+    }
+
+    .cm-terms:checked + .cm-checkbox-box::after {
+        transform: rotate(45deg) scale(1);
+    }
+
+    /* Chrome, Safari (WebKit) */
+    input[type="password"]::-webkit-textfield-decoration-container,
+    input[type="password"]::-webkit-credentials-auto-fill-button,
+    input[type="password"]::-webkit-password-toggle {
+        display: none !important;
+    }
+
+    /* Edge / Internet Explorer */
+    input[type="password"]::-ms-reveal,
+    input[type="password"]::-ms-clear {
+        display: none !important;
+    }
     </style>
+
 
     {{-- BACKGROUND --}}
     <div class="background-blur"></div>
@@ -124,14 +135,15 @@
                 <ol class="flex items-center gap-2">
                     <li><a href="{{ route('login') }}" class="hover:text-gray-700">Login</a></li>
                     <li aria-hidden="true" class="text-gray-500 font-semibold">/</li>
-                    <li class="text-gray-700 font-medium">Registrasi</li>
+                    <li class="text-gray-700 font-medium">Registrasi Penjual</li>
                 </ol>
             </nav>
 
             <div class="flex items-start justify-between gap-3">
                 <div>
+                    {{-- JUDUL SESUAI CONTOH --}}
                     <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
-                        Registrasi Penjual
+                        Formulir Registrasi Data Penjual (Toko)
                     </h1>
                     <p class="mt-2 text-gray-600">
                         Daftarkan toko Anda di CampusMarket. Lengkapi data di bawah ini,
@@ -167,91 +179,42 @@
                 {{-- Hidden field for role (this form is specifically for sellers) --}}
                 <input type="hidden" name="role" value="seller">
 
-                {{-- ================== AKUN ================== --}}
+                {{-- ================== DATA TOKO ================== --}}
                 <section class="px-6 pt-8">
                     <div class="mb-2">
-                        <h2 class="text-lg font-semibold text-gray-900">Data Akun</h2>
+                        <h2 class="text-lg font-semibold text-gray-900">Data Toko</h2>
                     </div>
-                    <p class="text-sm text-gray-500 mb-4">Data ini digunakan untuk login ke aplikasi.</p>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-                        {{-- NAMA LENGKAP — FULL WIDTH --}}
+                        {{-- Nama Toko --}}
                         <div class="relative md:col-span-2">
-                            <input autofocus type="text" name="name" value="{{ old('name') }}" required
-                                minlength="3"
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" ">
+                            <input type="text" name="store_name" value="{{ old('store_name') }}" required
+                                   class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                                   placeholder=" ">
                             <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                                peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
-                                peer-focus:top-2 peer-focus:text-xs transition-all">
-                                Nama Lengkap <span class="text-rose-600">*</span>
+                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
+                                Nama Toko <span class="text-rose-600">*</span>
                             </label>
+                            @error('store_name')
+                            <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        {{-- EMAIL --}}
-                        <div class="relative">
-                            <input type="email" name="email" value="{{ old('email') }}" required
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" ">
+                        {{-- Deskripsi singkat --}}
+                        <div class="relative md:col-span-2">
+                            <input type="text" name="store_description" id="store_description"
+                                   value="{{ old('store_description') }}" required maxlength="120"
+                                   class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                                   placeholder=" " oninput="countChars('store_description','descCounter',120)">
                             <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                                peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
-                                peer-focus:top-2 peer-focus:text-xs transition-all">
-                                Email <span class="text-rose-600">*</span>
+                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
+                                Deskripsi Singkat <span class="text-rose-600">*</span>
                             </label>
+                            <div class="flex justify-end"><span id="descCounter"
+                                                                class="text-[11px] text-gray-400 mt-1">0/120</span></div>
+                            @error('store_description')
+                            <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
-
-                        {{-- NO HP --}}
-                        <div class="relative">
-                            <input type="tel" name="phone" value="{{ old('phone') }}" required
-                                pattern="^(\+62|62|0)[0-9]{9,12}$"
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" " oninput="maskNumber(this, 13)">
-                            <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                                peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
-                                peer-focus:top-2 peer-focus:text-xs transition-all">
-                                No. Handphone <span class="text-rose-600">*</span>
-                            </label>
-                            <p class="text-[11px] text-gray-400 mt-1">Format: 08xxxxxxxxxx</p>
-                        </div>
-
-                        {{-- PASSWORD --}}
-                        <div class="relative">
-                            <input type="password" id="password" name="password" required minlength="8"
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 pr-11 bg-white"
-                                placeholder=" ">
-                            <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                                peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
-                                peer-focus:top-2 peer-focus:text-xs transition-all">
-                                Password <span class="text-rose-600">*</span>
-                            </label>
-                            <button type="button" onclick="togglePwd('password')"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <i id="password-icon" class="fas fa-eye"></i>
-                            </button>
-                        </div>
-
-                        {{-- KONFIRMASI PASSWORD --}}
-                        <div class="relative">
-                            <input type="password" id="password_confirmation" name="password_confirmation" required
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 pr-11 bg-white"
-                                placeholder=" ">
-                            <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                                peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
-                                peer-focus:top-2 peer-focus:text-xs transition-all">
-                                Konfirmasi Password <span class="text-rose-600">*</span>
-                            </label>
-                            <button type="button" onclick="togglePwd('password_confirmation')"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                <i id="password_confirmation-icon" class="fas fa-eye"></i>
-                            </button>
-                        </div>
-
                     </div>
                 </section>
 
@@ -260,96 +223,107 @@
                     <div class="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
                 </div>
 
-                {{-- ================== DATA TOKO ================== --}}
-                <section class="px-6">
-                    <div class="mb-2">
-                        <h2 class="text-lg font-semibold text-gray-900">Data Toko</h2>
+                
+
+                {{-- ================== DATA PIC ================== --}}
+                    <section class="px-6">
+                        <div class="mb-2">
+                            <h2 class="text-lg font-semibold text-gray-900">Data PIC</h2>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                            {{-- Nama PIC --}}
+                            <div class="relative md:col-span-2">
+                                <input type="text" name="pic_name" value="{{ old('pic_name') }}" required
+                                    class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
+                                    focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                                    placeholder=" ">
+                                <label
+                                    class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
+                                    Nama PIC <span class="text-rose-600">*</span>
+                                </label>
+                            </div>
+
+                            {{-- No HP PIC --}}
+                            <div class="relative">
+                                <input type="tel" name="pic_phone" value="{{ old('pic_phone') }}" required
+                                    pattern="^(\+62|62|0)[0-9]{9,12}$" inputmode="numeric"
+                                    class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
+                                    focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                                    placeholder=" " oninput="maskNumber(this, 13)">
+                                <label
+                                    class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
+                                    No Handphone PIC <span class="text-rose-600">*</span>
+                                </label>
+                            </div>
+
+                            {{-- Email PIC --}}
+                            <div class="relative">
+                                <input type="email" name="pic_email" value="{{ old('pic_email') }}" required
+                                    class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
+                                    focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                                    placeholder=" ">
+                                <label
+                                    class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
+                                    Email PIC <span class="text-rose-600">*</span>
+                                </label>
+                            </div>
+
+                            {{-- PASSWORD LOGIN --}}
+                            <div class="relative">
+                                <input type="password" id="password" name="password" required minlength="8"
+                                    class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
+                                    focus:ring-indigo-200 px-4 pt-5 pb-2 pr-11 bg-white"
+                                    placeholder=" ">
+                                <label
+                                    class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
+                                    Password Akun <span class="text-rose-600">*</span>
+                                </label>
+
+                                <button type="button" onclick="togglePwd('password')"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <i id="password-icon" class="fas fa-eye"></i>
+                                </button>
+                            </div>
+
+                            {{-- KONFIRMASI PASSWORD --}}
+                            <div class="relative">
+                                <input type="password" id="password_confirmation" name="password_confirmation" required
+                                    class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
+                                    focus:ring-indigo-200 px-4 pt-5 pb-2 pr-11 bg-white"
+                                    placeholder=" ">
+                                <label
+                                    class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
+                                    Konfirmasi Password <span class="text-rose-600">*</span>
+                                </label>
+
+                                <button type="button" onclick="togglePwd('password_confirmation')"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <i id="password_confirmation-icon" class="fas fa-eye"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <div class="px-6 py-6">
+                        <div class="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        {{-- 1 Nama Toko --}}
-                        <div class="relative">
-                            <input type="text" name="store_name" value="{{ old('store_name') }}" required
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" ">
-                            <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                                Nama Toko <span class="text-rose-600">*</span>
-                            </label>
-                            @error('store_name')
-                                <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
 
-                        {{-- 2 Deskripsi singkat --}}
-                        <div class="relative">
-                            <input type="text" name="store_description" id="store_description"
-                                value="{{ old('store_description') }}" required maxlength="120"
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" " oninput="countChars('store_description','descCounter',120)">
-                            <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                                Deskripsi Singkat <span class="text-rose-600">*</span>
-                            </label>
-                            <div class="flex justify-end"><span id="descCounter"
-                                    class="text-[11px] text-gray-400 mt-1">0/120</span></div>
-                            @error('store_description')
-                                <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-                </section>
+                
 
-                <div class="px-6 py-6">
-                    <div class="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
-                </div>
-
-                {{-- ================== PIC ================== --}}
-                <section class="px-6">
-                    <div class="mb-2">
-                        <h2 class="text-lg font-semibold text-gray-900">Data Penanggung Jawab</h2>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        {{-- 3 Nama PIC --}}
-                        <div class="relative">
-                            <input type="text" name="pic_name" value="{{ old('pic_name') }}" required
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" ">
-                            <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                                Nama PIC <span class="text-rose-600">*</span>
-                            </label>
-                        </div>
-
-                        {{-- 4 No HP PIC --}}
-                        <div class="relative">
-                            <input type="tel" name="pic_phone" value="{{ old('pic_phone') }}" required
-                                pattern="^(\+62|62|0)[0-9]{9,12}$" inputmode="numeric"
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" " oninput="maskNumber(this, 13)">
-                            <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                                No Handphone PIC <span class="text-rose-600">*</span>
-                            </label>
-                        </div>
-
-                        {{-- 5 Email PIC --}}
-                        <div class="relative md:col-span-2">
-                            <input type="email" name="pic_email" value="{{ old('pic_email') }}" required
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" ">
-                            <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
-                                Email PIC <span class="text-rose-600">*</span>
-                            </label>
-                        </div>
-                    </div>
-                </section>
-
-                <div class="px-6 py-6">
-                    <div class="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
-                </div>
-
-                {{-- ================== ALAMAT ================== --}}
+          {{-- ================== ALAMAT PIC ================== --}}
                 <section class="px-6">
                     <div class="mb-2">
                         <h2 class="text-lg font-semibold text-gray-900">Alamat PIC</h2>
@@ -357,16 +331,17 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-                        {{-- Alamat PIC --}}
+                        {{-- Alamat Jalan Lengkap --}}
                         <div class="relative md:col-span-2">
                             <input type="text" name="pic_address" value="{{ old('pic_address') }}" required
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2
+                                        focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
                                 placeholder=" ">
                             <label
                                 class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
-                              peer-focus:top-2 peer-focus:text-xs transition-all">
-                                Alamat PIC <span class="text-rose-600">*</span>
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
+                                Alamat Jalan Lengkap <span class="text-rose-600">*</span>
                             </label>
                         </div>
 
@@ -374,12 +349,13 @@
                         <div class="relative">
                             <input type="text" name="rt" value="{{ old('rt') }}" required maxlength="3"
                                 inputmode="numeric"
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2
+                                        focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
                                 placeholder=" " oninput="digitsOnly(this,3)">
                             <label
                                 class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
-                              peer-focus:top-2 peer-focus:text-xs transition-all">
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
                                 RT <span class="text-rose-600">*</span>
                             </label>
                         </div>
@@ -388,77 +364,93 @@
                         <div class="relative">
                             <input type="text" name="rw" value="{{ old('rw') }}" required maxlength="3"
                                 inputmode="numeric"
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2
+                                        focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
                                 placeholder=" " oninput="digitsOnly(this,3)">
                             <label
                                 class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
-                              peer-focus:top-2 peer-focus:text-xs transition-all">
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
                                 RW <span class="text-rose-600">*</span>
                             </label>
                         </div>
 
-                        {{-- Nama Kelurahan --}}
+                        {{-- PROVINSI --}}
                         <div class="relative">
-                            <input type="text" name="kelurahan" value="{{ old('kelurahan') }}" required
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" ">
-                            <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
-                              peer-focus:top-2 peer-focus:text-xs transition-all">
-                                Nama Kelurahan <span class="text-rose-600">*</span>
-                            </label>
-                        </div>
-
-                        {{-- Kabupaten / Kota --}}
-                        <div class="relative">
-                            <input type="text" name="kota_kab" value="{{ old('kota_kab') }}" required
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" ">
-                            <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
-                              peer-focus:top-2 peer-focus:text-xs transition-all">
-                                Kabupaten/Kota <span class="text-rose-600">*</span>
-                            </label>
-                        </div>
-
-                        {{-- Provinsi --}}
-                        <div class="relative md:col-span-2">
-                            <input type="text" name="provinsi" value="{{ old('provinsi') }}" required
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" ">
-                            <label
-                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                              peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
-                              peer-focus:top-2 peer-focus:text-xs transition-all">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">
                                 Provinsi <span class="text-rose-600">*</span>
                             </label>
+                            <select id="provinsi" name="provinsi" required
+                                class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2
+                                    focus:ring-blue-200 px-4 py-3 bg-white text-sm"
+                                data-old="{{ old('provinsi') }}">
+                                <option value="">Pilih Provinsi</option>
+                            </select>
                         </div>
 
-                    </div>
-                </section>
+                        {{-- KABUPATEN/KOTA --}}
+                        <div class="relative">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">
+                                Kabupaten/Kota <span class="text-rose-600">*</span>
+                            </label>
+                            <select id="kota_kab" name="kota_kab" required
+                                class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2
+                                    focus:ring-blue-200 px-4 py-3 bg-white text-sm"
+                                data-old="{{ old('kota_kab') }}">
+                                <option value="">Pilih Kabupaten/Kota</option>
+                            </select>
+                        </div>
 
+                        {{-- KECAMATAN --}}
+                        <div class="relative">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">
+                                Kecamatan <span class="text-rose-600">*</span>
+                            </label>
+                            <select id="kecamatan" name="kecamatan" required
+                                class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2
+                                    focus:ring-blue-200 px-4 py-3 bg-white text-sm"
+                                data-old="{{ old('kecamatan') }}">
+                                <option value="">Pilih Kecamatan</option>
+                            </select>
+                        </div>
+
+                        {{-- KELURAHAN/DESA --}}
+                        <div class="relative">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">
+                                Kelurahan/Desa <span class="text-rose-600">*</span>
+                            </label>
+                            <select id="kelurahan" name="kelurahan" required
+                                class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2
+                                    focus:ring-blue-200 px-4 py-3 bg-white text-sm"
+                                data-old="{{ old('kelurahan') }}">
+                                <option value="">Pilih Kelurahan/Desa</option>
+                            </select>
+                        </div>
+
+                    </div> {{-- <== TUTUP GRID --}}
+                </section>   {{-- <== TUTUP SECTION ALAMAT --}}
 
                 <div class="px-6 py-6">
                     <div class="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
                 </div>
 
+
+
+
                 {{-- ================== IDENTITAS & UPLOAD ================== --}}
                 <section class="px-6 pb-20 md:pb-10">
                     <div class="mb-2">
-                        <h2 class="text-lg font-semibold text-gray-900">Identitas</h2>
+                        <h2 class="text-lg font-semibold text-gray-900">Dokumen Identitas PIC</h2>
                     </div>
 
                     <div class="grid grid-cols-1 gap-5">
 
-                        {{-- BARIS 1 — No KTP --}}
+                        {{-- No KTP --}}
                         <div class="relative">
                             <input type="text" name="no_ktp" value="{{ old('no_ktp') }}" required
-                                inputmode="numeric" pattern="^[0-9]{16}$" maxlength="16"
-                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
-                                placeholder=" " oninput="digitsOnly(this,16)">
+                                   inputmode="numeric" pattern="^[0-9]{16}$" maxlength="16"
+                                   class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                                   placeholder=" " oninput="digitsOnly(this,16)">
                             <label
                                 class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
                                 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
@@ -467,42 +459,42 @@
                             </label>
                         </div>
 
-                        {{-- BARIS 2 — Foto PIC --}}
+                        {{-- Foto PIC --}}
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Foto PIC (jpg/png, max 2MB) <span
-                                    class="text-rose-600">*</span></label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Foto PIC (jpg/png, max 2MB) <span class="text-rose-600">*</span>
+                            </label>
                             <div class="flex items-center gap-4">
                                 <div id="foto-pic-preview"
-                                    class="h-20 w-20 rounded-2xl ring-1 ring-gray-200 bg-gray-100 grid place-items-center text-gray-400">
+                                     class="h-20 w-20 rounded-2xl ring-1 ring-gray-200 bg-gray-100 grid place-items-center text-gray-400">
                                     <i class="fas fa-user"></i>
                                 </div>
                                 <input type="file" name="foto_pic" id="foto_pic" required accept=".jpg,.jpeg,.png"
-                                    class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
-                                    onchange="previewImage('foto_pic','foto-pic-preview')">
+                                       class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
+                                       onchange="previewImage('foto_pic','foto-pic-preview')">
                             </div>
                         </div>
 
-                        {{-- BARIS 3 — File KTP --}}
+                        {{-- File KTP --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">
                                 File upload KTP PIC (jpg/png/pdf, max 2MB) <span class="text-rose-600">*</span>
                             </label>
                             <input type="file" name="file_ktp" id="file_ktp" required accept=".jpg,.jpeg,.png,.pdf"
-                                class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
-                                onchange="previewKTP(this)">
+                                   class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
+                                   onchange="previewKTP(this)">
                             <div id="ktp-preview" class="mt-2 text-sm text-gray-600"></div>
                         </div>
 
                     </div>
                 </section>
 
-
                 {{-- ================== TERMS & CONDITIONS ================== --}}
                 <section class="px-6 pb-4">
                     <div class="px-6 pb-6">
                         <label class="flex items-center gap-3 cursor-pointer select-none">
                             <input type="checkbox" name="terms" value="1" {{ old('terms') ? 'checked' : '' }}
-                                required class="cm-terms">
+                                   required class="cm-terms">
                             <span class="cm-checkbox-box"></span>
                             <span class="text-sm text-gray-700">
                                 Saya setuju dengan
@@ -516,8 +508,7 @@
                     </div>
                 </section>
 
-
-                {{-- Sticky Action (mobile-friendly) --}}
+                {{-- Sticky Action --}}
                 <div
                     class="fixed md:static inset-x-0 bottom-0 bg-white/95 backdrop-blur border-t md:border-t-0 border-gray-200 p-4 flex items-center justify-between gap-3">
                     <div class="hidden md:flex items-center gap-2 text-sm text-gray-500">
@@ -525,8 +516,8 @@
                         <span>Data terenkripsi & tidak dibagikan tanpa izin.</span>
                     </div>
                     <button type="submit"
-                        class="w-full md:w-auto inline-flex justify-center items-center gap-2 px-5 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]">
-                        <i class="fas fa-paper-plane"></i> Kirim Pendaftaran
+                            class="w-full md:w-auto inline-flex justify-center items-center gap-2 px-5 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]">
+                        <i class="fas fa-paper-plane"></i> Registrasi Penjual
                     </button>
                 </div>
             </form>
@@ -534,8 +525,8 @@
 
         {{-- Custom Confirmation Modal --}}
         <div id="confirmModal"
-            class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            style="display: none;">
+             class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+             style="display: none;">
             <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
                 <div class="text-center mb-6">
                     <div class="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
@@ -549,11 +540,11 @@
 
                 <div class="flex gap-3">
                     <button type="button" onclick="hideConfirmModal()"
-                        class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">
+                            class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">
                         <i class="fas fa-times mr-2"></i>Batal
                     </button>
                     <button type="button" onclick="confirmSubmit()"
-                        class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors shadow-md hover:shadow-lg">
+                            class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors shadow-md hover:shadow-lg">
                         <i class="fas fa-check mr-2"></i>Ya, Kirim
                     </button>
                 </div>
@@ -567,7 +558,6 @@
 
     @push('scripts')
         <script>
-            /* ---------- UX Helpers ---------- */
             function togglePwd(id) {
                 const f = document.getElementById(id),
                     ic = document.getElementById(id + '-icon');
@@ -590,29 +580,6 @@
                 if (c) c.textContent = `${v.length}/${max}`;
             }
 
-            function checkStrength() {
-                const v = document.getElementById('password')?.value ?? '';
-                const bars = ['p1', 'p2', 'p3', 'p4'].map(i => document.getElementById(i));
-                const txt = document.getElementById('ptext');
-                bars.forEach(b => b && (b.className = 'h-1 flex-1 bg-gray-200 rounded'));
-                let s = 0;
-                if (v.length >= 8) s++;
-                if (/[a-z]/.test(v)) s++;
-                if (/[A-Z]/.test(v)) s++;
-                if (/[0-9]/.test(v)) s++;
-                for (let i = 0; i < s && i < bars.length; i++) {
-                    if (bars[i]) bars[i].className = 'h-1 flex-1 ' + ['bg-gray-200', 'bg-rose-500', 'bg-amber-500',
-                        'bg-blue-500', 'bg-emerald-500'
-                    ][Math.min(s, 4)] + ' rounded';
-                }
-                if (txt) {
-                    txt.className = 'text-[11px] ' + (['text-gray-500', 'text-rose-600', 'text-amber-600', 'text-blue-600',
-                        'text-emerald-600'
-                    ][s] || 'text-gray-500');
-                    txt.textContent = (['', 'Lemah', 'Cukup', 'Baik', 'Kuat'][s] || '');
-                }
-            }
-            /* ---------- File Previews ---------- */
             function within2MB(f) {
                 return f.size <= 2 * 1024 * 1024;
             }
@@ -669,20 +636,15 @@
                 }
             }
 
-            /* ---------- Form Submission Confirmation ---------- */
             let formToSubmit = null;
 
             document.addEventListener('DOMContentLoaded', function() {
                 const form = document.getElementById('sellerForm');
                 if (form) {
                     form.addEventListener('submit', function(e) {
-                        // Cek validasi HTML5 dulu
                         if (!form.checkValidity()) {
-                            // Jika ada field yang belum valid, biarkan browser show error message
                             return true;
                         }
-
-                        // Jika semua field valid, prevent submit dan tampilkan modal konfirmasi
                         e.preventDefault();
                         formToSubmit = form;
                         showConfirmModal();
@@ -701,15 +663,92 @@
 
             function confirmSubmit() {
                 if (formToSubmit) {
-                    // Remove event listener to prevent loop
                     const form = formToSubmit;
                     formToSubmit = null;
                     hideConfirmModal();
-
-                    // Submit form manually
-                    form.removeEventListener('submit', arguments.callee);
                     form.submit();
                 }
             }
+
+        // ================= API wilayah - EMSIFA ================= //
+
+        async function loadProvinces() {
+            try {
+                const res = await fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json");
+                const data = await res.json();
+
+                const provSel = document.getElementById("provinsi");
+                provSel.innerHTML = `<option value="">Pilih Provinsi</option>`;
+
+                data.forEach(item => {
+                    provSel.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                });
+
+            } catch (err) {
+                console.error(err);
+                alert("Gagal memuat data provinsi.");
+            }
+        }
+
+        async function loadRegencies(id) {
+            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${id}.json`);
+            const data = await res.json();
+
+            const el = document.getElementById("kota_kab");
+            el.innerHTML = `<option value="">Pilih Kabupaten/Kota</option>`;
+
+            data.forEach(item => {
+                el.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+            });
+        }
+
+        async function loadDistricts(id) {
+            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${id}.json`);
+            const data = await res.json();
+
+            const el = document.getElementById("kecamatan");
+            el.innerHTML = `<option value="">Pilih Kecamatan</option>`;
+
+            data.forEach(item => {
+                el.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+            });
+        }
+
+        async function loadVillages(id) {
+            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`);
+            const data = await res.json();
+
+            const el = document.getElementById("kelurahan");
+            el.innerHTML = `<option value="">Pilih Kelurahan/Desa</option>`;
+
+            data.forEach(item => {
+                el.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+            });
+        }
+
+        // Event Binding
+        document.addEventListener("DOMContentLoaded", function () {
+            loadProvinces();
+
+            document.getElementById("provinsi").addEventListener("change", function () {
+                loadRegencies(this.value);
+                document.getElementById("kota_kab").innerHTML = `<option>Loading...</option>`;
+                document.getElementById("kecamatan").innerHTML = `<option>Pilih Kecamatan</option>`;
+                document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
+            });
+
+            document.getElementById("kota_kab").addEventListener("change", function () {
+                loadDistricts(this.value);
+                document.getElementById("kecamatan").innerHTML = `<option>Loading...</option>`;
+                document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
+            });
+
+            document.getElementById("kecamatan").addEventListener("change", function () {
+                loadVillages(this.value);
+                document.getElementById("kelurahan").innerHTML = `<option>Loading...</option>`;
+            });
+        });
+
+
         </script>
     @endpush

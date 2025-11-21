@@ -6,28 +6,37 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SellerApprovalController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Seller\SellerDashboardController;
+use App\Http\Controllers\Seller\ProductController;
 use Illuminate\Support\Facades\Route;
 
 // =============================
-// HOMEPAGE (Public)
+// HOMEPAGE
 // =============================
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
 
 // =============================
 // AUTH (Guest Only)
 // =============================
 Route::middleware('guest')->group(function () {
+
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
 });
 
-// Logout (Auth Only)
+
+// =============================
+// LOGOUT
+// =============================
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout')
     ->middleware('auth');
+
 
 // =============================
 // EMAIL VERIFICATION
@@ -39,8 +48,8 @@ Route::middleware('auth')->group(function () {
     })->name('verification.notice');
 
     Route::get('/email/verify/{id}/{hash}', function (Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
-        $request->fulfill();
 
+        $request->fulfill();
         $user = auth()->user();
 
         if ($user->role === 'admin') {
@@ -52,17 +61,17 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('buyer.dashboard')->with('success', 'Email berhasil diverifikasi!');
     })->middleware(['signed'])->name('verification.verify');
 
-    // Waiting approval page
-    Route::get('/waiting-approval', function () {
-        return view('auth.waiting-approval');
-    })->name('waiting.approval');
 
-    // Resend verification link
+    Route::get('/waiting-approval', fn () => view('auth.waiting-approval'))
+        ->name('waiting.approval');
+
     Route::post('/email/verification-notification', function (Illuminate\Http\Request $request) {
         $request->user()->sendEmailVerificationNotification();
         return back()->with('message', 'Link verifikasi telah dikirim ulang!');
     })->middleware(['throttle:6,1'])->name('verification.send');
+
 });
+
 
 // =============================
 // LEGAL PAGES
@@ -70,47 +79,84 @@ Route::middleware('auth')->group(function () {
 Route::get('/terms-seller', fn () => view('auth.termsseller'))->name('terms.seller');
 Route::get('/privacy-policy', fn () => view('auth.privacypolicy'))->name('privacy.policy');
 
+
 // =============================
 // ADMIN ROUTES
 // =============================
-Route::prefix('admin')->middleware(['auth', 'verified', 'role:admin'])->name('admin.')->group(function () {
-    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
+Route::prefix('admin')
+    ->middleware(['auth', 'verified', 'role:admin'])
+    ->name('admin.')
+    ->group(function () {
 
-    // Seller Approval
-    Route::prefix('sellers/approval')->name('sellers.approval.')->group(function () {
-        Route::get('/', [SellerApprovalController::class, 'index'])->name('index');
-        Route::get('/{id}', [SellerApprovalController::class, 'show'])->name('show');
-        Route::post('/{id}/approve', [SellerApprovalController::class, 'approve'])->name('approve');
-        Route::post('/{id}/reject', [SellerApprovalController::class, 'reject'])->name('reject');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
+
+        // Seller Approval
+        Route::prefix('sellers/approval')->name('sellers.approval.')->group(function () {
+            Route::get('/',       [SellerApprovalController::class, 'index'])->name('index');
+            Route::get('/{id}',   [SellerApprovalController::class, 'show'])->name('show');
+            Route::post('/{id}/approve', [SellerApprovalController::class, 'approve'])->name('approve');
+            Route::post('/{id}/reject',  [SellerApprovalController::class, 'reject'])->name('reject');
+        });
+
+        // Reports
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/sellers/status',     [ReportController::class, 'sellerStatus'])->name('sellers.status');
+            Route::get('/sellers/provinces',  [ReportController::class, 'sellerProvince'])->name('sellers.provinces');
+            Route::get('/products/ratings',   [ReportController::class, 'productRatings'])->name('products.ratings');
+        });
+
     });
 
-    // Reports (PDF)
-    Route::prefix('reports')->name('reports.')->group(function () {
-        Route::get('/sellers/status', [ReportController::class, 'sellerStatus'])->name('sellers.status');
-        Route::get('/sellers/provinces', [ReportController::class, 'sellerProvince'])->name('sellers.provinces');
-        Route::get('/products/ratings', [ReportController::class, 'productRatings'])->name('products.ratings');
-    });
-});
 
 // =============================
 // SELLER ROUTES
 // =============================
-Route::prefix('seller')->middleware(['auth', 'verified', 'role:seller'])->name('seller.')->group(function () {
-    Route::get('/dashboard', function () {
-        $user = auth()->user();
+Route::prefix('seller')
+    ->middleware(['auth', 'verified', 'role:seller'])
+    ->name('seller.')
+    ->group(function () {
 
-        if ($user->approval_status !== 'approved') {
-            return redirect()->route('waiting.approval');
-        }
+        // Dashboard
+        Route::get('/dashboard', function () {
+            $user = auth()->user();
+            if ($user->approval_status !== 'approved') {
+                return redirect()->route('waiting.approval');
+            }
+            return app(\App\Http\Controllers\Seller\SellerDashboardController::class)->index();
+        })->name('dashboard');
 
-        return view('seller.dashboard');
-    })->name('dashboard');
-});
+        // PRODUCT ROUTES
+        Route::prefix('products')->name('products.')->group(function () {
+            Route::get('/', [ProductController::class, 'index'])->name('index');
+            Route::get('/create', [ProductController::class, 'create'])->name('create');
+            Route::post('/', [ProductController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [ProductController::class, 'update'])->name('update');
+            Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
+        });
+
+        // RATING ROUTES
+        Route::prefix('ratings')->name('ratings.')->group(function () {
+            Route::get('/', [RatingController::class, 'index'])->name('index');
+        });
+
+        // ORDER ROUTES
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::get('/', [OrderController::class, 'index'])->name('index');
+        });
+
+    });
+
 
 // =============================
 // BUYER ROUTES
 // =============================
-Route::prefix('buyer')->middleware(['auth', 'verified', 'role:buyer'])->name('buyer.')->group(function () {
-    Route::get('/dashboard', fn () => view('buyer.dashboard'))->name('dashboard');
-});
+Route::prefix('buyer')
+    ->middleware(['auth', 'verified', 'role:buyer'])
+    ->name('buyer.')
+    ->group(function () {
+
+        Route::get('/dashboard', fn () => view('buyer.dashboard'))->name('dashboard');
+
+    });

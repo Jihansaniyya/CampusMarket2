@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
     // Seeder lain kalau diperlukan
     $this->call([
         AdminSeeder::class,
+        SellerSeeder::class,
     ]);
 
     // Contoh test user (opsional)

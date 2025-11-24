@@ -58,6 +58,7 @@
         .fade-in {
             animation: fadeIn 0.7s ease-out;
         }
+
     </style>
 
     <!-- Background -->
@@ -109,9 +110,11 @@
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                         <i class="fas fa-lock"></i>
                     </span>
-                    <input type="password" id="password" name="password"
+                    <input type="text" id="password" name="password"
+                        autocomplete="current-password"
                         class="w-full pl-10 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                        placeholder="Masukkan password" required>
+                        placeholder="Masukkan password" required
+                        style="-webkit-text-security: disc;">
                     <button type="button" onclick="togglePassword()"
                         class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600">
                         <i id="toggle-icon" class="fas fa-eye"></i>
@@ -150,17 +153,26 @@
 @push('scripts')
     <script>
         function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.getElementById('toggle-icon');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleIcon.classList.remove('fa-eye');
-                toggleIcon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                toggleIcon.classList.remove('fa-eye-slash');
-                toggleIcon.classList.add('fa-eye');
-            }
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggle-icon');
+    if (!passwordInput) return;
+
+    const isHidden = !passwordInput.style.webkitTextSecurity || passwordInput.style.webkitTextSecurity === 'disc';
+
+    if (isHidden) {
+        passwordInput.style.webkitTextSecurity = 'none';
+        if (toggleIcon) {
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
         }
+    } else {
+        passwordInput.style.webkitTextSecurity = 'disc';
+        if (toggleIcon) {
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    }
+}
+
     </script>
 @endpush

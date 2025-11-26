@@ -10,6 +10,8 @@ use App\Http\Controllers\Seller\SellerDashboardController;
 use App\Http\Controllers\Seller\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductSearchController;
+use App\Http\Controllers\Seller\OrderController;
+
 
 // =============================
 // HOMEPAGE
@@ -128,24 +130,45 @@ Route::prefix('seller')
             return app(\App\Http\Controllers\Seller\SellerDashboardController::class)->index();
         })->name('dashboard');
 
+
+        // =============================
         // PRODUCT ROUTES
+        // =============================
         Route::prefix('products')->name('products.')->group(function () {
-            Route::get('/', [ProductController::class, 'index'])->name('index');
-            Route::get('/create', [ProductController::class, 'create'])->name('create');
+
+            // LIST PRODUK
+            Route::get('/', [ProductController::class, 'index'])
+                ->name('index');  // → seller.product-list.blade.php
+
+            // UPLOAD PRODUK
+            Route::get('/create', [ProductController::class, 'create'])
+                ->name('create'); // → seller.product.blade.php
+
             Route::post('/', [ProductController::class, 'store'])->name('store');
+
             Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('edit');
             Route::put('/{id}', [ProductController::class, 'update'])->name('update');
             Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
         });
 
-        // RATING ROUTES
-        Route::prefix('ratings')->name('ratings.')->group(function () {
-            Route::get('/', [RatingController::class, 'index'])->name('index');
+
+        // =============================
+        // ORDER ROUTES
+        // =============================
+        Route::prefix('orders')->name('orders.')->group(function () {
+
+            // LIST PESANAN
+            Route::get('/', [OrderController::class, 'index'])
+                ->name('index'); // → seller.order-list.blade.php
+
         });
 
-        // ORDER ROUTES
-        Route::prefix('orders')->name('orders.')->group(function () {
-            Route::get('/', [OrderController::class, 'index'])->name('index');
+
+        // =============================
+        // RATING ROUTES
+        // =============================
+        Route::prefix('ratings')->name('ratings.')->group(function () {
+            Route::get('/', [RatingController::class, 'index'])->name('index');
         });
 
     });

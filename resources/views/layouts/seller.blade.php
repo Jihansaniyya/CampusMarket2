@@ -71,15 +71,17 @@
                 </a>
 
 
-                {{-- Pesanan --}}
+            {{-- Pesanan --}}
                 <a href="{{ route('seller.orders.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                     {{ request()->routeIs('seller.orders.*') ? 'sidebar-active shadow-lg' : 'text-gray-700 hover:bg-blue-50' }}">
-                    <i class="fas fa-shopping-cart w-5 {{ request()->routeIs('seller.orders.*') ? 'text-white' : 'text-blue-600' }}"></i>
+                    <i class="fas fa-shopping-cart w-5 
+                    {{ request()->routeIs('seller.orders.*') ? 'text-white' : 'text-blue-600' }}">
+                    </i>
                     <span class="font-medium">Kelola Pesanan</span>
                 </a>
 
-                
+
 
                 {{-- Divider --}}
                 <div class="pt-4 pb-2">

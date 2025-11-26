@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use App\Models\User;
 
 class HomeController extends Controller
 {
@@ -143,6 +144,19 @@ class HomeController extends Controller
             ],
         ];
 
-        return view('home', compact('categories', 'featuredProducts', 'products', 'banners'));
+        // Get provinces and cities from sellers for search filter
+        $provinces = User::where('role', 'seller')
+            ->whereNotNull('provinsi')
+            ->distinct()
+            ->pluck('provinsi')
+            ->toArray();
+
+        $cities = User::where('role', 'seller')
+            ->whereNotNull('kota_kab')
+            ->distinct()
+            ->pluck('kota_kab')
+            ->toArray();
+
+        return view('home', compact('categories', 'featuredProducts', 'products', 'banners', 'provinces', 'cities'));
     }
 }

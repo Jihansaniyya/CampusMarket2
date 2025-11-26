@@ -9,11 +9,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Seller\SellerDashboardController;
 use App\Http\Controllers\Seller\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductSearchController;
 
 // =============================
 // HOMEPAGE
 // =============================
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/search', [ProductSearchController::class, 'search'])->name('product.search');
 
 
 // =============================

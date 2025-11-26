@@ -51,4 +51,65 @@ class Product extends Model
     {
         return $this->hasMany(ProductReview::class);
     }
+
+    /**
+     * Scope to filter products by store name.
+     */
+    public function scopeByStoreName($query, ?string $storeName)
+    {
+        if ($storeName) {
+            return $query->whereHas('seller', function ($q) use ($storeName) {
+                $q->where('store_name', 'like', '%' . $storeName . '%');
+            });
+        }
+        return $query;
+    }
+
+    /**
+     * Scope to filter products by category.
+     */
+    public function scopeByCategory($query, ?int $categoryId)
+    {
+        if ($categoryId) {
+            return $query->where('category_id', $categoryId);
+        }
+        return $query;
+    }
+
+    /**
+     * Scope to filter products by name.
+     */
+    public function scopeByProductName($query, ?string $productName)
+    {
+        if ($productName) {
+            return $query->where('name', 'like', '%' . $productName . '%');
+        }
+        return $query;
+    }
+
+    /**
+     * Scope to filter products by store province.
+     */
+    public function scopeByProvince($query, ?string $province)
+    {
+        if ($province) {
+            return $query->whereHas('seller', function ($q) use ($province) {
+                $q->where('provinsi', 'like', '%' . $province . '%');
+            });
+        }
+        return $query;
+    }
+
+    /**
+     * Scope to filter products by store city/district.
+     */
+    public function scopeByCity($query, ?string $city)
+    {
+        if ($city) {
+            return $query->whereHas('seller', function ($q) use ($city) {
+                $q->where('kota_kab', 'like', '%' . $city . '%');
+            });
+        }
+        return $query;
+    }
 }

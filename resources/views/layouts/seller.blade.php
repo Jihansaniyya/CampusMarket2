@@ -67,7 +67,7 @@
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                     {{ request()->routeIs('seller.products.*') ? 'sidebar-active shadow-lg' : 'text-gray-700 hover:bg-blue-50' }}">
                     <i class="fas fa-box w-5 {{ request()->routeIs('seller.products.*') ? 'text-white' : 'text-blue-600' }}"></i>
-                    <span class="font-medium">Upload Produk</span>
+                    <span class="font-medium">Produk</span>
                 </a>
 
 

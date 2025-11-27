@@ -53,6 +53,14 @@ class Product extends Model
     }
 
     /**
+     * Product comments relation.
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(ProductComment::class);
+    }
+
+    /**
      * Scope to filter products by store name.
      */
     public function scopeByStoreName($query, ?string $storeName)

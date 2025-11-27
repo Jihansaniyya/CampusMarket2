@@ -11,6 +11,10 @@ use App\Http\Controllers\Seller\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductSearchController;
 use App\Http\Controllers\Seller\OrderController;
+use App\Http\Controllers\ProductCommentController;
+use App\Http\Controllers\ProductDetailController;
+use App\Http\Controllers\Admin\RatingController;
+
 
 
 // =============================
@@ -18,6 +22,14 @@ use App\Http\Controllers\Seller\OrderController;
 // =============================
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [ProductSearchController::class, 'search'])->name('product.search');
+
+// =============================
+// PRODUCT DETAIL & COMMENTS (For Visitors)
+// =============================
+Route::get('/product/{slug}', [ProductDetailController::class, 'show'])->name('product.show');
+Route::post('/product/comment', [ProductCommentController::class, 'store'])->name('product.comment.store');
+Route::get('/product/{productId}/comments', [ProductCommentController::class, 'getProductComments'])->name('product.comments');
+
 
 
 // =============================

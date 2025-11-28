@@ -74,11 +74,11 @@
                     <button @click="go(index)" class="w-3 h-3 rounded-full"
                         :class="current === index ? 'bg-white' : 'bg-white/50'"
                         :aria-label="'Pergi ke banner ' + (index + 1)"></button>
-        
-                    @include('components.search-filter', ['categories' => $categories, 'provinces' => $provinces ?? [], 'cities' => $cities ?? []])
                 </template>
             </div>
         </div>
+
+        @include('components.search-filter', ['categories' => $categories, 'provinces' => $provinces ?? [], 'cities' => $cities ?? []])
 
         @include('components.category-carousel', ['categories' => $categories])
 

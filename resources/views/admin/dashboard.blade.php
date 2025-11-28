@@ -231,7 +231,7 @@
                         <p class="text-3xl font-bold text-gray-900">{{ $productCategoryStats->sum('value') }}</p>
                         <p class="text-xs text-gray-400">Jumlah total produk aktif</p>
                     </div>
-                    <span class="px-3 py-1 text-xs font-semibold bg-blue-50 text-blue-600 rounded-full">SRS-07</span>
+                    
                 </div>
                 @if ($hasProductCategoryData)
                     <div class="flex flex-col lg:flex-row gap-6">
@@ -264,7 +264,7 @@
                         <p class="text-3xl font-bold text-gray-900">{{ $sellerProvinceStats->sum('value') }}</p>
                         <p class="text-xs text-gray-400">Total penjual terdaftar</p>
                     </div>
-                    <span class="px-3 py-1 text-xs font-semibold bg-blue-50 text-blue-600 rounded-full">SRS-07</span>
+                    
                 </div>
                 @if ($hasSellerProvinceData)
                     <div>
@@ -288,7 +288,7 @@
                         <p class="text-3xl font-bold text-gray-900">{{ $sellerActivityStats['active'] + $sellerActivityStats['inactive'] }}</p>
                         <p class="text-xs text-gray-400">Mengacu pada persetujuan akun</p>
                     </div>
-                    <span class="px-3 py-1 text-xs font-semibold bg-blue-50 text-blue-600 rounded-full">SRS-09</span>
+                    
                 </div>
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="flex-1">
@@ -315,7 +315,7 @@
                         <p class="text-3xl font-bold text-gray-900">{{ $visitorEngagementStats['total_reviews'] }}</p>
                         <p class="text-xs text-gray-400">Pengunjung yang meninggalkan feedback</p>
                     </div>
-                    <span class="px-3 py-1 text-xs font-semibold bg-blue-50 text-blue-600 rounded-full">SRS-11</span>
+                   
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <div class="lg:col-span-2">
@@ -396,7 +396,7 @@
                     </div>
                     <div>
                         <p class="font-bold text-gray-900 group-hover:text-violet-600 transition-colors">Laporan Produk</p>
-                        <p class="text-sm text-gray-600">Unduh rating produk (SRS-11)</p>
+                        <p class="text-sm text-gray-600">Unduh rating produk </p>
                     </div>
                     <i
                         class="fas fa-arrow-right absolute right-4 text-violet-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-2 transition-all"></i>
@@ -413,13 +413,13 @@
                 </div>
                 <div>
                     <h2 class="text-xl font-bold text-gray-900">Download Laporan Resmi</h2>
-                    <p class="text-sm text-gray-500">Memenuhi kebutuhan SRS-MartPlace-09, 10, dan 11</p>
+                    
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <a href="{{ route('admin.reports.sellers.status') }}" target="_blank" rel="noopener"
                     class="border border-gray-200 rounded-2xl p-4 hover:border-blue-400 hover:shadow-lg transition group">
-                    <p class="text-xs font-semibold text-blue-500 mb-1">SRS-09</p>
+                    
                     <p class="text-lg font-bold text-gray-900">Penjual Aktif vs Tidak Aktif</p>
                     <p class="text-sm text-gray-500 mt-2">Format PDF menampilkan status akun terbaru.</p>
                     <span class="text-sm text-blue-500 font-semibold inline-flex items-center gap-1 mt-3">Unduh sekarang
@@ -427,7 +427,7 @@
                 </a>
                 <a href="{{ route('admin.reports.sellers.provinces') }}" target="_blank" rel="noopener"
                     class="border border-gray-200 rounded-2xl p-4 hover:border-emerald-400 hover:shadow-lg transition group">
-                    <p class="text-xs font-semibold text-emerald-500 mb-1">SRS-10</p>
+                    
                     <p class="text-lg font-bold text-gray-900">Daftar Penjual per Provinsi</p>
                     <p class="text-sm text-gray-500 mt-2">Memetakan toko berdasarkan lokasi propinsi.</p>
                     <span class="text-sm text-emerald-500 font-semibold inline-flex items-center gap-1 mt-3">Unduh sekarang
@@ -435,7 +435,7 @@
                 </a>
                 <a href="{{ route('admin.reports.products.ratings') }}" target="_blank" rel="noopener"
                     class="border border-gray-200 rounded-2xl p-4 hover:border-violet-400 hover:shadow-lg transition group">
-                    <p class="text-xs font-semibold text-violet-500 mb-1">SRS-11</p>
+                    
                     <p class="text-lg font-bold text-gray-900">Produk & Rating Menurun</p>
                     <p class="text-sm text-gray-500 mt-2">Termasuk nama toko, kategori, harga, dan propinsi.</p>
                     <span class="text-sm text-violet-500 font-semibold inline-flex items-center gap-1 mt-3">Unduh sekarang

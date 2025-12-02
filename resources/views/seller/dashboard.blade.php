@@ -163,7 +163,7 @@
                 </div>
                 <p class="text-sm opacity-90">Total Komentar</p>
                 <p class="text-4xl font-bold mb-4">{{ $totalComments }}</p>
-                <a href="{{ route('seller.ratings.index') }}" class="inline-flex items-center text-sm font-semibold">Lihat Komentar <i class="fas fa-arrow-right ml-2"></i></a>
+                <a href="{{ route('seller.comments.index') }}" class="inline-flex items-center text-sm font-semibold">Lihat Komentar <i class="fas fa-arrow-right ml-2"></i></a>
             </div>
         </div>
 

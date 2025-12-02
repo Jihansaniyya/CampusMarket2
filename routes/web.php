@@ -14,6 +14,7 @@ use App\Http\Controllers\ProductCommentController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\Admin\RatingController;
 use App\Http\Controllers\Seller\RatingController as SellerRatingController;
+use App\Http\Controllers\Seller\CommentController as SellerCommentController;  
 
 
 
@@ -148,19 +149,13 @@ Route::prefix('seller')
         // =============================
         Route::prefix('products')->name('products.')->group(function () {
 
-            // LIST PRODUK
-            Route::get('/', [ProductController::class, 'index'])
-                ->name('index');  // → seller.product-list.blade.php
-
-            // UPLOAD PRODUK
-            Route::get('/create', [ProductController::class, 'create'])
-                ->name('create'); // → seller.product.blade.php
-
+            Route::get('/', [ProductController::class, 'index'])->name('index');
+            Route::get('/create', [ProductController::class, 'create'])->name('create');
             Route::post('/', [ProductController::class, 'store'])->name('store');
-
             Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('edit');
             Route::put('/{id}', [ProductController::class, 'update'])->name('update');
             Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
+
         });
 
 
@@ -168,11 +163,7 @@ Route::prefix('seller')
         // ORDER ROUTES
         // =============================
         Route::prefix('orders')->name('orders.')->group(function () {
-
-            // LIST PESANAN
-            Route::get('/', [OrderController::class, 'index'])
-                ->name('index'); // → seller.order-list.blade.php
-
+            Route::get('/', [OrderController::class, 'index'])->name('index');
         });
 
 
@@ -181,6 +172,14 @@ Route::prefix('seller')
         // =============================
         Route::prefix('ratings')->name('ratings.')->group(function () {
             Route::get('/', [SellerRatingController::class, 'index'])->name('index');
+        });
+
+
+        // =============================
+        // COMMENT ROUTES (SELLER)
+        // =============================
+        Route::prefix('comments')->name('comments.')->group(function () {    
+            Route::get('/', [SellerCommentController::class, 'index'])->name('index');
         });
 
     });

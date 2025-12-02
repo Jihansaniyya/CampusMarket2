@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ReportController;
@@ -14,6 +13,7 @@ use App\Http\Controllers\Seller\OrderController;
 use App\Http\Controllers\ProductCommentController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\Admin\RatingController;
+use App\Http\Controllers\Seller\RatingController as SellerRatingController;
 
 
 
@@ -180,7 +180,7 @@ Route::prefix('seller')
         // RATING ROUTES
         // =============================
         Route::prefix('ratings')->name('ratings.')->group(function () {
-            Route::get('/', [RatingController::class, 'index'])->name('index');
+            Route::get('/', [SellerRatingController::class, 'index'])->name('index');
         });
 
     });

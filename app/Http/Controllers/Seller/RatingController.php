@@ -19,6 +19,6 @@ class RatingController extends Controller
             ->latest()
             ->get();
 
-        return view('seller.ratings.index', compact('reviews'));
+        return view('seller.rating', compact('reviews'));
     }
 }

@@ -94,80 +94,58 @@
 @section('content')
 <div>
 
-    {{-- STATISTIC CARDS --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {{-- STATISTIC CARDS --}}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
 
-        {{-- Total Produk --}}
-        <div class="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
-            <div class="absolute inset-0 bg-linear-to-br from-blue-500 to-indigo-600"></div>
-            <div class="absolute inset-0 bg-black opacity-5"></div>
-            <div class="relative p-6 text-white">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <i class="fas fa-box text-3xl"></i>
-                    </div>
+    {{-- Total Produk --}}
+    <div class="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
+        <div class="absolute inset-0 bg-linear-to-br from-blue-500 to-indigo-600"></div>
+        <div class="absolute inset-0 bg-black opacity-5"></div>
+        <div class="relative p-6 text-white">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                    <i class="fas fa-box text-3xl"></i>
                 </div>
-                <p class="text-sm opacity-90">Total Produk</p>
-                <p class="text-4xl font-bold mb-4">{{ $totalProducts }}</p>
-                <a href="{{ route('seller.products.index') }}" class="inline-flex items-center text-sm font-semibold">Lihat Produk <i class="fas fa-arrow-right ml-2"></i></a>
             </div>
+            <p class="text-sm opacity-90">Total Produk</p>
+            <p class="text-4xl font-bold mb-4">{{ $totalProducts }}</p>
+            <a href="{{ route('seller.products.index') }}" class="inline-flex items-center text-sm font-semibold">
+                Lihat Produk <i class="fas fa-arrow-right ml-2"></i>
+            </a>
         </div>
-
-        {{-- Total Pesanan Masuk --}}
-        <div
-    class="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-    <div class="absolute inset-0 bg-linear-to-br from-emerald-400 to-green-500"></div>
-    <div class="absolute inset-0 bg-black opacity-5"></div>
-    <div class="relative p-6 text-white">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <i class="fas fa-shopping-cart text-3xl"></i>
-            </div>
-        </div>
-
-        <p class="text-sm font-medium mb-1 opacity-90">Total Pesanan Masuk</p>
-        <p class="text-4xl font-bold mb-4">{{ $totalOrders }}</p>
-
-        <a href="{{ route('seller.orders.index') }}"
-            class="inline-flex items-center text-sm font-semibold hover:gap-3 transition-all">
-            Lihat Pesanan <i class="fas fa-arrow-right ml-2"></i>
-        </a>
     </div>
+
+    {{-- Rating + Komentar --}}
+    <div class="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
+        <div class="absolute inset-0 bg-linear-to-br from-orange-400 to-rose-500"></div>
+        <div class="absolute inset-0 bg-black opacity-5"></div>
+        <div class="relative p-6 text-white">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                    <i class="fas fa-star text-3xl"></i>
+                </div>
+            </div>
+
+            <p class="text-sm opacity-90">Total Rating & Komentar</p>
+
+            {{-- kalau mau angka gabungan pakai ini --}}
+            <p class="text-4xl font-bold mb-1">
+                {{ $totalRatings + $totalComments }}
+            </p>
+
+            {{-- info detail rating & komentar --}}
+            <p class="text-xs opacity-90 mb-4">
+                Rating: {{ $totalRatings }} • Komentar: {{ $totalComments }}
+            </p>
+
+            <a href="{{ route('seller.ratings.index') }}" class="inline-flex items-center text-sm font-semibold">
+                Lihat Rating & Komentar <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </div>
+
 </div>
 
-        {{-- Rating Diterima --}}
-        <div class="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
-            <div class="absolute inset-0 bg-linear-to-br from-orange-400 to-rose-500"></div>
-            <div class="absolute inset-0 bg-black opacity-5"></div>
-            <div class="relative p-6 text-white">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <i class="fas fa-star text-3xl"></i>
-                    </div>
-                </div>
-                <p class="text-sm opacity-90">Total Rating Masuk</p>
-                <p class="text-4xl font-bold mb-4">{{ $totalRatings }}</p>
-                <a href="{{ route('seller.ratings.index') }}" class="inline-flex items-center text-sm font-semibold">Lihat Rating <i class="fas fa-arrow-right ml-2"></i></a>
-            </div>
-        </div>
-
-        {{-- Total Komentar --}}
-        <div class="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
-            <div class="absolute inset-0 bg-linear-to-br from-purple-500 to-violet-600"></div>
-            <div class="absolute inset-0 bg-black opacity-5"></div>
-            <div class="relative p-6 text-white">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <i class="fas fa-comments text-3xl"></i>
-                    </div>
-                </div>
-                <p class="text-sm opacity-90">Total Komentar</p>
-                <p class="text-4xl font-bold mb-4">{{ $totalComments }}</p>
-                <a href="{{ route('seller.comments.index') }}" class="inline-flex items-center text-sm font-semibold">Lihat Komentar <i class="fas fa-arrow-right ml-2"></i></a>
-            </div>
-        </div>
-
-    </div>
 
 
     {{-- CHART AREA --}}

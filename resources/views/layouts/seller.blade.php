@@ -70,17 +70,15 @@
                     <span class="font-medium">Produk</span>
                 </a>
 
-
-            {{-- Pesanan --}}
-                <a href="{{ route('seller.orders.index') }}"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
-                    {{ request()->routeIs('seller.orders.*') ? 'sidebar-active shadow-lg' : 'text-gray-700 hover:bg-blue-50' }}">
-                    <i class="fas fa-shopping-cart w-5 
-                    {{ request()->routeIs('seller.orders.*') ? 'text-white' : 'text-blue-600' }}">
-                    </i>
-                    <span class="font-medium">Kelola Pesanan</span>
-                </a>
-
+                {{-- Rating & Komentar --}}
+<a href="{{ route('seller.ratings.index') }}"
+    class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
+    {{ (request()->routeIs('seller.ratings.*') || request()->routeIs('seller.comments.*'))
+        ? 'sidebar-active shadow-lg'
+        : 'text-gray-700 hover:bg-blue-50' }}">
+    <i class="fas fa-star w-5 {{ (request()->routeIs('seller.ratings.*') || request()->routeIs('seller.comments.*')) ? 'text-white' : 'text-blue-600' }}"></i>
+    <span class="font-medium">Rating & Komentar</span>
+</a>
 
 
                 {{-- Divider --}}
@@ -89,18 +87,15 @@
                 </div>
 
                 {{-- Laporan --}}
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50 transition-all duration-200">
-                    <i class="fas fa-chart-line w-5 text-blue-600"></i>
-                    <span class="font-medium">Laporan</span>
-                </a>
+<a href="{{ route('seller.reports.index') }}"
+    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50 transition-all duration-200
+        {{ request()->routeIs('seller.reports.*') ? 'sidebar-active shadow-lg' : '' }}">
+    <i class="fas fa-chart-line w-5 {{ request()->routeIs('seller.reports.*') ? 'text-white' : 'text-blue-600' }}"></i>
+    <span class="font-medium">Laporan</span>
+</a>
 
-                {{-- Pengaturan --}}
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50 transition-all duration-200">
-                    <i class="fas fa-cog w-5 text-blue-600"></i>
-                    <span class="font-medium">Pengaturan</span>
-                </a>
+
+               
 
             </nav>
 

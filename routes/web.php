@@ -16,6 +16,8 @@ use App\Http\Controllers\ProductReviewController;
 use App\Http\Controllers\Admin\RatingController;
 use App\Http\Controllers\Seller\RatingController as SellerRatingController;
 use App\Http\Controllers\Seller\CommentController as SellerCommentController;  
+use App\Http\Controllers\Seller\ReportController as SellerReportController;
+
 
 
 
@@ -184,8 +186,34 @@ Route::prefix('seller')
             Route::get('/', [SellerCommentController::class, 'index'])->name('index');
         });
 
-    });
+         // =============================
+        // REPORT ROUTES (SELLER)
+        // Sesuai SRS-MartPlace-12, 13, 14
+        // =============================
+        Route::prefix('reports')->name('reports.')->group(function () {
 
+            // Halaman daftar laporan di dashboard seller
+            Route::get('/', [SellerReportController::class, 'index'])->name('index');
+
+            // SRS-MartPlace-12:
+            // Laporan daftar stok produk yang diurutkan berdasarkan stok menurun,
+            // berisi: stok, rating, kategori produk, dan harga (PDF)
+            Route::get('/stock-desc', [SellerReportController::class, 'stockDescPdf'])
+                ->name('stock-desc');
+
+            // SRS-MartPlace-13:
+            // Laporan daftar stok produk yang diurutkan berdasarkan rating menurun,
+            // berisi: rating, stok, kategori produk, dan harga (PDF)
+            Route::get('/rating-desc', [SellerReportController::class, 'ratingDescPdf'])
+                ->name('rating-desc');
+
+            // SRS-MartPlace-14:
+            // Laporan stok barang yang harus segera dipesan (stok < 2) (PDF)
+            Route::get('/low-stock', [SellerReportController::class, 'lowStockPdf'])
+                ->name('low-stock');
+        });
+
+    });
 
 // =============================
 // BUYER ROUTES

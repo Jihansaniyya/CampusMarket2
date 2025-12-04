@@ -26,6 +26,7 @@ class Product extends Model
         'rating',
         'rating_count',
         'is_active',
+        'thumbnail',
     ];
 
     /**

@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
     // Seeder lain kalau diperlukan
     $this->call([
+        HomepageSeeder::class,
         AdminSeeder::class,
         SellerSeeder::class,
     ]);

@@ -7,118 +7,119 @@
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-    * {
-        font-family: 'Rubik', sans-serif;
-    }
+        * {
+            font-family: 'Rubik', sans-serif;
+        }
 
-    body {
-        position: relative;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        background-color: #e7f0ff;
-    }
+        body {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-color: #e7f0ff;
+        }
 
-    html,
-    body {
-        height: 100%;
-        overflow-y: auto !important;
-    }
+        html,
+        body {
+            height: 100%;
+            overflow-y: auto !important;
+        }
 
-    body {
-        display: block !important;
-    }
+        body {
+            display: block !important;
+        }
 
-    .background-blur {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url("{{ asset('assets/bg2.png') }}") no-repeat center center/cover;
-        filter: blur(5px);
-        z-index: -1;
-    }
+        .background-blur {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("{{ asset('assets/bg2.png') }}") no-repeat center center/cover;
+            filter: blur(5px);
+            z-index: -1;
+        }
 
-    .overlay {
-        position: fixed;
-        inset: 0;
-        background-color: rgba(255, 255, 255, 0.35);
-        z-index: -1;
-    }
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(255, 255, 255, 0.35);
+            z-index: -1;
+        }
 
-    @keyframes fadeIn {
-        from {
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.7s ease-out;
+        }
+
+        /* === Custom checkbox Terms & Conditions === */
+        .cm-terms {
+            position: absolute;
             opacity: 0;
-            transform: translateY(20px);
+            pointer-events: none;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+
+        .cm-checkbox-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 0.45rem;
+            border: 1px solid #9ca3af;
+            background-color: #ffffff;
+            box-sizing: border-box;
+            position: relative;
+            transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
         }
-    }
 
-    .fade-in {
-        animation: fadeIn 0.7s ease-out;
-    }
+        .cm-checkbox-box::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 10px;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            transform: rotate(45deg) scale(0);
+            transform-origin: center;
+            transition: transform 0.15s ease-out;
+        }
 
-    /* === Custom checkbox Terms & Conditions === */
-    .cm-terms {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-    }
+        .cm-terms:checked+.cm-checkbox-box {
+            background-color: #2563eb;
+            border-color: #2563eb;
+        }
 
-    .cm-checkbox-box {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 20px;
-        height: 20px;
-        border-radius: 0.45rem;
-        border: 1px solid #9ca3af;
-        background-color: #ffffff;
-        box-sizing: border-box;
-        position: relative;
-        transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
-    }
+        .cm-terms:checked+.cm-checkbox-box::after {
+            transform: rotate(45deg) scale(1);
+        }
 
-    .cm-checkbox-box::after {
-        content: '';
-        position: absolute;
-        width: 6px;
-        height: 10px;
-        border-right: 2px solid #ffffff;
-        border-bottom: 2px solid #ffffff;
-        transform: rotate(45deg) scale(0);
-        transform-origin: center;
-        transition: transform 0.15s ease-out;
-    }
+        /* Chrome, Safari (WebKit) */
+        input[type="password"]::-webkit-textfield-decoration-container,
+        input[type="password"]::-webkit-credentials-auto-fill-button,
+        input[type="password"]::-webkit-password-toggle {
+            display: none !important;
+        }
 
-    .cm-terms:checked + .cm-checkbox-box {
-        background-color: #2563eb;
-        border-color: #2563eb;
-    }
-
-    .cm-terms:checked + .cm-checkbox-box::after {
-        transform: rotate(45deg) scale(1);
-    }
-
-    /* Chrome, Safari (WebKit) */
-    input[type="password"]::-webkit-textfield-decoration-container,
-    input[type="password"]::-webkit-credentials-auto-fill-button,
-    input[type="password"]::-webkit-password-toggle {
-        display: none !important;
-    }
-
-    /* Edge / Internet Explorer */
-    input[type="password"]::-ms-reveal,
-    input[type="password"]::-ms-clear {
-        display: none !important;
-    }
+        /* Edge / Internet Explorer */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+            display: none !important;
+        }
     </style>
 
 
@@ -188,31 +189,31 @@
                         {{-- Nama Toko --}}
                         <div class="relative md:col-span-2">
                             <input type="text" name="store_name" value="{{ old('store_name') }}" required
-                                   class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                                   placeholder=" ">
+                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                                placeholder=" ">
                             <label
                                 class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
                                 Nama Toko <span class="text-rose-600">*</span>
                             </label>
                             @error('store_name')
-                            <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
+                                <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
                         {{-- Deskripsi singkat --}}
                         <div class="relative md:col-span-2">
                             <input type="text" name="store_description" id="store_description"
-                                   value="{{ old('store_description') }}" required maxlength="120"
-                                   class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                                   placeholder=" " oninput="countChars('store_description','descCounter',120)">
+                                value="{{ old('store_description') }}" required maxlength="120"
+                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                                placeholder=" " oninput="countChars('store_description','descCounter',120)">
                             <label
                                 class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 peer-focus:top-2 peer-focus:text-xs transition-all">
                                 Deskripsi Singkat <span class="text-rose-600">*</span>
                             </label>
                             <div class="flex justify-end"><span id="descCounter"
-                                                                class="text-[11px] text-gray-400 mt-1">0/120</span></div>
+                                    class="text-[11px] text-gray-400 mt-1">0/120</span></div>
                             @error('store_description')
-                            <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
+                                <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
@@ -223,107 +224,116 @@
                     <div class="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
                 </div>
 
-                
+
 
                 {{-- ================== DATA PIC ================== --}}
-                    <section class="px-6">
-                        <div class="mb-2">
-                            <h2 class="text-lg font-semibold text-gray-900">Data PIC</h2>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-
-                            {{-- Nama PIC --}}
-                            <div class="relative md:col-span-2">
-                                <input type="text" name="pic_name" value="{{ old('pic_name') }}" required
-                                    class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
-                                    focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                                    placeholder=" ">
-                                <label
-                                    class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 
-                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
-                                    peer-focus:top-2 peer-focus:text-xs transition-all">
-                                    Nama PIC <span class="text-rose-600">*</span>
-                                </label>
-                            </div>
-
-                            {{-- No HP PIC --}}
-                            <div class="relative">
-                                <input type="tel" name="pic_phone" value="{{ old('pic_phone') }}" required
-                                    pattern="^(\+62|62|0)[0-9]{9,12}$" inputmode="numeric"
-                                    class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
-                                    focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                                    placeholder=" " oninput="maskNumber(this, 13)">
-                                <label
-                                    class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 
-                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
-                                    peer-focus:top-2 peer-focus:text-xs transition-all">
-                                    No Handphone PIC <span class="text-rose-600">*</span>
-                                </label>
-                            </div>
-
-                            {{-- Email PIC --}}
-                            <div class="relative">
-                                <input type="email" name="pic_email" value="{{ old('pic_email') }}" required
-                                    class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
-                                    focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
-                                    placeholder=" ">
-                                <label
-                                    class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 
-                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
-                                    peer-focus:top-2 peer-focus:text-xs transition-all">
-                                    Email PIC <span class="text-rose-600">*</span>
-                                </label>
-                            </div>
-
-                            {{-- PASSWORD LOGIN --}}
-                            <div class="relative">
-                                <input type="password" id="password" name="password" required minlength="8"
-                                    class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
-                                    focus:ring-indigo-200 px-4 pt-5 pb-2 pr-11 bg-white"
-                                    placeholder=" ">
-                                <label
-                                    class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
-                                    peer-focus:top-2 peer-focus:text-xs transition-all">
-                                    Password Akun <span class="text-rose-600">*</span>
-                                </label>
-
-                                <button type="button" onclick="togglePwd('password')"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                    <i id="password-icon" class="fas fa-eye"></i>
-                                </button>
-                            </div>
-
-                            {{-- KONFIRMASI PASSWORD --}}
-                            <div class="relative">
-                                <input type="password" id="password_confirmation" name="password_confirmation" required
-                                    class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
-                                    focus:ring-indigo-200 px-4 pt-5 pb-2 pr-11 bg-white"
-                                    placeholder=" ">
-                                <label
-                                    class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
-                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
-                                    peer-focus:top-2 peer-focus:text-xs transition-all">
-                                    Konfirmasi Password <span class="text-rose-600">*</span>
-                                </label>
-
-                                <button type="button" onclick="togglePwd('password_confirmation')"
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                                    <i id="password_confirmation-icon" class="fas fa-eye"></i>
-                                </button>
-                            </div>
-
-                        </div>
-                    </section>
-
-                    <div class="px-6 py-6">
-                        <div class="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
+                <section class="px-6">
+                    <div class="mb-2">
+                        <h2 class="text-lg font-semibold text-gray-900">Data PIC</h2>
                     </div>
 
-                
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-          {{-- ================== ALAMAT PIC ================== --}}
+                        {{-- Nama PIC --}}
+                        <div class="relative md:col-span-2">
+                            <input type="text" name="name" value="{{ old('name') }}" required
+                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
+                                    focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                                placeholder=" ">
+                            <label
+                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
+                                Nama PIC <span class="text-rose-600">*</span>
+                            </label>
+                            @error('name')
+                                <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- No HP PIC --}}
+                        <div class="relative">
+                            <input type="tel" name="phone" value="{{ old('phone') }}" required
+                                pattern="^(\+62|62|0)[0-9]{9,12}$" inputmode="numeric"
+                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
+                                    focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                                placeholder=" " oninput="maskNumber(this, 13)">
+                            <label
+                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
+                                No Handphone PIC <span class="text-rose-600">*</span>
+                            </label>
+                            @error('phone')
+                                <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Email PIC --}}
+                        <div class="relative">
+                            <input type="email" name="email" value="{{ old('email') }}" required
+                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
+                                    focus:ring-indigo-200 px-4 pt-5 pb-2 bg-white"
+                                placeholder=" ">
+                            <label
+                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600 
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
+                                Email PIC <span class="text-rose-600">*</span>
+                            </label>
+                            @error('email')
+                                <p class="text-xs text-rose-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- PASSWORD LOGIN --}}
+                        <div class="relative">
+                            <input type="password" id="password" name="password" required minlength="8"
+                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
+                                    focus:ring-indigo-200 px-4 pt-5 pb-2 pr-11 bg-white"
+                                placeholder=" ">
+                            <label
+                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
+                                Password Akun <span class="text-rose-600">*</span>
+                            </label>
+
+                            <button type="button" onclick="togglePwd('password')"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                <i id="password-icon" class="fas fa-eye"></i>
+                            </button>
+                        </div>
+
+                        {{-- KONFIRMASI PASSWORD --}}
+                        <div class="relative">
+                            <input type="password" id="password_confirmation" name="password_confirmation" required
+                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-indigo-500 focus:ring-2 
+                                    focus:ring-indigo-200 px-4 pt-5 pb-2 pr-11 bg-white"
+                                placeholder=" ">
+                            <label
+                                class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
+                                    peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5 
+                                    peer-focus:top-2 peer-focus:text-xs transition-all">
+                                Konfirmasi Password <span class="text-rose-600">*</span>
+                            </label>
+
+                            <button type="button" onclick="togglePwd('password_confirmation')"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                <i id="password_confirmation-icon" class="fas fa-eye"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </section>
+
+                <div class="px-6 py-6">
+                    <div class="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
+                </div>
+
+
+
+                {{-- ================== ALAMAT PIC ================== --}}
                 <section class="px-6">
                     <div class="mb-2">
                         <h2 class="text-lg font-semibold text-gray-900">Alamat PIC</h2>
@@ -428,7 +438,7 @@
                         </div>
 
                     </div> {{-- <== TUTUP GRID --}}
-                </section>   {{-- <== TUTUP SECTION ALAMAT --}}
+                </section> {{-- <== TUTUP SECTION ALAMAT --}}
 
                 <div class="px-6 py-6">
                     <div class="h-px bg-linear-to-r from-transparent via-gray-200 to-transparent"></div>
@@ -448,9 +458,9 @@
                         {{-- No KTP --}}
                         <div class="relative">
                             <input type="text" name="no_ktp" value="{{ old('no_ktp') }}" required
-                                   inputmode="numeric" pattern="^[0-9]{16}$" maxlength="16"
-                                   class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
-                                   placeholder=" " oninput="digitsOnly(this,16)">
+                                inputmode="numeric" pattern="^[0-9]{16}$" maxlength="16"
+                                class="peer w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 pt-5 pb-2 bg-white"
+                                placeholder=" " oninput="digitsOnly(this,16)">
                             <label
                                 class="pointer-events-none absolute left-4 top-2 text-xs text-gray-600
                                 peer-placeholder-shown:text-sm peer-placeholder-shown:top-3.5
@@ -466,12 +476,12 @@
                             </label>
                             <div class="flex items-center gap-4">
                                 <div id="foto-pic-preview"
-                                     class="h-20 w-20 rounded-2xl ring-1 ring-gray-200 bg-gray-100 grid place-items-center text-gray-400">
+                                    class="h-20 w-20 rounded-2xl ring-1 ring-gray-200 bg-gray-100 grid place-items-center text-gray-400">
                                     <i class="fas fa-user"></i>
                                 </div>
                                 <input type="file" name="foto_pic" id="foto_pic" required accept=".jpg,.jpeg,.png"
-                                       class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
-                                       onchange="previewImage('foto_pic','foto-pic-preview')">
+                                    class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
+                                    onchange="previewImage('foto_pic','foto-pic-preview')">
                             </div>
                         </div>
 
@@ -481,8 +491,8 @@
                                 File upload KTP PIC (jpg/png/pdf, max 2MB) <span class="text-rose-600">*</span>
                             </label>
                             <input type="file" name="file_ktp" id="file_ktp" required accept=".jpg,.jpeg,.png,.pdf"
-                                   class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
-                                   onchange="previewKTP(this)">
+                                class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
+                                onchange="previewKTP(this)">
                             <div id="ktp-preview" class="mt-2 text-sm text-gray-600"></div>
                         </div>
 
@@ -494,7 +504,7 @@
                     <div class="px-6 pb-6">
                         <label class="flex items-center gap-3 cursor-pointer select-none">
                             <input type="checkbox" name="terms" value="1" {{ old('terms') ? 'checked' : '' }}
-                                   required class="cm-terms">
+                                required class="cm-terms">
                             <span class="cm-checkbox-box"></span>
                             <span class="text-sm text-gray-700">
                                 Saya setuju dengan
@@ -516,7 +526,7 @@
                         <span>Data terenkripsi & tidak dibagikan tanpa izin.</span>
                     </div>
                     <button type="submit"
-                            class="w-full md:w-auto inline-flex justify-center items-center gap-2 px-5 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]">
+                        class="w-full md:w-auto inline-flex justify-center items-center gap-2 px-5 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]">
                         <i class="fas fa-paper-plane"></i> Registrasi Penjual
                     </button>
                 </div>
@@ -525,8 +535,8 @@
 
         {{-- Custom Confirmation Modal --}}
         <div id="confirmModal"
-             class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-             style="display: none;">
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            style="display: none;">
             <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
                 <div class="text-center mb-6">
                     <div class="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
@@ -540,11 +550,11 @@
 
                 <div class="flex gap-3">
                     <button type="button" onclick="hideConfirmModal()"
-                            class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">
+                        class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">
                         <i class="fas fa-times mr-2"></i>Batal
                     </button>
                     <button type="button" onclick="confirmSubmit()"
-                            class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors shadow-md hover:shadow-lg">
+                        class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors shadow-md hover:shadow-lg">
                         <i class="fas fa-check mr-2"></i>Ya, Kirim
                     </button>
                 </div>
@@ -670,85 +680,83 @@
                 }
             }
 
-        // ================= API wilayah - EMSIFA ================= //
+            // ================= API wilayah - EMSIFA ================= //
 
-        async function loadProvinces() {
-            try {
-                const res = await fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json");
+            async function loadProvinces() {
+                try {
+                    const res = await fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json");
+                    const data = await res.json();
+
+                    const provSel = document.getElementById("provinsi");
+                    provSel.innerHTML = `<option value="">Pilih Provinsi</option>`;
+
+                    data.forEach(item => {
+                        provSel.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                    });
+
+                } catch (err) {
+                    console.error(err);
+                    alert("Gagal memuat data provinsi.");
+                }
+            }
+
+            async function loadRegencies(id) {
+                const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${id}.json`);
                 const data = await res.json();
 
-                const provSel = document.getElementById("provinsi");
-                provSel.innerHTML = `<option value="">Pilih Provinsi</option>`;
+                const el = document.getElementById("kota_kab");
+                el.innerHTML = `<option value="">Pilih Kabupaten/Kota</option>`;
 
                 data.forEach(item => {
-                    provSel.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                    el.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                });
+            }
+
+            async function loadDistricts(id) {
+                const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${id}.json`);
+                const data = await res.json();
+
+                const el = document.getElementById("kecamatan");
+                el.innerHTML = `<option value="">Pilih Kecamatan</option>`;
+
+                data.forEach(item => {
+                    el.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                });
+            }
+
+            async function loadVillages(id) {
+                const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`);
+                const data = await res.json();
+
+                const el = document.getElementById("kelurahan");
+                el.innerHTML = `<option value="">Pilih Kelurahan/Desa</option>`;
+
+                data.forEach(item => {
+                    el.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                });
+            }
+
+            // Event Binding
+            document.addEventListener("DOMContentLoaded", function() {
+                loadProvinces();
+
+                document.getElementById("provinsi").addEventListener("change", function() {
+                    loadRegencies(this.value);
+                    document.getElementById("kota_kab").innerHTML = `<option>Loading...</option>`;
+                    document.getElementById("kecamatan").innerHTML = `<option>Pilih Kecamatan</option>`;
+                    document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
                 });
 
-            } catch (err) {
-                console.error(err);
-                alert("Gagal memuat data provinsi.");
-            }
-        }
+                document.getElementById("kota_kab").addEventListener("change", function() {
+                    loadDistricts(this.value);
+                    document.getElementById("kecamatan").innerHTML = `<option>Loading...</option>`;
+                    document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
+                });
 
-        async function loadRegencies(id) {
-            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${id}.json`);
-            const data = await res.json();
-
-            const el = document.getElementById("kota_kab");
-            el.innerHTML = `<option value="">Pilih Kabupaten/Kota</option>`;
-
-            data.forEach(item => {
-                el.innerHTML += `<option value="${item.id}">${item.name}</option>`;
+                document.getElementById("kecamatan").addEventListener("change", function() {
+                    loadVillages(this.value);
+                    document.getElementById("kelurahan").innerHTML = `<option>Loading...</option>`;
+                });
             });
-        }
-
-        async function loadDistricts(id) {
-            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${id}.json`);
-            const data = await res.json();
-
-            const el = document.getElementById("kecamatan");
-            el.innerHTML = `<option value="">Pilih Kecamatan</option>`;
-
-            data.forEach(item => {
-                el.innerHTML += `<option value="${item.id}">${item.name}</option>`;
-            });
-        }
-
-        async function loadVillages(id) {
-            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${id}.json`);
-            const data = await res.json();
-
-            const el = document.getElementById("kelurahan");
-            el.innerHTML = `<option value="">Pilih Kelurahan/Desa</option>`;
-
-            data.forEach(item => {
-                el.innerHTML += `<option value="${item.id}">${item.name}</option>`;
-            });
-        }
-
-        // Event Binding
-        document.addEventListener("DOMContentLoaded", function () {
-            loadProvinces();
-
-            document.getElementById("provinsi").addEventListener("change", function () {
-                loadRegencies(this.value);
-                document.getElementById("kota_kab").innerHTML = `<option>Loading...</option>`;
-                document.getElementById("kecamatan").innerHTML = `<option>Pilih Kecamatan</option>`;
-                document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
-            });
-
-            document.getElementById("kota_kab").addEventListener("change", function () {
-                loadDistricts(this.value);
-                document.getElementById("kecamatan").innerHTML = `<option>Loading...</option>`;
-                document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
-            });
-
-            document.getElementById("kecamatan").addEventListener("change", function () {
-                loadVillages(this.value);
-                document.getElementById("kelurahan").innerHTML = `<option>Loading...</option>`;
-            });
-        });
-
-
         </script>
     @endpush

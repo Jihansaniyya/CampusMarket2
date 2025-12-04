@@ -1,45 +1,12 @@
 @extends('layouts.seller')
 
-@section('title', 'Tambah Produk')
-@section('page-title', 'Tambah Produk Baru')
+@section('title', 'Edit Produk')
+@section('page-title', 'Edit Produk')
 @section('page-description')
-    Lengkapi detail produk anda agar mudah ditemukan.
+    Perbarui informasi produk Anda.
 @endsection
 
 @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const wrapper = document.getElementById('preorder-toggle-wrapper');
-            const checkbox = document.getElementById('preorder-toggle');
-            const hiddenInput = document.getElementById('preorder-value');
-            const poDays = document.getElementById('po-days');
-            const track = document.getElementById('preorder-track');
-
-            if (!wrapper || !checkbox || !hiddenInput || !poDays || !track) return;
-
-            function syncPreorderUI() {
-                if (checkbox.checked) {
-                    hiddenInput.value = 1;
-                    poDays.classList.remove('hidden');
-                    track.classList.remove('bg-gray-300', 'justify-start');
-                    track.classList.add('bg-blue-500', 'justify-end');
-                } else {
-                    hiddenInput.value = 0;
-                    poDays.classList.add('hidden');
-                    track.classList.add('bg-gray-300', 'justify-start');
-                    track.classList.remove('bg-blue-500', 'justify-end');
-                }
-            }
-
-            wrapper.addEventListener('click', function(e) {
-                e.preventDefault();
-                checkbox.checked = !checkbox.checked;
-                syncPreorderUI();
-            });
-
-            syncPreorderUI();
-        });
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById('thumbnail');
@@ -73,8 +40,10 @@
         </div>
     @endif
 
-    <form action="{{ route('seller.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+    <form action="{{ route('seller.products.update', $product->id) }}" method="POST" enctype="multipart/form-data"
+        class="space-y-6">
         @csrf
+        @method('PUT')
 
         {{-- ================= FOTO PRODUK ================= --}}
         <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
@@ -84,16 +53,25 @@
                     <i class="fas fa-images text-white"></i>
                 </div>
                 <div>
-                    <h2 class="text-lg font-bold text-gray-900">Foto Produk <span class="text-red-500">*</span></h2>
-                    <p class="text-sm text-gray-500">Minimal 1 foto utama</p>
+                    <h2 class="text-lg font-bold text-gray-900">Foto Produk</h2>
+                    <p class="text-sm text-gray-500">Update foto produk jika diperlukan</p>
                 </div>
             </div>
+
+            {{-- Foto Saat Ini --}}
+            @if ($product->thumbnail)
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600 mb-2">Foto Saat Ini:</p>
+                    <img src="{{ asset('storage/' . $product->thumbnail) }}" alt="Current Product"
+                        class="w-40 h-40 object-cover rounded-xl border">
+                </div>
+            @endif
 
             {{-- TILE TAMBAH FOTO --}}
             <label for="thumbnail"
                 class="w-40 h-40 border-2 border-dashed border-red-300 rounded-xl flex flex-col items-center justify-center text-red-500 cursor-pointer hover:bg-red-50 transition">
                 <span class="text-2xl font-bold">+</span>
-                <span class="text-sm font-semibold">Tambah Foto</span>
+                <span class="text-sm font-semibold">Ganti Foto</span>
             </label>
 
             <input type="file" id="thumbnail" name="thumbnail" accept="image/*" class="hidden">
@@ -101,8 +79,6 @@
             {{-- PREVIEW --}}
             <div id="preview" class="mt-3"></div>
         </div>
-
-
 
         {{-- ============== INFORMASI PRODUK ============== --}}
         <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
@@ -119,12 +95,11 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {{-- Nama Produk --}}
-                {{-- Nama Produk --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Nama Produk <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" name="name" value="{{ old('name') }}"
+                    <input type="text" name="name" value="{{ old('name', $product->name) }}"
                         placeholder="Contoh: Charger Aki Motor 12V Otomatis"
                         class="w-full rounded-xl border border-gray-300 bg-white
                                focus:border-blue-500 focus:ring-2 focus:ring-blue-200
@@ -142,7 +117,8 @@
                                text-sm px-3 py-2.5 transition">
                         <option value="">Pilih kategori</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                            <option value="{{ $category->id }}"
+                                {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
                         @endforeach
@@ -157,7 +133,7 @@
                     <textarea name="description" rows="5" placeholder="Tulis deskripsi produk..."
                         class="w-full rounded-xl border border-gray-300 bg-white
                                focus:border-blue-500 focus:ring-2 focus:ring-blue-200
-                               text-sm px-3 py-2.5 transition">{{ old('description') }}</textarea>
+                               text-sm px-3 py-2.5 transition">{{ old('description', $product->description) }}</textarea>
                 </div>
             </div>
         </div>
@@ -181,7 +157,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Harga (Rp) <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="price" value="{{ old('price') }}"
+                    <input type="number" name="price" value="{{ old('price', $product->price) }}"
                         class="w-full rounded-xl border border-gray-300 bg-white
                                focus:border-blue-500 focus:ring-2 focus:ring-blue-200
                                text-sm px-3 py-2.5 transition"
@@ -193,7 +169,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Stok <span class="text-red-500">*</span>
                     </label>
-                    <input type="number" name="stock" value="{{ old('stock') }}"
+                    <input type="number" name="stock" value="{{ old('stock', $product->stock) }}"
                         class="w-full rounded-xl border border-gray-300 bg-white
                                focus:border-blue-500 focus:ring-2 focus:ring-blue-200
                                text-sm px-3 py-2.5 transition"
@@ -216,7 +192,7 @@
 
             <button type="submit" name="submit_type" value="publish"
                 class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-lg hover:brightness-110 transition">
-                <i class="fas fa-check mr-2"></i> Terbitkan Produk
+                <i class="fas fa-check mr-2"></i> Update Produk
             </button>
         </div>
     </form>

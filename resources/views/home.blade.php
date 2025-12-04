@@ -78,20 +78,43 @@
             </div>
         </div>
 
-        @include('components.search-filter', ['categories' => $categories, 'provinces' => $provinces ?? [], 'cities' => $cities ?? []])
+        @include('components.search-filter', [
+            'categories' => $categories,
+            'provinces' => $provinces ?? [],
+            'cities' => $cities ?? [],
+        ])
 
         @include('components.category-carousel', ['categories' => $categories])
 
         <section id="featured" class="mt-12">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-semibold text-gray-900">Produk Unggulan</h2>
-                <a href="#" class="text-sm font-semibold text-blue-600 hover:text-blue-500">Lihat semua</a>
+                <h2 class="text-xl font-semibold text-gray-900">
+                    @if (request()->get('category'))
+                        @php
+                            $selectedCat = $categories->firstWhere('id', request()->get('category'));
+                        @endphp
+                        Produk {{ $selectedCat['name'] ?? 'Pilihan' }}
+                    @else
+                        Produk Unggulan
+                    @endif
+                </h2>
+                @if (request()->get('category'))
+                    <a href="{{ route('home') }}" class="text-sm font-semibold text-blue-600 hover:text-blue-500">Lihat
+                        semua</a>
+                @endif
             </div>
-            <div class="grid gap-6 md:grid-cols-3">
-                @foreach ($featuredProducts as $product)
-                    @include('components.product-card', ['product' => $product])
-                @endforeach
-            </div>
+            @if ($featuredProducts->count() > 0)
+                <div class="grid gap-6 md:grid-cols-3">
+                    @foreach ($featuredProducts as $product)
+                        @include('components.product-card', ['product' => $product])
+                    @endforeach
+                </div>
+            @else
+                <div class="text-center py-12 bg-gray-50 rounded-xl">
+                    <i class="fas fa-box-open text-5xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">Belum ada produk di kategori ini</p>
+                </div>
+            @endif
         </section>
 
         <section
@@ -109,19 +132,39 @@
 
         <section id="recommended" class="mt-12">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-semibold text-gray-900">Rekomendasi Untukmu</h2>
+                <h2 class="text-xl font-semibold text-gray-900">
+                    @if (request()->get('category'))
+                        @php
+                            $selectedCat = $categories->firstWhere('id', request()->get('category'));
+                        @endphp
+                        Semua Produk {{ $selectedCat['name'] ?? '' }}
+                    @else
+                        Rekomendasi Untukmu
+                    @endif
+                </h2>
                 <div class="text-sm text-gray-500">Total {{ number_format($products->total()) }} produk</div>
             </div>
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 @forelse ($products as $product)
                     @include('components.product-card', ['product' => $product])
                 @empty
-                    <p class="text-gray-500 col-span-full">Belum ada rekomendasi saat ini.</p>
+                    <div class="col-span-full text-center py-12 bg-gray-50 rounded-xl">
+                        <i class="fas fa-shopping-bag text-5xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500">
+                            @if (request()->get('category'))
+                                Belum ada produk di kategori ini
+                            @else
+                                Belum ada produk tersedia
+                            @endif
+                        </p>
+                    </div>
                 @endforelse
             </div>
-            <div class="mt-8">
-                {{ $products->links() }}
-            </div>
+            @if ($products->hasPages())
+                <div class="mt-8">
+                    {{ $products->appends(request()->query())->links() }}
+                </div>
+            @endif
         </section>
     </section>
 

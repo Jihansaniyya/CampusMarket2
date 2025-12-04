@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Seller;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -14,22 +16,18 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::where('seller_id', auth()->id());
+        $query = Product::where('seller_id', auth()->id())->with('category');
 
         if ($request->search) {
             $query->where('name', 'like', "%{$request->search}%");
         }
 
-        if ($request->category) {
-            $query->where('category', $request->category);
+        if ($request->category_id) {
+            $query->where('category_id', $request->category_id);
         }
 
-        if ($request->condition) {
-            $query->where('condition', $request->condition);
-        }
-
-        if ($request->status) {
-            $query->where('status', $request->status);
+        if ($request->is_active !== null && $request->is_active !== '') {
+            $query->where('is_active', $request->is_active);
         }
 
         if ($request->sort === 'price_asc') {
@@ -43,8 +41,9 @@ class ProductController extends Controller
         }
 
         $products = $query->paginate(10);
+        $categories = Category::all();
 
-        return view('seller.product-list', compact('products'));
+        return view('seller.product-list', compact('products', 'categories'));
     }
 
 
@@ -53,7 +52,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('seller.product');
+        $categories = Category::all();
+        return view('seller.product', compact('categories'));
     }
 
 
@@ -63,36 +63,30 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'        => 'required|string',
-            'category'    => 'required|string',
-            'description' => 'required|string',
-            'price'       => 'required|numeric|min:1',
-            'stock'       => 'required|numeric|min:1',
-            'weight'      => 'required|numeric|min:1',
-            'thumbnail'   => 'required|image|max:2048',
-            'condition'   => 'required|string',
+            'name'        => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:0',
+            'stock'       => 'required|integer|min:0',
+            'thumbnail'   => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
         ]);
 
-        $thumbnailPath = $request->file('thumbnail')->store('products', 'public');
+        // Upload thumbnail jika ada
+        $thumbnailPath = null;
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailPath = $request->file('thumbnail')->store('products', 'public');
+        }
 
         Product::create([
             'seller_id'     => auth()->id(),
+            'category_id'   => $request->category_id,
             'name'          => $request->name,
-            'category'      => $request->category,
-            'sku'           => $request->sku,
+            'slug'          => Str::slug($request->name) . '-' . Str::random(6),
             'description'   => $request->description,
             'price'         => $request->price,
             'stock'         => $request->stock,
-            'min_order'     => $request->min_order ?? 1,
-            'weight'        => $request->weight,
-            'length'        => $request->length,
-            'width'         => $request->width,
-            'height'        => $request->height,
-            'preorder'      => $request->preorder ?? 0,
-            'preorder_days' => $request->preorder_days,
-            'condition'     => $request->condition,
-            'status'        => $request->submit_type == 'publish' ? 'publish' : 'draft',
             'thumbnail'     => $thumbnailPath,
+            'is_active'     => $request->submit_type == 'publish' ? true : false,
         ]);
 
         return redirect()->route('seller.products.index')
@@ -108,8 +102,9 @@ class ProductController extends Controller
         $product = Product::where('id', $id)
                           ->where('seller_id', auth()->id())
                           ->firstOrFail();
-
-        return view('seller.product-edit', compact('product'));
+        
+        $categories = Category::all();
+        return view('seller.product-edit', compact('product', 'categories'));
     }
 
 
@@ -123,39 +118,32 @@ class ProductController extends Controller
                           ->firstOrFail();
 
         $request->validate([
-            'name'        => 'required',
-            'category'    => 'required',
-            'description' => 'required',
-            'price'       => 'required|numeric',
-            'stock'       => 'required|numeric',
-            'weight'      => 'required|numeric',
-            'condition'   => 'required',
+            'name'        => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:0',
+            'stock'       => 'required|integer|min:0',
+            'thumbnail'   => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
         ]);
 
+        // Handle thumbnail upload
         if ($request->hasFile('thumbnail')) {
-            Storage::disk('public')->delete($product->thumbnail);
+            // Hapus thumbnail lama jika ada
+            if ($product->thumbnail) {
+                Storage::disk('public')->delete($product->thumbnail);
+            }
             $thumbnailPath = $request->file('thumbnail')->store('products', 'public');
-        } else {
-            $thumbnailPath = $product->thumbnail;
+            $product->thumbnail = $thumbnailPath;
         }
 
         $product->update([
             'name'          => $request->name,
-            'category'      => $request->category,
-            'sku'           => $request->sku,
+            'category_id'   => $request->category_id,
+            'slug'          => Str::slug($request->name) . '-' . Str::random(6),
             'description'   => $request->description,
             'price'         => $request->price,
             'stock'         => $request->stock,
-            'min_order'     => $request->min_order,
-            'weight'        => $request->weight,
-            'length'        => $request->length,
-            'width'         => $request->width,
-            'height'        => $request->height,
-            'preorder'      => $request->preorder,
-            'preorder_days' => $request->preorder_days,
-            'condition'     => $request->condition,
-            'status'        => $request->submit_type == 'publish' ? 'publish' : 'draft',
-            'thumbnail'     => $thumbnailPath,
+            'is_active'     => $request->submit_type == 'publish' ? true : false,
         ]);
 
         return redirect()->route('seller.products.index')

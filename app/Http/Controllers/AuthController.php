@@ -18,7 +18,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
-            // Data Akun
+            // Data Akun (jadi data utama user)
             'name'                => 'required|string|max:255',
             'email'               => 'required|email|max:255|unique:users,email',
             'phone'               => 'required|string|max:20',
@@ -30,10 +30,10 @@ class AuthController extends Controller
             'store_name'          => 'required|string|max:255',
             'store_description'   => 'required|string|max:1000',
             
-            // Data PIC (required)
-            'pic_name'            => 'required|string|max:255',
-            'pic_phone'           => 'required|string|max:20',
-            'pic_email'           => 'required|email|max:255',
+            // Data PIC tambahan (opsional karena name, email, phone sudah jadi data utama)
+            'pic_name'            => 'nullable|string|max:255',
+            'pic_phone'           => 'nullable|string|max:20',
+            'pic_email'           => 'nullable|email|max:255',
             'pic_address'         => 'required|string|max:500',
             
             // Alamat PIC (required)
@@ -60,16 +60,16 @@ class AuthController extends Controller
 
         // Create user
         $user = User::create([
-            'name'                => $validated['name'],
-            'email'               => $validated['email'],
-            'phone'               => $validated['phone'],
+            'name'                => $validated['name'], // Nama PIC jadi nama user utama
+            'email'               => $validated['email'], // Email PIC jadi email user utama
+            'phone'               => $validated['phone'], // Phone PIC jadi phone user utama
             'password'            => Hash::make($validated['password']),
             'role'                => $validated['role'] ?? 'seller', // Default to seller for this form
             'store_name'          => $validated['store_name'] ?? null,
             'store_description'   => $validated['store_description'] ?? null,
-            'pic_name'            => $validated['pic_name'] ?? null,
-            'pic_phone'           => $validated['pic_phone'] ?? null,
-            'pic_email'           => $validated['pic_email'] ?? null,
+            'pic_name'            => $validated['pic_name'] ?? $validated['name'], // Fallback ke name
+            'pic_phone'           => $validated['pic_phone'] ?? $validated['phone'], // Fallback ke phone
+            'pic_email'           => $validated['pic_email'] ?? $validated['email'], // Fallback ke email
             'pic_address'         => $validated['pic_address'] ?? null,
             'rt'                  => $validated['rt'] ?? null,
             'rw'                  => $validated['rw'] ?? null,

@@ -84,6 +84,7 @@ class HomeController extends Controller
                 'image_url' => $product->thumbnail ? asset('storage/' . $product->thumbnail) : 'https://placehold.co/400x400/EEF2FF/4F46E5?text=' . urlencode(substr($product->name, 0, 20)),
                 'category_id' => $product->category_id,
                 'badge' => $product->sale_price ? 'Sale' : null,
+                'location' => $product->seller->kota_kab ?? ($product->seller->provinsi ?? null),
             ];
         });
 
@@ -113,6 +114,7 @@ class HomeController extends Controller
                 'image_url' => $product->thumbnail ? asset('storage/' . $product->thumbnail) : 'https://placehold.co/400x400/EEF2FF/4F46E5?text=' . urlencode(substr($product->name, 0, 20)),
                 'category_id' => $product->category_id,
                 'badge' => $product->sale_price ? 'Sale' : null,
+                'location' => $product->seller->kota_kab ?? ($product->seller->provinsi ?? null),
             ];
         });
 

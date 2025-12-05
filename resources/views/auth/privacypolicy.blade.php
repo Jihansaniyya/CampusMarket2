@@ -186,8 +186,9 @@
 
             </div>
         </div>
+    </div>
+@endsection
 
-{{-- Footer --}}
-@include('components.footer')
-
+@section('footer')
+    @include('components.footer')
 @endsection

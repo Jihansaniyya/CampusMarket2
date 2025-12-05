@@ -150,13 +150,10 @@
                 @yield('content')
             </main>
 
-            {{-- FOOTER --}}
-            <footer class="px-6 py-4 border-t border-gray-200 bg-white">
-                <div class="flex items-center justify-between text-sm text-gray-600">
-                    <p>&copy; 2025 CampusMarket Seller Panel. All rights reserved.</p>
-                    <p>Made with <i class="fas fa-heart text-rose-500"></i></p>
-                </div>
-            </footer>
+            {{-- Footer --}}
+            <div class="mt-16">
+                @include('components.footer')
+            </div>
 
         </div>
 

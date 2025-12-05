@@ -127,8 +127,8 @@
                     © {{ date('Y') }} <span class="text-blue-500 font-semibold">CampusMarket</span>. All rights reserved.
                 </p>
                 <div class="flex items-center gap-6">
-                    <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors">Syarat & Ketentuan</a>
-                    <a href="#" class="text-gray-500 hover:text-white text-sm transition-colors">Kebijakan Privasi</a>
+                    <a href="{{ route('terms.seller') }}" class="text-gray-500 hover:text-white text-sm transition-colors">Syarat & Ketentuan</a>
+                    <a href="{{ route('privacy.policy') }}" class="text-gray-500 hover:text-white text-sm transition-colors">Kebijakan Privasi</a>
                 </div>
             </div>
         </div>

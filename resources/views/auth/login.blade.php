@@ -55,8 +55,9 @@
     <div class="background-blur"></div>
     <div class="overlay"></div>
 
-    <!-- Login Card -->
-    <div class="max-w-md w-full mx-auto bg-white/90 backdrop-blur-md p-8 shadow-2xl rounded-2xl fade-in">
+    <div class="min-h-screen flex items-center justify-center px-4 py-12">
+        <!-- Login Card -->
+        <div class="max-w-md w-full mx-auto bg-white/90 backdrop-blur-md p-8 shadow-2xl rounded-2xl fade-in">
         <div class="text-center mb-6">
             <h1 class="text-4xl font-bold text-blue-600">CampusMarket</h1>
             <p class="text-gray-600 mt-2">Selamat datang kembali! Silakan login untuk melanjutkan</p>
@@ -133,7 +134,10 @@
                 <a href="{{ route('register') }}" class="text-blue-600 hover:underline font-semibold">Daftar di sini</a>
             </p>
         </div>
+        </div>
     </div>
+
+    @include('components.footer')
 
 @endsection
 

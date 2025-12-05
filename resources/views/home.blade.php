@@ -35,22 +35,33 @@
         }
     }">
         <div class="relative rounded-3xl overflow-hidden shadow-xl" aria-label="Hero carousel">
-            <template x-for="(banner, index) in banners" :key="index">
-                <div x-show="current === index" x-transition class="relative h-72 md:h-96">
-                    <img :src="banner.image_url" :alt="banner.title" class="w-full h-full object-cover bg-gray-200"
-                        loading="lazy">
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
-                    <div
-                        class="absolute inset-y-0 left-0 flex flex-col justify-center px-8 md:px-12 text-white space-y-3 max-w-lg">
-                        <p class="uppercase text-xs tracking-[0.3em] text-white/70">Promo Spesial</p>
-                        <h1 class="text-2xl md:text-4xl font-bold" x-text="banner.title"></h1>
-                        <p class="text-sm md:text-base text-white/80" x-text="banner.subtitle"></p>
-                        <a :href="banner.cta_link"
-                            class="inline-flex items-center bg-blue-600 text-white px-5 py-2.5 rounded-full w-max font-semibold hover:bg-blue-500 transition"
-                            x-text="banner.cta_text"></a>
+            <div class="relative h-72 md:h-96">
+                <template x-for="(banner, index) in banners" :key="index">
+                    <div 
+                        x-show="current === index" 
+                        x-transition:enter="transition ease-out duration-500"
+                        x-transition:enter-start="opacity-0 transform translate-x-full"
+                        x-transition:enter-end="opacity-100 transform translate-x-0"
+                        x-transition:leave="transition ease-in duration-300"
+                        x-transition:leave-start="opacity-100 transform translate-x-0"
+                        x-transition:leave-end="opacity-0 transform -translate-x-full"
+                        class="absolute inset-0"
+                    >
+                        <img :src="banner.image_url" :alt="banner.title" class="w-full h-full object-cover bg-gray-200"
+                            loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
+                        <div
+                            class="absolute inset-y-0 left-0 flex flex-col justify-center px-8 md:px-12 text-white space-y-3 max-w-lg">
+                            <p class="uppercase text-xs tracking-[0.3em] text-white/70">Promo Spesial</p>
+                            <h1 class="text-2xl md:text-4xl font-bold" x-text="banner.title"></h1>
+                            <p class="text-sm md:text-base text-white/80" x-text="banner.subtitle"></p>
+                            <a :href="banner.cta_link"
+                                class="inline-flex items-center bg-blue-600 text-white px-5 py-2.5 rounded-full w-max font-semibold hover:bg-blue-500 transition"
+                                x-text="banner.cta_text"></a>
+                        </div>
                     </div>
-                </div>
-            </template>
+                </template>
+            </div>
 
             <div class="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-4">
                 <button @click="go((current - 1 + banners.length) % banners.length)"
@@ -77,12 +88,6 @@
                 </template>
             </div>
         </div>
-
-        @include('components.search-filter', [
-            'categories' => $categories,
-            'provinces' => $provinces ?? [],
-            'cities' => $cities ?? [],
-        ])
 
         @include('components.category-carousel', ['categories' => $categories])
 

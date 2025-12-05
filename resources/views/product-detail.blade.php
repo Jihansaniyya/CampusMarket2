@@ -186,6 +186,29 @@
                                 @enderror
                             </div>
 
+                            <!-- Province -->
+                            <div x-data="{ provinces: [], loading: true }" x-init="
+                                fetch('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')
+                                    .then(res => res.json())
+                                    .then(data => { provinces = data; loading = false; })
+                                    .catch(() => loading = false)
+                            ">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Provinsi <span class="text-red-500">*</span></label>
+                                <select name="province" required
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">Pilih Provinsi</option>
+                                    <template x-for="prov in provinces" :key="prov.id">
+                                        <option :value="prov.name" x-text="prov.name"></option>
+                                    </template>
+                                </select>
+                                <template x-if="loading">
+                                    <p class="text-gray-500 text-sm mt-1">Memuat provinsi...</p>
+                                </template>
+                                @error('province')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <!-- Comment -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Review (opsional)</label>
@@ -233,9 +256,6 @@
                     @endforelse
                 </div>
             </div>
-
-            <!-- Product Comments Section -->
-            @include('components.product-comments', ['product' => $product])
         </div>
     </section>
 

@@ -17,6 +17,7 @@ class ProductReview extends Model
         'product_id',
         'visitor_name',
         'visitor_email',
+        'province',
         'rating',
         'comment',
     ];

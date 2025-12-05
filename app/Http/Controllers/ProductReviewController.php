@@ -17,6 +17,7 @@ class ProductReviewController extends Controller
             'product_id'    => 'required|exists:products,id',
             'visitor_name'  => 'required|string|max:255',
             'visitor_email' => 'nullable|email|max:255',
+            'province'      => 'required|string|max:255',
             'rating'        => 'required|integer|min:1|max:5',
             'comment'       => 'nullable|string|max:1000',
         ]);
@@ -26,6 +27,7 @@ class ProductReviewController extends Controller
             'product_id'    => $request->product_id,
             'visitor_name'  => $request->visitor_name,
             'visitor_email' => $request->visitor_email,
+            'province'      => $request->province,
             'rating'        => $request->rating,
             'comment'       => $request->comment,
         ]);

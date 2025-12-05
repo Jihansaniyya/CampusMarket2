@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin Dashboard') - CampusMarket</title>
+    <title>@yield('title', 'Dashboard Admin') - CampusMarket</title>
 
     {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -40,12 +40,12 @@
             <div
                 class="h-20 flex items-center justify-center border-b border-gray-200 bg-linear-to-r from-blue-600 to-blue-700">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
-                        <i class="fas fa-shopping-cart text-blue-600 text-lg"></i>
+                    <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-md p-1">
+                        <img src="{{ asset('assets/logo1.png') }}" alt="CampusMarket" class="w-full h-full object-contain">
                     </div>
                     <div class="text-white">
                         <p class="text-lg font-bold leading-none">CampusMarket</p>
-                        <p class="text-xs text-blue-100">Admin Panel</p>
+                        <p class="text-xs text-blue-100">Admin</p>
                     </div>
                 </a>
             </div>
@@ -84,17 +84,10 @@
                 </div>
 
                 {{-- Laporan --}}
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50 transition-all duration-200">
-                    <i class="fas fa-chart-line w-5 text-blue-600"></i>
+                <a href="{{ route('admin.reports.index') }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.reports.*') ? 'sidebar-active shadow-lg' : 'text-gray-700 hover:bg-blue-50' }}">
+                    <i class="fas fa-chart-line w-5 {{ request()->routeIs('admin.reports.*') ? 'text-white' : 'text-blue-600' }}"></i>
                     <span class="font-medium">Laporan</span>
-                </a>
-
-                {{-- Pengaturan --}}
-                <a href="#"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50 transition-all duration-200">
-                    <i class="fas fa-cog w-5 text-blue-600"></i>
-                    <span class="font-medium">Pengaturan</span>
                 </a>
             </nav>
 
@@ -126,7 +119,7 @@
             <header class="bg-white shadow-sm sticky top-0 z-40">
                 <div class="px-6 py-4 flex items-center justify-between">
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900">@yield('page-title', 'Dashboard')</h1>
+                        <h1 class="text-2xl font-bold text-gray-900">@yield('page-title', 'Dashboard Admin')</h1>
                         <p class="text-sm text-gray-600">@yield('page-description', 'Selamat datang di CampusMarket Admin')</p>
                     </div>
 
@@ -149,12 +142,9 @@
             </main>
 
             {{-- Footer --}}
-            <footer class="px-6 py-4 border-t border-gray-200 bg-white">
-                <div class="flex items-center justify-between text-sm text-gray-600">
-                    <p>&copy; 2025 CampusMarket. All rights reserved.</p>
-                    <p>Made with <i class="fas fa-heart text-rose-500"></i> by CampusMarket Team</p>
-                </div>
-            </footer>
+            <div class="mt-16">
+                @include('components.footer')
+            </div>
         </div>
     </div>
 

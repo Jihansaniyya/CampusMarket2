@@ -37,7 +37,9 @@
             @yield('content')
         </main>
 
-        @include('components.footer')
+        <div class="mt-16">
+            @include('components.footer')
+        </div>
     </div>
 
     @stack('scripts')

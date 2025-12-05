@@ -8,11 +8,20 @@ use App\Models\ProductReview;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class ReportController extends Controller
 {
     /**
-     * Laporan daftar akun penjual aktif dan tidak aktif (SRS-MartPlace-09).
+     * Halaman index laporan.
+     */
+    public function index(): View
+    {
+        return view('admin.reports.index');
+    }
+
+    /**
+     * Laporan daftar akun penjual aktif dan tidak aktif.
      */
     public function sellerStatus(): Response
     {
@@ -34,7 +43,6 @@ class ReportController extends Controller
 
         $payload = [
             'title' => 'Laporan Penjual Aktif & Tidak Aktif',
-            'subtitle' => 'SRS-MartPlace-09',
             'generatedAt' => now(),
             'sellers' => $sellers,
         ];
@@ -43,24 +51,95 @@ class ReportController extends Controller
     }
 
     /**
+     * Daftar 38 Provinsi di Indonesia.
+     */
+    private function getIndonesianProvinces(): array
+    {
+        return [
+            'Aceh',
+            'Sumatera Utara',
+            'Sumatera Barat',
+            'Riau',
+            'Jambi',
+            'Sumatera Selatan',
+            'Bengkulu',
+            'Lampung',
+            'Kepulauan Bangka Belitung',
+            'Kepulauan Riau',
+            'DKI Jakarta',
+            'Jawa Barat',
+            'Jawa Tengah',
+            'DI Yogyakarta',
+            'Jawa Timur',
+            'Banten',
+            'Bali',
+            'Nusa Tenggara Barat',
+            'Nusa Tenggara Timur',
+            'Kalimantan Barat',
+            'Kalimantan Tengah',
+            'Kalimantan Selatan',
+            'Kalimantan Timur',
+            'Kalimantan Utara',
+            'Sulawesi Utara',
+            'Sulawesi Tengah',
+            'Sulawesi Selatan',
+            'Sulawesi Tenggara',
+            'Gorontalo',
+            'Sulawesi Barat',
+            'Maluku',
+            'Maluku Utara',
+            'Papua',
+            'Papua Barat',
+            'Papua Barat Daya',
+            'Papua Tengah',
+            'Papua Pegunungan',
+            'Papua Selatan',
+        ];
+    }
+
+    /**
      * Laporan daftar penjual per provinsi (SRS-MartPlace-10).
      */
     public function sellerProvince(): Response
     {
-        $sellers = User::query()
+        // Ambil semua seller (tidak perlu filter email_verified_at untuk laporan)
+        $allSellers = User::query()
             ->where('role', 'seller')
             ->whereNotNull('provinsi')
-            ->select([ 'store_name', 'name', 'email', 'phone', 'provinsi', 'approval_status' ])
-            ->orderBy('provinsi')
+            ->where('provinsi', '!=', '')
+            ->select(['store_name', 'name', 'email', 'phone', 'provinsi', 'approval_status'])
             ->orderBy('store_name')
-            ->get()
-            ->groupBy('provinsi');
+            ->get();
+
+        // Group by provinsi (normalized ke Title Case untuk matching)
+        $sellersByProvince = $allSellers->groupBy(function ($seller) {
+            return ucwords(strtolower($seller->provinsi));
+        });
+
+        // Buat struktur data dengan semua provinsi Indonesia
+        $provinces = collect($this->getIndonesianProvinces())->mapWithKeys(function ($province) use ($sellersByProvince) {
+            return [$province => $sellersByProvince->get($province, collect())];
+        });
+
+        // Tambahkan juga provinsi yang ada di database tapi tidak ada di daftar standar
+        foreach ($sellersByProvince as $province => $sellers) {
+            if (!$provinces->has($province)) {
+                $provinces[$province] = $sellers;
+            }
+        }
+
+        // Hitung statistik
+        $totalSellers = $allSellers->count();
+        $provincesWithSellers = $sellersByProvince->count();
 
         $payload = [
-            'title' => 'Laporan Penjual per Provinsi',
+            'title' => 'Laporan Penjual per Provinsi Indonesia',
             'subtitle' => 'SRS-MartPlace-10',
             'generatedAt' => now(),
-            'sellers' => $sellers,
+            'provinces' => $provinces,
+            'totalSellers' => $totalSellers,
+            'provincesWithSellers' => $provincesWithSellers,
+            'totalProvinces' => count($this->getIndonesianProvinces()),
         ];
 
         return $this->downloadPdf('admin.reports.seller-province', $payload, 'laporan-penjual-per-provinsi.pdf');

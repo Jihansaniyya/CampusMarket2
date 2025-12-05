@@ -11,9 +11,13 @@
     @stack('styles')
 </head>
 
-<body class="@yield('body-class', 'min-h-screen flex items-center justify-center bg-gray-50')">
+<body class="bg-gray-50">
 
-    @yield('content')
+    <div class="min-h-screen flex items-center justify-center px-4 py-12">
+        @yield('content')
+    </div>
+
+    @include('components.footer')
 
     @stack('scripts')
 </body>

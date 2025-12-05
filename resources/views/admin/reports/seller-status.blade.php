@@ -82,7 +82,6 @@
 <body>
     <header>
         <h1>{{ $title }}</h1>
-        <h2>{{ $subtitle }}</h2>
         <p class="meta">Dibuat pada: {{ $generatedAt->format('d M Y H:i') }} WIB</p>
     </header>
 

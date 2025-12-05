@@ -12,16 +12,6 @@
             font-family: 'Rubik', sans-serif;
         }
 
-        body {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
         /* Background blur */
         .background-blur {
             position: fixed;
@@ -31,7 +21,7 @@
             height: 100%;
             background: url("{{ asset('assets/bg2.png') }}") no-repeat center center/cover;
             filter: blur(5px);
-            z-index: -1;
+            z-index: -2;
         }
 
         /* Overlay */
@@ -66,7 +56,7 @@
     <div class="overlay"></div>
 
     <!-- Login Card -->
-    <div class="max-w-md w-full mx-auto bg-white/90 backdrop-blur-md p-8 shadow-2xl rounded-2xl fade-in mt-10">
+    <div class="max-w-md w-full mx-auto bg-white/90 backdrop-blur-md p-8 shadow-2xl rounded-2xl fade-in">
         <div class="text-center mb-6">
             <h1 class="text-4xl font-bold text-blue-600">CampusMarket</h1>
             <p class="text-gray-600 mt-2">Selamat datang kembali! Silakan login untuk melanjutkan</p>
@@ -144,9 +134,6 @@
             </p>
         </div>
     </div>
-
-{{-- Footer --}}
-@include('components.footer')
 
 @endsection
 

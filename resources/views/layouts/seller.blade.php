@@ -41,8 +41,8 @@
             {{-- LOGO --}}
             <div class="h-20 flex items-center justify-center border-b border-gray-200 bg-linear-to-r from-blue-600 to-blue-700">
                 <a href="{{ route('seller.dashboard') }}" class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-md">
-                        <i class="fas fa-shopping-cart text-blue-600 text-lg"></i>
+                    <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-md p-1">
+                        <img src="{{ asset('assets/logo1.png') }}" alt="CampusMarket" class="w-full h-full object-contain">
                     </div>
                     <div class="text-white">
                         <p class="text-lg font-bold leading-none">CampusMarket</p>

@@ -72,7 +72,6 @@
 <body>
     <header>
         <h1>{{ $title }}</h1>
-        <h2>{{ $subtitle }}</h2>
         <p class="meta">Dibuat pada: {{ $generatedAt->format('d M Y H:i') }} WIB</p>
         <div>
             <span class="stat-box">Rata-rata rating <strong>{{ number_format($averageRating, 2) }}</strong></span>

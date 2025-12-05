@@ -28,6 +28,13 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [ProductSearchController::class, 'search'])->name('product.search');
 
 // =============================
+// STATIC PAGES
+// =============================
+Route::view('/cara-berjualan', 'pages.cara-berjualan')->name('cara-berjualan');
+Route::view('/faq', 'pages.faq')->name('faq');
+Route::view('/hubungi-kami', 'pages.contact')->name('contact');
+
+// =============================
 // PRODUCT DETAIL & COMMENTS (For Visitors)
 // =============================
 Route::get('/product/{slug}', [ProductDetailController::class, 'show'])->name('product.show');
@@ -122,6 +129,7 @@ Route::prefix('admin')
 
         // Reports
         Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/',                   [ReportController::class, 'index'])->name('index');
             Route::get('/sellers/status',     [ReportController::class, 'sellerStatus'])->name('sellers.status');
             Route::get('/sellers/provinces',  [ReportController::class, 'sellerProvince'])->name('sellers.provinces');
             Route::get('/products/ratings',   [ReportController::class, 'productRatings'])->name('products.ratings');

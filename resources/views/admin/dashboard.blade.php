@@ -404,46 +404,6 @@
             </div>
         </div>
 
-        {{-- Download Laporan (PDF) --}}
-        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
-            <div class="flex items-center gap-3 mb-6">
-                <div
-                    class="w-10 h-10 bg-linear-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-file-pdf text-white"></i>
-                </div>
-                <div>
-                    <h2 class="text-xl font-bold text-gray-900">Download Laporan Resmi</h2>
-                    
-                </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <a href="{{ route('admin.reports.sellers.status') }}" target="_blank" rel="noopener"
-                    class="border border-gray-200 rounded-2xl p-4 hover:border-blue-400 hover:shadow-lg transition group">
-                    
-                    <p class="text-lg font-bold text-gray-900">Penjual Aktif vs Tidak Aktif</p>
-                    <p class="text-sm text-gray-500 mt-2">Format PDF menampilkan status akun terbaru.</p>
-                    <span class="text-sm text-blue-500 font-semibold inline-flex items-center gap-1 mt-3">Unduh sekarang
-                        <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition"></i></span>
-                </a>
-                <a href="{{ route('admin.reports.sellers.provinces') }}" target="_blank" rel="noopener"
-                    class="border border-gray-200 rounded-2xl p-4 hover:border-emerald-400 hover:shadow-lg transition group">
-                    
-                    <p class="text-lg font-bold text-gray-900">Daftar Penjual per Provinsi</p>
-                    <p class="text-sm text-gray-500 mt-2">Memetakan toko berdasarkan lokasi propinsi.</p>
-                    <span class="text-sm text-emerald-500 font-semibold inline-flex items-center gap-1 mt-3">Unduh sekarang
-                        <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition"></i></span>
-                </a>
-                <a href="{{ route('admin.reports.products.ratings') }}" target="_blank" rel="noopener"
-                    class="border border-gray-200 rounded-2xl p-4 hover:border-violet-400 hover:shadow-lg transition group">
-                    
-                    <p class="text-lg font-bold text-gray-900">Produk & Rating Menurun</p>
-                    <p class="text-sm text-gray-500 mt-2">Termasuk nama toko, kategori, harga, dan propinsi.</p>
-                    <span class="text-sm text-violet-500 font-semibold inline-flex items-center gap-1 mt-3">Unduh sekarang
-                        <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition"></i></span>
-                </a>
-            </div>
-        </div>
-
         {{-- Recent Activity --}}
         <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
             <div class="flex items-center gap-3 mb-6">
@@ -453,14 +413,65 @@
                 </div>
                 <h2 class="text-xl font-bold text-gray-900">Aktivitas Terbaru</h2>
             </div>
-            <div class="text-center py-12">
-                <div
-                    class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
-                    <i class="fas fa-inbox text-4xl text-gray-400"></i>
+
+            @if ($recentActivities->count() > 0)
+                <div class="space-y-4">
+                    @foreach ($recentActivities as $activity)
+                        <div class="flex items-start gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                            {{-- Icon --}}
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
+                                @if($activity['color'] === 'blue') bg-blue-100 text-blue-600
+                                @elseif($activity['color'] === 'green') bg-green-100 text-green-600
+                                @elseif($activity['color'] === 'purple') bg-purple-100 text-purple-600
+                                @elseif($activity['color'] === 'amber') bg-amber-100 text-amber-600
+                                @elseif($activity['color'] === 'red') bg-red-100 text-red-600
+                                @else bg-gray-100 text-gray-600
+                                @endif">
+                                <i class="fas {{ $activity['icon'] }}"></i>
+                            </div>
+
+                            {{-- Content --}}
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-gray-700">{!! $activity['message'] !!}</p>
+                                <p class="text-xs text-gray-400 mt-1">
+                                    <i class="fas fa-clock mr-1"></i>
+                                    {{ $activity['time']->diffForHumans() }}
+                                </p>
+                            </div>
+
+                            {{-- Badge --}}
+                            <div class="flex-shrink-0">
+                                @if($activity['type'] === 'seller_register')
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+                                        Pendaftaran
+                                    </span>
+                                @elseif($activity['type'] === 'seller_approved')
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                                        Disetujui
+                                    </span>
+                                @elseif($activity['type'] === 'product_added')
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+                                        Produk Baru
+                                    </span>
+                                @elseif($activity['type'] === 'review_added')
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
+                                        Review
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-                <p class="text-gray-500 font-medium">Fitur aktivitas akan segera hadir</p>
-                <p class="text-sm text-gray-400 mt-1">Pantau semua aktivitas admin dan user di sini</p>
-            </div>
+            @else
+                <div class="text-center py-12">
+                    <div
+                        class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-inbox text-4xl text-gray-400"></i>
+                    </div>
+                    <p class="text-gray-500 font-medium">Belum ada aktivitas</p>
+                    <p class="text-sm text-gray-400 mt-1">Aktivitas akan muncul saat ada pendaftaran, produk baru, atau review</p>
+                </div>
+            @endif
         </div>
     </div>
 @endsection

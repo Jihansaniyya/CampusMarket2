@@ -1,15 +1,15 @@
 <header class="bg-white shadow-sm sticky top-0 z-40" x-data="headerSearch()" @click.outside="showFilters = false">
     <div class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-10 xl:px-12">
-        <div class="flex items-center justify-between py-4 gap-5">
-            <div class="flex items-center gap-5">
-                <a href="{{ route('home') }}" class="flex items-center gap-2.5">
-                    <img src="{{ asset('assets/logo1.png') }}" alt="CampusMarket" class="h-11 w-auto object-contain">
-                    <span class="text-2xl font-bold text-blue-600 leading-none">CampusMarket</span>
+        <div class="flex items-center justify-between py-4 gap-4">
+            <div class="flex items-center gap-4 flex-shrink-0">
+                <a href="{{ route('home') }}" class="flex items-center gap-2">
+                    <img src="{{ asset('assets/logo1.png') }}" alt="CampusMarket" class="h-10 w-auto object-contain">
+                    <span class="text-xl font-bold text-blue-600 leading-none hidden lg:block">CampusMarket</span>
                 </a>
             </div>
 
             {{-- Search Form --}}
-            <form action="{{ route('product.search') }}" method="GET" class="flex-1 hidden md:flex max-w-2xl mx-4">
+            <form action="{{ route('product.search') }}" method="GET" class="flex-1 hidden md:flex mx-4">
                 <div class="relative w-full">
                     <label for="search" class="sr-only">Cari produk</label>
                     
@@ -134,20 +134,11 @@
                 </div>
             </form>
 
-            <div class="flex items-center gap-4">
-                <button class="relative p-3 text-gray-600 hover:text-blue-600 transition">
-                    <span class="sr-only">Keranjang</span>
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.436M7.5 14.25a3 3 0 1 0 5.999.001A3 3 0 0 0 7.5 14.25Zm8.25 0a3 3 0 1 0 5.999.001A3 3 0 0 0 15.75 14.25Zm.75-5.25h-9m12 0h-1.5m-9.75 0L6.75 5.25m0 0H19.5m-12.75 0L5.25 3" />
-                    </svg>
-                    <span class="absolute -top-1 -right-1 bg-orange-400 text-white text-xs rounded-full px-1.5">3</span>
-                </button>
-                <div class="h-6 w-px bg-gray-300 hidden sm:block"></div>
+            <div class="flex items-center gap-3">
                 <a href="{{ route('login') }}"
-                    class="text-base font-medium text-gray-700 hover:text-blue-600 border border-blue-500 px-5 py-2.5 rounded-full hover:bg-blue-50 transition hidden sm:block">Masuk</a>
+                    class="text-sm font-medium text-gray-700 hover:text-blue-600 border border-blue-500 px-4 py-2 rounded-full hover:bg-blue-50 transition hidden sm:block">Masuk</a>
                 <a href="{{ route('register') }}"
-                    class="text-base font-medium text-white bg-blue-600 px-5 py-2.5 rounded-full hover:bg-blue-500 transition">Daftar</a>
+                    class="text-sm font-medium text-white bg-blue-600 px-4 py-2 rounded-full hover:bg-blue-500 transition">Daftar</a>
             </div>
         </div>
 

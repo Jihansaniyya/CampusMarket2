@@ -100,12 +100,13 @@
                 + Tambah Produk
             </a>
         </div>
+
     @else
         {{-- ===================== LIST PRODUK ===================== --}}
         <div class="space-y-4">
 
             @foreach ($products as $p)
-                <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-5 flex gap-4">
+                <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-5 flex items-center gap-4">
 
                     {{-- FOTO --}}
                     <img src="{{ asset('storage/' . $p->thumbnail) }}" class="w-24 h-24 rounded-xl object-cover">
@@ -116,16 +117,15 @@
 
                         {{-- BADGES --}}
                         <div class="flex gap-2 mt-1">
-
-                            {{-- STATUS --}}
                             @if ($p->is_active)
-                                <span
-                                    class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">Aktif</span>
+                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                    Aktif
+                                </span>
                             @else
-                                <span
-                                    class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-semibold">Draft</span>
+                                <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                    Draft
+                                </span>
                             @endif
-
                         </div>
 
                         {{-- DETAIL --}}
@@ -137,29 +137,43 @@
                         <p class="text-gray-500 text-xs mt-1">Kategori: {{ $p->category->name ?? '-' }}</p>
                     </div>
 
-                    {{-- ACTION --}}
-                    <div class="flex flex-col justify-between text-right">
-
+                    {{-- ACTION  --}}
+                    <div class="flex flex-col items-end justify-center gap-2 mr-4">
                         <a href="{{ route('seller.products.edit', $p->id) }}"
-                            class="text-indigo-600 hover:underline font-semibold text-sm">Edit</a>
+                           class="inline-flex justify-center w-24 px-3 py-1.5 rounded-lg border border-indigo-200
+                                  text-indigo-600 text-xs font-semibold hover:bg-indigo-50 transition">
+                            Edit
+                        </a>
 
                         <form action="{{ route('seller.products.destroy', $p->id) }}" method="POST"
-                            onsubmit="return confirm('Yakin hapus produk ini?')">
+                              onsubmit="return confirm('Yakin hapus produk ini?')">
                             @csrf
                             @method('DELETE')
-                            <button class="text-red-600 hover:underline text-sm font-semibold">Hapus</button>
+                            <button
+                                class="inline-flex justify-center w-24 px-3 py-1.5 rounded-lg border border-red-200
+                                       text-red-600 text-xs font-semibold hover:bg-red-50 transition">
+                                Hapus
+                            </button>
                         </form>
-
                     </div>
                 </div>
             @endforeach
 
         </div>
 
-
         {{-- PAGINATION --}}
         <div class="mt-6">
             {{ $products->links() }}
+        </div>
+
+        {{--  TAMBAH PRODUK  --}}
+        <div class="mt-4 flex justify-end">
+            <a href="{{ route('seller.products.create') }}"
+               class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white
+                      px-6 py-3 rounded-xl shadow-md hover:shadow-lg hover:brightness-110 text-sm font-semibold transition">
+                <i class="fas fa-plus text-sm"></i>
+                <span>Tambah Produk</span>
+            </a>
         </div>
 
     @endif

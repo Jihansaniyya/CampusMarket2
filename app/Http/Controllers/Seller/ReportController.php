@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade\Pdf; // pastikan paket dompdf sudah terpasang
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -19,94 +19,84 @@ class ReportController extends Controller
 
     /**
      * SRS-MartPlace-12
-     * Laporan daftar stock produk yang diurutkan berdasarkan stock secara menurun.
-     * Untuk setiap produk memuat:
-     * - stok
-     * - rating
-     * - kategori produk
-     * - harga
-     * (format PDF)
+     * Laporan stok produk diurutkan berdasarkan stok menurun.
      */
     public function stockDescPdf()
     {
         $products = $this->baseQueryWithRating()
-            ->orderBy('products.stock', 'desc')
+            ->orderByDesc('stock')
+            ->orderBy('name')
             ->get();
 
-        $pdf = Pdf::loadView('seller.reports.pdf_stock_desc', [
-            'products' => $products,
-        ])->setPaper('A4', 'portrait');
-
-        return $pdf->download('laporan_stok_produk_urut_stok_menurun.pdf');
+        return Pdf::loadView('seller.reports.pdf-stock-desc', [
+                'title'       => 'Laporan Stok Produk (Urut Stok Menurun)',
+                'generatedAt' => now(),
+                'products'    => $products,
+            ])
+            ->setPaper('a4', 'portrait')
+            ->download('laporan_stok_produk_urut_stok_menurun.pdf');
     }
 
     /**
      * SRS-MartPlace-13
-     * Laporan daftar stock produk yang diurutkan berdasarkan rating secara menurun.
-     * Untuk setiap produk memuat:
-     * - rating
-     * - stok
-     * - kategori produk
-     * - harga
-     * (format PDF)
+     * Laporan stok produk diurutkan berdasarkan rating menurun.
      */
     public function ratingDescPdf()
     {
         $products = $this->baseQueryWithRating()
-            ->orderBy('avg_rating', 'desc')
+            ->orderByDesc('avg_rating')    // alias dari kolom rating
+            ->orderByDesc('rating_count')
+            ->orderBy('name')
             ->get();
 
-        $pdf = Pdf::loadView('seller.reports.pdf_rating_desc', [
-            'products' => $products,
-        ])->setPaper('A4', 'portrait');
-
-        return $pdf->download('laporan_stok_produk_urut_rating_menurun.pdf');
+        return Pdf::loadView('seller.reports.pdf-rating-desc', [
+                'title'       => 'Laporan Stok Produk (Urut Rating Menurun)',
+                'generatedAt' => now(),
+                'products'    => $products,
+            ])
+            ->setPaper('a4', 'portrait')
+            ->download('laporan_stok_produk_urut_rating_menurun.pdf');
     }
 
     /**
      * SRS-MartPlace-14
-     * Laporan daftar stock barang yang harus segera dipesan
-     * (stok produk yang segera dipesan jika stock < 2) dalam format PDF.
+     * Laporan barang yang harus segera dipesan (stok < 2).
      */
     public function lowStockPdf()
     {
         $products = $this->baseQueryWithRating()
-            ->where('products.stock', '<', 2)
-            ->orderBy('products.stock', 'asc')
+            ->where('stock', '<', 2)
+            ->orderBy('stock')
+            ->orderBy('name')
             ->get();
 
-        $pdf = Pdf::loadView('seller.reports.pdf_low_stock', [
-            'products' => $products,
-        ])->setPaper('A4', 'portrait');
-
-        return $pdf->download('laporan_barang_stok_kritis.pdf');
+        return Pdf::loadView('seller.reports.pdf-low-stock', [
+                'title'       => 'Laporan Barang yang Harus Segera Dipesan (Stok < 2)',
+                'generatedAt' => now(),
+                'products'    => $products,
+            ])
+            ->setPaper('a4', 'portrait')
+            ->download('laporan_barang_stok_kritis.pdf');
     }
 
     /**
-     * Query dasar: produk + rata-rata rating
-     * Asumsi:
-     *  - tabel products
-     *  - tabel product_reviews dengan kolom product_id dan rating
-     * Silakan sesuaikan nama tabel/kolom kalau beda.
+     * Query dasar: produk + rating + kategori
+     * Mengikuti struktur yang dipakai di ReportController Admin.
      */
     protected function baseQueryWithRating()
     {
         return Product::query()
-            ->leftJoin('product_reviews', 'products.id', '=', 'product_reviews.product_id')
-            ->select(
-                'products.id',
-                'products.name',
-                'products.stock',
-                'products.category',
-                'products.price',
-                DB::raw('COALESCE(AVG(product_reviews.rating), 0) as avg_rating')
-            )
-            ->groupBy(
-                'products.id',
-                'products.name',
-                'products.stock',
-                'products.category',
-                'products.price'
-            );
+            ->with(['category:id,name'])          
+            ->where('seller_id', Auth::id())      
+            ->select([
+                'id',
+                'category_id',
+                'seller_id',
+                'name',
+                'stock',
+                'price',
+                'rating as avg_rating',         
+                'rating_count',
+            ]);
     }
 }

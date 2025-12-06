@@ -221,6 +221,11 @@ Route::prefix('seller')
                 ->name('low-stock');
         });
 
+        // =============================
+        // PROFILE ROUTE
+        // =============================
+        Route::get('/profile', [\App\Http\Controllers\Seller\ProfileController::class, 'index'])->name('profile');
+
     });
 
 // =============================

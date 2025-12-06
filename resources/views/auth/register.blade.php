@@ -111,8 +111,16 @@
 
         {{-- Header Halaman --}}
         <header class="mb-6">
-            <nav class="text-sm text-gray-500 mb-3" aria-label="Breadcrumb">
-                <ol class="flex items-center gap-2">
+            {{-- Logo --}}
+            <div class="flex justify-center">
+                <a href="{{ route('home') }}" onclick="return confirmLeave(event)">
+                    <img src="{{ asset('assets/logo2.png') }}" alt="CampusMarket Logo"
+                        class="h-36 md:h-44 lg:h-52 object-contain cursor-pointer hover:opacity-80 transition-opacity">
+                </a>
+            </div>
+
+            <nav class="text-sm text-gray-500 mb-3 mt-2" aria-label="Breadcrumb">
+                <ol class="flex items-center gap-2 justify-center">
                     <li><a href="{{ route('login') }}" class="hover:text-gray-700">Login</a></li>
                     <li aria-hidden="true" class="text-gray-500 font-semibold">/</li>
                     <li class="text-gray-700 font-medium">Registrasi Penjual</li>
@@ -120,7 +128,7 @@
             </nav>
 
             <div class="flex items-start justify-between gap-3">
-                <div>
+                <div class="w-full text-center">
                     {{-- JUDUL SESUAI CONTOH --}}
                     <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
                         Formulir Registrasi Data Penjual (Toko)
@@ -139,11 +147,11 @@
 
             {{-- Alerts --}}
             @if (session('success'))
-                <div class="mx-6 mt-6 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800">
+                <div class="mx-6 mt-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800">
                     {{ session('success') }}</div>
             @endif
             @if ($errors->any())
-                <div class="mx-6 mt-6 rounded-xl border border-rose-200 bg-rose-50">
+                <div class="mx-6 mt-4 rounded-xl border border-rose-200 bg-rose-50">
                     <div class="px-4 py-3 text-rose-800 font-semibold">Periksa kembali input kamu:</div>
                     <ul class="px-6 pb-3 list-disc text-sm text-rose-700 space-y-1">
                         @foreach ($errors->all() as $err)
@@ -450,29 +458,50 @@
 
                         {{-- Foto PIC --}}
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
                                 Foto PIC (jpg/png, max 2MB) <span class="text-rose-600">*</span>
                             </label>
-                            <div class="flex items-center gap-4">
-                                <div id="foto-pic-preview"
-                                    class="h-20 w-20 rounded-2xl ring-1 ring-gray-200 bg-gray-100 grid place-items-center text-gray-400">
-                                    <i class="fas fa-user"></i>
-                                </div>
+                            <div class="relative">
                                 <input type="file" name="foto_pic" id="foto_pic" required accept=".jpg,.jpeg,.png"
-                                    class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
-                                    onchange="previewImage('foto_pic','foto-pic-preview')">
+                                    class="hidden"
+                                    onchange="previewImageInBox('foto_pic','foto-pic-preview', 'foto-pic-name')">
+                                <label for="foto_pic"
+                                    class="flex items-center gap-3 w-full rounded-xl border-2 border-gray-300 hover:border-blue-500 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-200 px-4 py-3 bg-white cursor-pointer transition-all">
+                                    <div id="foto-pic-preview"
+                                        class="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 shrink-0 overflow-hidden">
+                                        <i class="fas fa-user text-xl"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p id="foto-pic-name" class="text-sm text-gray-500 truncate">Klik untuk upload
+                                            foto PIC</p>
+                                    </div>
+                                    <i class="fas fa-upload text-blue-600"></i>
+                                </label>
                             </div>
                         </div>
 
                         {{-- File KTP --}}
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
                                 File upload KTP PIC (jpg/png/pdf, max 2MB) <span class="text-rose-600">*</span>
                             </label>
-                            <input type="file" name="file_ktp" id="file_ktp" required accept=".jpg,.jpeg,.png,.pdf"
-                                class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white"
-                                onchange="previewKTP(this)">
-                            <div id="ktp-preview" class="mt-2 text-sm text-gray-600"></div>
+                            <div class="relative">
+                                <input type="file" name="file_ktp" id="file_ktp" required
+                                    accept=".jpg,.jpeg,.png,.pdf" class="hidden"
+                                    onchange="previewKTPInBox('file_ktp', 'ktp-preview', 'ktp-name')">
+                                <label for="file_ktp"
+                                    class="flex items-center gap-3 w-full rounded-xl border-2 border-gray-300 hover:border-blue-500 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-200 px-4 py-3 bg-white cursor-pointer transition-all">
+                                    <div id="ktp-preview"
+                                        class="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 shrink-0 overflow-hidden">
+                                        <i class="fas fa-id-card text-xl"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p id="ktp-name" class="text-sm text-gray-500 truncate">Klik untuk upload KTP PIC
+                                        </p>
+                                    </div>
+                                    <i class="fas fa-upload text-blue-600"></i>
+                                </label>
+                            </div>
                         </div>
 
                     </div>
@@ -512,7 +541,7 @@
             </form>
         </div>
 
-        {{-- Custom Confirmation Modal --}}
+        {{-- Custom Confirmation Modal for Submit --}}
         <div id="confirmModal"
             class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             style="display: none;">
@@ -540,227 +569,359 @@
             </div>
         </div>
 
+        {{-- Custom Confirmation Modal for Leave Page --}}
+        <div id="leaveModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            style="display: none;">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all">
+                <div class="text-center mb-6">
+                    <div class="mx-auto w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-exclamation-triangle text-amber-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Peringatan</h3>
+                    <p class="text-gray-600">
+                        Data formulir yang sudah Anda isi akan hilang. Apakah Anda yakin ingin meninggalkan halaman ini?
+                    </p>
+                </div>
+
+                <div class="flex gap-3">
+                    <button type="button" onclick="hideLeaveModal()"
+                        class="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors shadow-md hover:shadow-lg">
+                        <i class="fas fa-arrow-left mr-2"></i>Tetap di Sini
+                    </button>
+                    <button type="button" onclick="proceedToHome()"
+                        class="flex-1 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Keluar
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     @include('components.footer')
 
-    @endsection
+@endsection
 
-    @push('scripts')
-        <script>
-            function togglePwd(id) {
-                const f = document.getElementById(id),
-                    ic = document.getElementById(id + '-icon');
-                if (!f) return;
-                f.type = f.type === 'password' ? 'text' : 'password';
-                if (ic) ic.className = 'fas ' + (f.type === 'text' ? 'fa-eye-slash' : 'fa-eye');
+@push('scripts')
+    <script>
+        function togglePwd(id) {
+            const f = document.getElementById(id),
+                ic = document.getElementById(id + '-icon');
+            if (!f) return;
+            f.type = f.type === 'password' ? 'text' : 'password';
+            if (ic) ic.className = 'fas ' + (f.type === 'text' ? 'fa-eye-slash' : 'fa-eye');
+        }
+
+        function maskNumber(el, maxLen) {
+            el.value = el.value.replace(/[^0-9+]/g, '').slice(0, maxLen || 15);
+        }
+
+        function digitsOnly(el, maxLen) {
+            el.value = el.value.replace(/\D/g, '').slice(0, maxLen);
+        }
+
+        function countChars(inputId, counterId, max) {
+            const v = document.getElementById(inputId)?.value ?? '';
+            const c = document.getElementById(counterId);
+            if (c) c.textContent = `${v.length}/${max}`;
+        }
+
+        function within2MB(f) {
+            return f.size <= 2 * 1024 * 1024;
+        }
+
+        function previewImage(inputId, previewId) {
+            const input = document.getElementById(inputId),
+                prev = document.getElementById(previewId);
+            if (!input || !prev) return;
+            prev.innerHTML = '';
+            const f = input.files?.[0];
+            if (!f) return;
+            if (!within2MB(f)) {
+                prev.innerHTML = '<span class="text-rose-600 text-sm">Ukuran file > 2MB</span>';
+                input.value = '';
+                return;
+            }
+            if (!['image/jpeg', 'image/png', 'image/jpg'].includes(f.type)) {
+                prev.textContent = 'Format harus JPG/PNG';
+                input.value = '';
+                return;
+            }
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(f);
+            img.alt = 'Foto PIC';
+            img.className = 'h-20 w-20 rounded-2xl object-cover ring-1 ring-gray-200';
+            prev.appendChild(img);
+        }
+
+        function previewImageInBox(inputId, previewId, nameId) {
+            const input = document.getElementById(inputId),
+                prev = document.getElementById(previewId),
+                nameEl = document.getElementById(nameId);
+            if (!input || !prev || !nameEl) return;
+
+            const f = input.files?.[0];
+            if (!f) return;
+
+            if (!within2MB(f)) {
+                alert('Ukuran file melebihi 2MB');
+                input.value = '';
+                return;
             }
 
-            function maskNumber(el, maxLen) {
-                el.value = el.value.replace(/[^0-9+]/g, '').slice(0, maxLen || 15);
+            if (!['image/jpeg', 'image/png', 'image/jpg'].includes(f.type)) {
+                alert('Format harus JPG/PNG');
+                input.value = '';
+                return;
             }
 
-            function digitsOnly(el, maxLen) {
-                el.value = el.value.replace(/\D/g, '').slice(0, maxLen);
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(f);
+            img.alt = 'Preview';
+            img.className = 'h-12 w-12 rounded-lg object-cover';
+            prev.innerHTML = '';
+            prev.appendChild(img);
+            nameEl.textContent = f.name;
+            nameEl.classList.remove('text-gray-500');
+            nameEl.classList.add('text-gray-900', 'font-medium');
+        }
+
+        function previewKTPInBox(inputId, previewId, nameId) {
+            const input = document.getElementById(inputId),
+                prev = document.getElementById(previewId),
+                nameEl = document.getElementById(nameId);
+            if (!input || !prev || !nameEl) return;
+
+            const f = input.files?.[0];
+            if (!f) return;
+
+            if (!within2MB(f)) {
+                alert('Ukuran file melebihi 2MB');
+                input.value = '';
+                return;
             }
 
-            function countChars(inputId, counterId, max) {
-                const v = document.getElementById(inputId)?.value ?? '';
-                const c = document.getElementById(counterId);
-                if (c) c.textContent = `${v.length}/${max}`;
-            }
+            nameEl.textContent = f.name;
+            nameEl.classList.remove('text-gray-500');
+            nameEl.classList.add('text-gray-900', 'font-medium');
 
-            function within2MB(f) {
-                return f.size <= 2 * 1024 * 1024;
-            }
-
-            function previewImage(inputId, previewId) {
-                const input = document.getElementById(inputId),
-                    prev = document.getElementById(previewId);
-                if (!input || !prev) return;
-                prev.innerHTML = '';
-                const f = input.files?.[0];
-                if (!f) return;
-                if (!within2MB(f)) {
-                    prev.innerHTML = '<span class="text-rose-600 text-sm">Ukuran file > 2MB</span>';
-                    input.value = '';
-                    return;
-                }
-                if (!['image/jpeg', 'image/png', 'image/jpg'].includes(f.type)) {
-                    prev.textContent = 'Format harus JPG/PNG';
-                    input.value = '';
-                    return;
-                }
+            if (['image/jpeg', 'image/png', 'image/jpg'].includes(f.type)) {
                 const img = document.createElement('img');
                 img.src = URL.createObjectURL(f);
-                img.alt = 'Foto PIC';
-                img.className = 'h-20 w-20 rounded-2xl object-cover ring-1 ring-gray-200';
-                prev.appendChild(img);
-            }
-
-            function previewKTP(input) {
-                const prev = document.getElementById('ktp-preview');
+                img.className = 'h-12 w-12 rounded-lg object-cover';
+                img.alt = 'KTP Preview';
                 prev.innerHTML = '';
-                const f = input.files?.[0];
-                if (!f) return;
-                if (!within2MB(f)) {
-                    prev.innerHTML = '<span class="text-rose-600 text-sm">Ukuran file > 2MB</span>';
-                    input.value = '';
-                    return;
-                }
-                if (['image/jpeg', 'image/png', 'image/jpg'].includes(f.type)) {
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(f);
-                    img.className = 'max-h-40 rounded-xl ring-1 ring-gray-200';
-                    img.alt = 'KTP preview';
-                    prev.appendChild(img);
-                } else if (f.type === 'application/pdf') {
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(f);
-                    a.target = '_blank';
-                    a.className = 'text-indigo-600 hover:underline text-sm';
-                    a.textContent = 'Buka PDF terunggah';
-                    prev.appendChild(a);
-                } else {
-                    prev.textContent = 'File terpilih: ' + f.name;
+                prev.appendChild(img);
+            } else if (f.type === 'application/pdf') {
+                prev.innerHTML = '<i class="fas fa-file-pdf text-red-600 text-2xl"></i>';
+            } else {
+                prev.innerHTML = '<i class="fas fa-file text-gray-400 text-2xl"></i>';
+            }
+        }
+
+        function previewKTP(input) {
+            const prev = document.getElementById('ktp-preview');
+            prev.innerHTML = '';
+            const f = input.files?.[0];
+            if (!f) return;
+            if (!within2MB(f)) {
+                prev.innerHTML = '<span class="text-rose-600 text-sm">Ukuran file > 2MB</span>';
+                input.value = '';
+                return;
+            }
+            if (['image/jpeg', 'image/png', 'image/jpg'].includes(f.type)) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(f);
+                img.className = 'max-h-40 rounded-xl ring-1 ring-gray-200';
+                img.alt = 'KTP preview';
+                prev.appendChild(img);
+            } else if (f.type === 'application/pdf') {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(f);
+                a.target = '_blank';
+                a.className = 'text-indigo-600 hover:underline text-sm';
+                a.textContent = 'Buka PDF terunggah';
+                prev.appendChild(a);
+            } else {
+                prev.textContent = 'File terpilih: ' + f.name;
+            }
+        }
+
+        let formToSubmit = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('sellerForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (!form.checkValidity()) {
+                        return true;
+                    }
+                    e.preventDefault();
+                    formToSubmit = form;
+                    showConfirmModal();
+                });
+            }
+        });
+
+        function showConfirmModal() {
+            document.getElementById('confirmModal').style.display = 'flex';
+        }
+
+        function hideConfirmModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+            formToSubmit = null;
+        }
+
+        // Fungsi untuk mengecek apakah form sudah terisi
+        function isFormFilled() {
+            const form = document.getElementById('sellerForm');
+            if (!form) return false;
+
+            const inputs = form.querySelectorAll(
+                'input[type="text"], input[type="email"], input[type="tel"], textarea, select');
+            for (let input of inputs) {
+                if (input.value && input.value.trim() !== '') {
+                    return true;
                 }
             }
+            return false;
+        }
 
-            let formToSubmit = null;
-
-            document.addEventListener('DOMContentLoaded', function() {
-                const form = document.getElementById('sellerForm');
-                if (form) {
-                    form.addEventListener('submit', function(e) {
-                        if (!form.checkValidity()) {
-                            return true;
-                        }
-                        e.preventDefault();
-                        formToSubmit = form;
-                        showConfirmModal();
-                    });
-                }
-            });
-
-            function showConfirmModal() {
-                document.getElementById('confirmModal').style.display = 'flex';
+        // Konfirmasi saat klik logo jika form terisi
+        function confirmLeave(event) {
+            event.preventDefault();
+            if (isFormFilled()) {
+                showLeaveModal();
+                return false;
+            } else {
+                window.location.href = '{{ route('home') }}';
+                return true;
             }
+        }
 
-            function hideConfirmModal() {
-                document.getElementById('confirmModal').style.display = 'none';
+        function showLeaveModal() {
+            document.getElementById('leaveModal').style.display = 'flex';
+        }
+
+        function hideLeaveModal() {
+            document.getElementById('leaveModal').style.display = 'none';
+        }
+
+        function proceedToHome() {
+            window.location.href = '{{ route('home') }}';
+        }
+
+        function confirmSubmit() {
+            if (formToSubmit) {
+                const form = formToSubmit;
                 formToSubmit = null;
+                hideConfirmModal();
+                form.submit();
             }
+        }
 
-            function confirmSubmit() {
-                if (formToSubmit) {
-                    const form = formToSubmit;
-                    formToSubmit = null;
-                    hideConfirmModal();
-                    form.submit();
-                }
-            }
+        // ================= API wilayah - EMSIFA ================= //
 
-            // ================= API wilayah - EMSIFA ================= //
+        // Simpan mapping ID ke nama untuk cascading dropdown
+        let provinceIdMap = {};
 
-            // Simpan mapping ID ke nama untuk cascading dropdown
-            let provinceIdMap = {};
-
-            async function loadProvinces() {
-                try {
-                    const res = await fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json");
-                    const data = await res.json();
-
-                    const provSel = document.getElementById("provinsi");
-                    provSel.innerHTML = `<option value="">Pilih Provinsi</option>`;
-
-                    // Reset map
-                    provinceIdMap = {};
-
-                    data.forEach(item => {
-                        provinceIdMap[item.name] = item.id;
-                        // Simpan NAMA sebagai value (bukan ID), ID disimpan di data attribute
-                        provSel.innerHTML += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
-                    });
-
-                } catch (err) {
-                    console.error(err);
-                    alert("Gagal memuat data provinsi.");
-                }
-            }
-
-            async function loadRegencies(provinceId) {
-                const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`);
+        async function loadProvinces() {
+            try {
+                const res = await fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json");
                 const data = await res.json();
 
-                const el = document.getElementById("kota_kab");
-                el.innerHTML = `<option value="">Pilih Kabupaten/Kota</option>`;
+                const provSel = document.getElementById("provinsi");
+                provSel.innerHTML = `<option value="">Pilih Provinsi</option>`;
+
+                // Reset map
+                provinceIdMap = {};
 
                 data.forEach(item => {
-                    // Simpan NAMA sebagai value
-                    el.innerHTML += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
+                    provinceIdMap[item.name] = item.id;
+                    // Simpan NAMA sebagai value (bukan ID), ID disimpan di data attribute
+                    provSel.innerHTML +=
+                        `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
                 });
+
+            } catch (err) {
+                console.error(err);
+                alert("Gagal memuat data provinsi.");
             }
+        }
 
-            async function loadDistricts(regencyId) {
-                const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`);
-                const data = await res.json();
+        async function loadRegencies(provinceId) {
+            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`);
+            const data = await res.json();
 
-                const el = document.getElementById("kecamatan");
-                el.innerHTML = `<option value="">Pilih Kecamatan</option>`;
+            const el = document.getElementById("kota_kab");
+            el.innerHTML = `<option value="">Pilih Kabupaten/Kota</option>`;
 
-                data.forEach(item => {
-                    el.innerHTML += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
-                });
-            }
-
-            async function loadVillages(districtId) {
-                const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtId}.json`);
-                const data = await res.json();
-
-                const el = document.getElementById("kelurahan");
-                el.innerHTML = `<option value="">Pilih Kelurahan/Desa</option>`;
-
-                data.forEach(item => {
-                    el.innerHTML += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
-                });
-            }
-
-            // Event Binding
-            document.addEventListener("DOMContentLoaded", function() {
-                loadProvinces();
-
-                document.getElementById("provinsi").addEventListener("change", function() {
-                    const selectedOption = this.options[this.selectedIndex];
-                    const provinceId = selectedOption.getAttribute('data-id');
-                    
-                    if (provinceId) {
-                        loadRegencies(provinceId);
-                    }
-                    document.getElementById("kota_kab").innerHTML = `<option>Loading...</option>`;
-                    document.getElementById("kecamatan").innerHTML = `<option>Pilih Kecamatan</option>`;
-                    document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
-                });
-
-                document.getElementById("kota_kab").addEventListener("change", function() {
-                    const selectedOption = this.options[this.selectedIndex];
-                    const regencyId = selectedOption.getAttribute('data-id');
-                    
-                    if (regencyId) {
-                        loadDistricts(regencyId);
-                    }
-                    document.getElementById("kecamatan").innerHTML = `<option>Loading...</option>`;
-                    document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
-                });
-
-                document.getElementById("kecamatan").addEventListener("change", function() {
-                    const selectedOption = this.options[this.selectedIndex];
-                    const districtId = selectedOption.getAttribute('data-id');
-                    
-                    if (districtId) {
-                        loadVillages(districtId);
-                    }
-                    document.getElementById("kelurahan").innerHTML = `<option>Loading...</option>`;
-                });
+            data.forEach(item => {
+                // Simpan NAMA sebagai value
+                el.innerHTML += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
             });
-        </script>
-    @endpush
+        }
+
+        async function loadDistricts(regencyId) {
+            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`);
+            const data = await res.json();
+
+            const el = document.getElementById("kecamatan");
+            el.innerHTML = `<option value="">Pilih Kecamatan</option>`;
+
+            data.forEach(item => {
+                el.innerHTML += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
+            });
+        }
+
+        async function loadVillages(districtId) {
+            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtId}.json`);
+            const data = await res.json();
+
+            const el = document.getElementById("kelurahan");
+            el.innerHTML = `<option value="">Pilih Kelurahan/Desa</option>`;
+
+            data.forEach(item => {
+                el.innerHTML += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
+            });
+        }
+
+        // Event Binding
+        document.addEventListener("DOMContentLoaded", function() {
+            loadProvinces();
+
+            document.getElementById("provinsi").addEventListener("change", function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const provinceId = selectedOption.getAttribute('data-id');
+
+                if (provinceId) {
+                    loadRegencies(provinceId);
+                }
+                document.getElementById("kota_kab").innerHTML = `<option>Loading...</option>`;
+                document.getElementById("kecamatan").innerHTML = `<option>Pilih Kecamatan</option>`;
+                document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
+            });
+
+            document.getElementById("kota_kab").addEventListener("change", function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const regencyId = selectedOption.getAttribute('data-id');
+
+                if (regencyId) {
+                    loadDistricts(regencyId);
+                }
+                document.getElementById("kecamatan").innerHTML = `<option>Loading...</option>`;
+                document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
+            });
+
+            document.getElementById("kecamatan").addEventListener("change", function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const districtId = selectedOption.getAttribute('data-id');
+
+                if (districtId) {
+                    loadVillages(districtId);
+                }
+                document.getElementById("kelurahan").innerHTML = `<option>Loading...</option>`;
+            });
+        });
+    </script>
+@endpush

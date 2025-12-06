@@ -72,6 +72,17 @@ class HomeController extends Controller
         }
 
         $featuredProducts = $featuredQuery->get()->map(function($product) {
+            $imageUrl = 'https://placehold.co/400x400/EEF2FF/4F46E5?text=' . urlencode(substr($product->name, 0, 20));
+            if ($product->thumbnail) {
+                $imageUrl = str_starts_with($product->thumbnail, 'http') 
+                    ? $product->thumbnail 
+                    : asset('storage/' . $product->thumbnail);
+            }
+            
+            // Calculate actual rating from reviews
+            $actualRating = $product->reviews()->avg('rating') ?? 0;
+            $actualReviewsCount = $product->reviews()->count();
+            
             return [
                 'id' => $product->id,
                 'slug' => $product->slug,
@@ -79,9 +90,9 @@ class HomeController extends Controller
                 'short_description' => \Str::limit($product->description, 50),
                 'price' => $product->price,
                 'sale_price' => $product->sale_price,
-                'rating' => $product->rating,
-                'reviews_count' => $product->rating_count,
-                'image_url' => $product->thumbnail ? asset('storage/' . $product->thumbnail) : 'https://placehold.co/400x400/EEF2FF/4F46E5?text=' . urlencode(substr($product->name, 0, 20)),
+                'rating' => round($actualRating, 1),
+                'reviews_count' => $actualReviewsCount,
+                'image_url' => $imageUrl,
                 'category_id' => $product->category_id,
                 'badge' => $product->sale_price ? 'Sale' : null,
                 'location' => $product->seller->kota_kab ?? ($product->seller->provinsi ?? null),
@@ -102,6 +113,17 @@ class HomeController extends Controller
         // Transform untuk compatibility dengan view (menggunakan array, bukan object)
         $products = $productsDb;
         $products->getCollection()->transform(function($product) {
+            $imageUrl = 'https://placehold.co/400x400/EEF2FF/4F46E5?text=' . urlencode(substr($product->name, 0, 20));
+            if ($product->thumbnail) {
+                $imageUrl = str_starts_with($product->thumbnail, 'http') 
+                    ? $product->thumbnail 
+                    : asset('storage/' . $product->thumbnail);
+            }
+            
+            // Calculate actual rating from reviews
+            $actualRating = $product->reviews()->avg('rating') ?? 0;
+            $actualReviewsCount = $product->reviews()->count();
+            
             return [
                 'id' => $product->id,
                 'slug' => $product->slug,
@@ -109,9 +131,9 @@ class HomeController extends Controller
                 'short_description' => \Str::limit($product->description, 50),
                 'price' => $product->price,
                 'sale_price' => $product->sale_price,
-                'rating' => $product->rating,
-                'reviews_count' => $product->rating_count,
-                'image_url' => $product->thumbnail ? asset('storage/' . $product->thumbnail) : 'https://placehold.co/400x400/EEF2FF/4F46E5?text=' . urlencode(substr($product->name, 0, 20)),
+                'rating' => round($actualRating, 1),
+                'reviews_count' => $actualReviewsCount,
+                'image_url' => $imageUrl,
                 'category_id' => $product->category_id,
                 'badge' => $product->sale_price ? 'Sale' : null,
                 'location' => $product->seller->kota_kab ?? ($product->seller->provinsi ?? null),

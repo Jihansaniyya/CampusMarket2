@@ -15,14 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-    // Seeder lain kalau diperlukan
     $this->call([
         HomepageSeeder::class,
         AdminSeeder::class,
         SellerSeeder::class,
+        ProductReviewSeeder::class, // Add reviews to all products
     ]);
 
-    // Contoh test user (opsional)
     User::factory()->create([
         'name' => 'Test User',
         'email' => 'test@example.com',

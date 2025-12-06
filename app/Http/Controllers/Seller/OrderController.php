@@ -15,9 +15,7 @@ class OrderController extends Controller
 
         $query = Order::where('seller_id', $sellerId);
 
-        // =============================
-        // SEARCH
-        // =============================
+        // Apply search filter
         if ($request->search) {
             $query->where(function ($q) use ($request) {
                 $q->where('order_code', 'like', "%{$request->search}%")
@@ -25,35 +23,25 @@ class OrderController extends Controller
             });
         }
 
-        // =============================
-        // FILTER STATUS
-        // =============================
+        // Apply status filter
         if ($request->status) {
             $query->where('status', $request->status);
         }
 
-        // =============================
-        // FILTER METODE PEMBAYARAN
-        // =============================
+        // Apply payment method filter
         if ($request->payment) {
             $query->where('payment_method', $request->payment);
         }
 
-        // =============================
-        // SORT
-        // =============================
+        // Apply sorting
         if ($request->sort == 'oldest') {
             $query->orderBy('created_at', 'asc');
         } else {
             $query->orderBy('created_at', 'desc');
         }
 
-        // Ambil data
         $orders = $query->paginate(10);
 
-        // ================
-        // PANGGIL VIEW SESUAI FOLDER KAMU
-        // ================
         return view('seller.order-list', compact('orders'));
     }
 }

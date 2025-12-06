@@ -12,7 +12,7 @@
     <div class="flex gap-3 overflow-x-auto scrollbar-none pb-2">
         @foreach ($categories as $category)
             <a href="{{ route('home', ['category' => $category['id']]) }}"
-                class="flex-shrink-0 w-32 bg-white border rounded-xl p-4 text-center hover:border-blue-500 hover:shadow-lg transition flex flex-col items-center gap-2
+                class="shrink-0 w-32 bg-white border rounded-xl p-4 text-center hover:border-blue-500 hover:shadow-lg transition flex flex-col items-center gap-2
                       {{ request()->get('category') == $category['id'] ? 'border-blue-500 bg-blue-50' : 'border-gray-100' }}">
                 <span class="text-2xl" aria-hidden="true">{{ $category['icon'] }}</span>
                 <span

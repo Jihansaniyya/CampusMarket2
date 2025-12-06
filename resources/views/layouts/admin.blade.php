@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/logo1.png') }}">
     <title>@yield('title', 'Dashboard Admin') - CampusMarket</title>
 
     {{-- Font Awesome --}}
@@ -41,7 +42,8 @@
                 class="h-20 flex items-center justify-center border-b border-gray-200 bg-linear-to-r from-blue-600 to-blue-700">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-md p-1">
-                        <img src="{{ asset('assets/logo1.png') }}" alt="CampusMarket" class="w-full h-full object-contain">
+                        <img src="{{ asset('assets/logo1.png') }}" alt="CampusMarket"
+                            class="w-full h-full object-contain">
                     </div>
                     <div class="text-white">
                         <p class="text-lg font-bold leading-none">CampusMarket</p>
@@ -86,7 +88,8 @@
                 {{-- Laporan --}}
                 <a href="{{ route('admin.reports.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.reports.*') ? 'sidebar-active shadow-lg' : 'text-gray-700 hover:bg-blue-50' }}">
-                    <i class="fas fa-chart-line w-5 {{ request()->routeIs('admin.reports.*') ? 'text-white' : 'text-blue-600' }}"></i>
+                    <i
+                        class="fas fa-chart-line w-5 {{ request()->routeIs('admin.reports.*') ? 'text-white' : 'text-blue-600' }}"></i>
                     <span class="font-medium">Laporan</span>
                 </a>
             </nav>

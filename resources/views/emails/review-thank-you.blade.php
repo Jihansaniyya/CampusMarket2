@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi Email - CampusMarket</title>
+    <title>Terima Kasih - CampusMarket</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -32,7 +32,7 @@
         }
 
         .email-content {
-            padding: 30px 30px;
+            padding: 30px 50px;
             text-align: center;
         }
 
@@ -56,7 +56,6 @@
             margin-bottom: 30px;
             font-weight: 500;
             line-height: 1;
-            padding-top: -20;
         }
 
         h1 {
@@ -85,7 +84,37 @@
             color: #6b7280;
             font-size: 15px;
             line-height: 1.7;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
+        }
+
+        .review-box {
+            background: #f9fafb;
+            border-radius: 12px;
+            border-left: 4px solid #3b82f6;
+            padding: 16px 24px;
+            margin: 30px 0;
+        }
+
+        .review-box-title {
+            font-size: 12px;
+            color: #3b82f6;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            color: #111827;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .rating-stars {
+            font-size: 20px;
+            color: #f59e0b;
+            margin-bottom: 5px;
         }
 
         .verify-button {
@@ -168,17 +197,6 @@
                 padding: 50px 30px;
             }
 
-            .icon-wrapper {
-                width: 70px;
-                height: 70px;
-                margin-bottom: 25px;
-            }
-
-            .icon-wrapper svg {
-                width: 35px;
-                height: 35px;
-            }
-
             h1 {
                 font-size: 26px;
             }
@@ -205,29 +223,37 @@
             </div>
             <p class="tagline">Marketplace untuk Mahasiswa</p>
 
-            <h1>Verifikasi Email</h1>
+            <h1>Terima Kasih!</h1>
 
             <div class="divider"></div>
 
-            <p class="greeting">Halo, <strong>{{ $notifiable->name }}</strong></p>
+            <p class="greeting">Halo, <strong>{{ $visitorName }}</strong></p>
 
             <p class="message">
-                Terima kasih telah mendaftar sebagai penjual di CampusMarket. Untuk mengaktifkan akun dan memulai
-                berjualan, silakan klik tombol di bawah ini untuk verifikasi email Anda.
+                Terima kasih telah memberikan review pada produk di CampusMarket. Review Anda sangat membantu pembeli
+                lain dalam membuat keputusan yang tepat.
             </p>
 
-            <!-- Tombol Verifikasi -->
-            <a href="{{ $verificationUrl }}" class="verify-button">
-                Verifikasi Email Saya
-            </a>
-
-            <!-- Expiry Note -->
-            <div class="expiry-note">
-                <p>
-                    <strong>Link ini akan kadaluarsa dalam 60 menit.</strong><br>
-                    Jika Anda tidak membuat akun ini, abaikan email ini.
-                </p>
+            <!-- Review Summary Box -->
+            <div class="review-box">
+                <div class="review-box-title">Review Anda</div>
+                <div class="product-name">{{ $productName }}</div>
+                <div class="rating-stars">
+                    @for ($i = 1; $i <= 5; $i++)
+                        @if ($i <= $rating)
+                            ⭐
+                        @else
+                            ☆
+                        @endif
+                    @endfor
+                    <span style="font-size: 14px; color: #6b7280; margin-left: 10px;">{{ $rating }}/5</span>
+                </div>
             </div>
+
+            <!-- Tombol Belanja Lagi -->
+            <a href="{{ url('/') }}" class="verify-button">
+                Belanja Lagi
+            </a>
         </div>
 
         <!-- Footer -->

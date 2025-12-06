@@ -29,8 +29,5 @@ class HomepageSeeder extends Seeder
                 ['name' => $category['name'], 'created_at' => now(), 'updated_at' => now()]
             );
         }
-
-        // Products akan ditambahkan oleh seller melalui dashboard
-        // Tidak perlu seed products di sini
     }
 }

@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 class ProductController extends Controller
 {
     /**
-     * LIST PRODUK
+     * Display product list
      */
     public function index(Request $request)
     {
@@ -48,7 +48,7 @@ class ProductController extends Controller
 
 
     /**
-     * HALAMAN UPLOAD PRODUK
+     * Show product creation form
      */
     public function create()
     {
@@ -58,7 +58,7 @@ class ProductController extends Controller
 
 
     /**
-     * SIMPAN PRODUK BARU
+     * Store new product
      */
     public function store(Request $request)
     {
@@ -71,7 +71,7 @@ class ProductController extends Controller
             'thumbnail'   => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
         ]);
 
-        // Upload thumbnail jika ada
+        // Upload thumbnail if provided
         $thumbnailPath = null;
         if ($request->hasFile('thumbnail')) {
             $thumbnailPath = $request->file('thumbnail')->store('products', 'public');
@@ -95,7 +95,7 @@ class ProductController extends Controller
 
 
     /**
-     * HALAMAN EDIT PRODUK
+     * Show product edit form
      */
     public function edit($id)
     {
@@ -109,7 +109,7 @@ class ProductController extends Controller
 
 
     /**
-     * UPDATE PRODUK
+     * Update product
      */
     public function update(Request $request, $id)
     {
@@ -128,7 +128,7 @@ class ProductController extends Controller
 
         // Handle thumbnail upload
         if ($request->hasFile('thumbnail')) {
-            // Hapus thumbnail lama jika ada
+            // Delete old thumbnail if exists
             if ($product->thumbnail) {
                 Storage::disk('public')->delete($product->thumbnail);
             }
@@ -152,7 +152,7 @@ class ProductController extends Controller
 
 
     /**
-     * HAPUS PRODUK
+     * Delete product
      */
     public function destroy($id)
     {

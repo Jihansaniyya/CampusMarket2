@@ -49,7 +49,7 @@
                     >
                         <img :src="banner.image_url" :alt="banner.title" class="w-full h-full object-cover bg-gray-200"
                             loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent"></div>
+                        <div class="absolute inset-0 bg-linear-to-r from-black/70 to-transparent"></div>
                         <div
                             class="absolute inset-y-0 left-0 flex flex-col justify-center px-8 md:px-12 text-white space-y-3 max-w-lg">
                             <p class="uppercase text-xs tracking-[0.3em] text-white/70">Promo Spesial</p>
@@ -123,7 +123,7 @@
         </section>
 
         <section
-            class="mt-12 bg-gradient-to-r from-blue-50 via-white to-orange-50 rounded-3xl p-6 md:p-10 flex flex-col md:flex-row items-center gap-6">
+            class="mt-12 bg-linear-to-r from-blue-50 via-white to-orange-50 rounded-3xl p-6 md:p-10 flex flex-col md:flex-row items-center gap-6">
             <div>
                 <p class="text-sm uppercase font-semibold text-blue-600">Promo Flash</p>
                 <h3 class="text-2xl font-bold text-gray-900 mt-2">Cashback hingga 50% untuk pengguna baru</h3>

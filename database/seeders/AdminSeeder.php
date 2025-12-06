@@ -14,9 +14,8 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create default admin user
         User::updateOrCreate(
-    ['email' => 'admin@campusmarket.com'], // cek berdasarkan email
+    ['email' => 'admin@campusmarket.com'],
     [
         'name' => 'Admin CampusMarket',
         'password' => Hash::make('admin123'),

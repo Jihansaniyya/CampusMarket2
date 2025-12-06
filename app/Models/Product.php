@@ -121,4 +121,20 @@ class Product extends Model
         }
         return $query;
     }
+
+    /**
+     * Get actual average rating from reviews.
+     */
+    public function getActualRatingAttribute()
+    {
+        return $this->reviews()->avg('rating') ?? 0;
+    }
+
+    /**
+     * Get actual reviews count.
+     */
+    public function getActualReviewsCountAttribute()
+    {
+        return $this->reviews()->count();
+    }
 }

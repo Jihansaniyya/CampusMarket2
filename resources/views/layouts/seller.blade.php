@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/logo1.png') }}">
     <title>@yield('title', 'Seller Dashboard') - CampusMarket</title>
 
     {{-- Font Awesome --}}
@@ -39,10 +40,12 @@
         <aside class="fixed inset-y-0 left-0 w-64 bg-white shadow-xl z-50">
 
             {{-- LOGO --}}
-            <div class="h-20 flex items-center justify-center border-b border-gray-200 bg-linear-to-r from-blue-600 to-blue-700">
+            <div
+                class="h-20 flex items-center justify-center border-b border-gray-200 bg-linear-to-r from-blue-600 to-blue-700">
                 <a href="{{ route('seller.dashboard') }}" class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-md p-1">
-                        <img src="{{ asset('assets/logo1.png') }}" alt="CampusMarket" class="w-full h-full object-contain">
+                        <img src="{{ asset('assets/logo1.png') }}" alt="CampusMarket"
+                            class="w-full h-full object-contain">
                     </div>
                     <div class="text-white">
                         <p class="text-lg font-bold leading-none">CampusMarket</p>
@@ -58,27 +61,30 @@
                 <a href="{{ route('seller.dashboard') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                     {{ request()->routeIs('seller.dashboard') ? 'sidebar-active shadow-lg' : 'text-gray-700 hover:bg-blue-50' }}">
-                    <i class="fas fa-home w-5 {{ request()->routeIs('seller.dashboard') ? 'text-white' : 'text-blue-600' }}"></i>
+                    <i
+                        class="fas fa-home w-5 {{ request()->routeIs('seller.dashboard') ? 'text-white' : 'text-blue-600' }}"></i>
                     <span class="font-medium">Dashboard</span>
                 </a>
 
-               {{--UPLOAD PRODUK --}}
+                {{-- UPLOAD PRODUK --}}
                 <a href="{{ route('seller.products.index') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                     {{ request()->routeIs('seller.products.*') ? 'sidebar-active shadow-lg' : 'text-gray-700 hover:bg-blue-50' }}">
-                    <i class="fas fa-box w-5 {{ request()->routeIs('seller.products.*') ? 'text-white' : 'text-blue-600' }}"></i>
+                    <i
+                        class="fas fa-box w-5 {{ request()->routeIs('seller.products.*') ? 'text-white' : 'text-blue-600' }}"></i>
                     <span class="font-medium">Produk</span>
                 </a>
 
                 {{-- Rating & Komentar --}}
-<a href="{{ route('seller.ratings.index') }}"
-    class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
-    {{ (request()->routeIs('seller.ratings.*') || request()->routeIs('seller.comments.*'))
+                <a href="{{ route('seller.ratings.index') }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
+    {{ request()->routeIs('seller.ratings.*') || request()->routeIs('seller.comments.*')
         ? 'sidebar-active shadow-lg'
         : 'text-gray-700 hover:bg-blue-50' }}">
-    <i class="fas fa-star w-5 {{ (request()->routeIs('seller.ratings.*') || request()->routeIs('seller.comments.*')) ? 'text-white' : 'text-blue-600' }}"></i>
-    <span class="font-medium">Rating & Komentar</span>
-</a>
+                    <i
+                        class="fas fa-star w-5 {{ request()->routeIs('seller.ratings.*') || request()->routeIs('seller.comments.*') ? 'text-white' : 'text-blue-600' }}"></i>
+                    <span class="font-medium">Rating & Komentar</span>
+                </a>
 
 
                 {{-- Divider --}}
@@ -87,15 +93,24 @@
                 </div>
 
                 {{-- Laporan --}}
-<a href="{{ route('seller.reports.index') }}"
-    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50 transition-all duration-200
+                <a href="{{ route('seller.reports.index') }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50 transition-all duration-200
         {{ request()->routeIs('seller.reports.*') ? 'sidebar-active shadow-lg' : '' }}">
-    <i class="fas fa-chart-line w-5 {{ request()->routeIs('seller.reports.*') ? 'text-white' : 'text-blue-600' }}"></i>
-    <span class="font-medium">Laporan</span>
-</a>
+                    <i
+                        class="fas fa-chart-line w-5 {{ request()->routeIs('seller.reports.*') ? 'text-white' : 'text-blue-600' }}"></i>
+                    <span class="font-medium">Laporan</span>
+                </a>
+
+                {{-- Profile --}}
+                <a href="{{ route('seller.profile') }}"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-blue-50 transition-all duration-200
+        {{ request()->routeIs('seller.profile') ? 'sidebar-active shadow-lg' : '' }}">
+                    <i
+                        class="fas fa-user-circle w-5 {{ request()->routeIs('seller.profile') ? 'text-white' : 'text-blue-600' }}"></i>
+                    <span class="font-medium">Profile</span>
+                </a>
 
 
-               
 
             </nav>
 
@@ -104,12 +119,13 @@
                 <div class="flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl">
                     <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
                         <span class="text-white font-semibold text-sm">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            {{ strtoupper(substr(Auth::user()->store_name ?? Auth::user()->name, 0, 1)) }}
                         </span>
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-semibold text-gray-900 truncate">{{ Auth::user()->name }}</p>
-                        <p class="text-xs text-gray-500">Seller</p>
+                        <p class="text-xs text-blue-600 font-medium truncate">
+                            {{ Auth::user()->store_name ?? 'Seller' }}</p>
                     </div>
                     <form action="{{ route('logout') }}" method="POST" class="inline">
                         @csrf

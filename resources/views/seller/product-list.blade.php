@@ -12,7 +12,7 @@
     <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6">
 
         <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+            <div class="w-10 h-10 rounded-xl bg-linear-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
                 <i class="fas fa-box text-white"></i>
             </div>
             <div>
@@ -74,7 +74,7 @@
             {{-- BUTTON --}}
             <div>
                 <button
-                    class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2.5 rounded-xl shadow hover:brightness-110 transition text-sm font-semibold">
+                    class="w-full bg-linear-to-r from-blue-600 to-indigo-600 text-white px-4 py-2.5 rounded-xl shadow hover:brightness-110 transition text-sm font-semibold">
                     Terapkan
                 </button>
             </div>
@@ -169,7 +169,7 @@
         {{--  TAMBAH PRODUK  --}}
         <div class="mt-4 flex justify-end">
             <a href="{{ route('seller.products.create') }}"
-               class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white
+               class="inline-flex items-center gap-2 bg-linear-to-r from-blue-600 to-indigo-600 text-white
                       px-6 py-3 rounded-xl shadow-md hover:shadow-lg hover:brightness-110 text-sm font-semibold transition">
                 <i class="fas fa-plus text-sm"></i>
                 <span>Tambah Produk</span>

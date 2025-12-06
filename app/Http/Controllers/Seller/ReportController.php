@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class ReportController extends Controller
 {
     /**
-     * Halaman daftar laporan seller (SRS-MartPlace-12, 13, 14)
+     * Display reports page
      */
     public function index()
     {
@@ -18,8 +18,7 @@ class ReportController extends Controller
     }
 
     /**
-     * SRS-MartPlace-12
-     * Laporan stok produk diurutkan berdasarkan stok menurun.
+     * Generate stock report (descending order)
      */
     public function stockDescPdf()
     {
@@ -38,8 +37,7 @@ class ReportController extends Controller
     }
 
     /**
-     * SRS-MartPlace-13
-     * Laporan stok produk diurutkan berdasarkan rating menurun.
+     * Generate rating report (descending order)
      */
     public function ratingDescPdf()
     {
@@ -59,8 +57,7 @@ class ReportController extends Controller
     }
 
     /**
-     * SRS-MartPlace-14
-     * Laporan barang yang harus segera dipesan (stok < 2).
+     * Generate low stock report (stock < 2)
      */
     public function lowStockPdf()
     {
@@ -80,8 +77,7 @@ class ReportController extends Controller
     }
 
     /**
-     * Query dasar: produk + rating + kategori
-     * Mengikuti struktur yang dipakai di ReportController Admin.
+     * Base query for products with ratings
      */
     protected function baseQueryWithRating()
     {

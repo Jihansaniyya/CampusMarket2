@@ -22,6 +22,9 @@ class ProductReviewController extends Controller
             'comment'       => 'nullable|string|max:1000',
         ]);
 
+        // Get product info
+        $product = Product::findOrFail($request->product_id);
+
         // Create review
         ProductReview::create([
             'product_id'    => $request->product_id,
@@ -34,6 +37,22 @@ class ProductReviewController extends Controller
 
         // Update product rating
         $this->updateProductRating($request->product_id);
+
+        // Send thank you email if email is provided
+        if ($request->visitor_email) {
+            try {
+                \Mail::to($request->visitor_email)->send(
+                    new \App\Mail\ReviewThankYouMail(
+                        $request->visitor_name,
+                        $product->name,
+                        $request->rating
+                    )
+                );
+            } catch (\Exception $e) {
+                // Log error but don't fail the review submission
+                \Log::error('Failed to send review thank you email: ' . $e->getMessage());
+            }
+        }
 
         return redirect()->back()->with('success', 'Terima kasih! Review Anda telah disimpan.');
     }

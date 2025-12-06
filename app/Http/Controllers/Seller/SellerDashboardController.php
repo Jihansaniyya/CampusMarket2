@@ -14,29 +14,21 @@ class SellerDashboardController extends Controller
     {
         $sellerId = Auth::id();
 
-        // ============================
-        // PRODUK SELLER
-        // ============================
+        // Get seller products
         $products = Product::where('seller_id', $sellerId)->get();
         $totalProducts  = $products->count();
 
-        // ============================
-        // TOTAL PESANAN MASUK
-        // ============================
+        // Count orders
         $totalOrders = Order::where('seller_id', $sellerId)->count();
 
-        // ============================
-        // TOTAL RATING & TOTAL KOMENTAR
-        // ============================
+        // Count ratings and comments
         $totalRatings = ProductReview::whereIn('product_id', $products->pluck('id'))->count();
 
         $totalComments = ProductReview::whereIn('product_id', $products->pluck('id'))
             ->whereNotNull('comment')
             ->count();
 
-        // ============================
-        // SEBARAN STOK PER PRODUK
-        // ============================
+        // Stock distribution per product
         $stockDistribution = $products->map(function ($product) {
             return [
                 'label' => $product->name,
@@ -44,9 +36,7 @@ class SellerDashboardController extends Controller
             ];
         });
 
-        // ============================
-        // SEBARAN RATING PER PRODUK
-        // ============================
+        // Rating distribution per product
         $ratingDistribution = $products->map(function ($product) {
             $avgRating = ProductReview::where('product_id', $product->id)->avg('rating');
 
@@ -56,9 +46,7 @@ class SellerDashboardController extends Controller
             ];
         });
 
-        // ============================
-        // SEBARAN PROVINSI PEMBERI RATING
-        // ============================
+        // Province distribution of reviewers
         $ratingProvinceStats = ProductReview::whereIn('product_id', $products->pluck('id'))
             ->selectRaw('IFNULL(province, "Tidak diketahui") as province, COUNT(*) as total')
             ->groupBy('province')

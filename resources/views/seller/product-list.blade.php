@@ -46,18 +46,6 @@
                 </select>
             </div>
 
-            {{-- FILTER STATUS --}}
-            <div>
-                <select name="is_active"
-                    class="w-full rounded-xl border border-gray-300 bg-white
-                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200
-                       text-sm px-3 py-2.5 transition">
-                    <option value="">Semua Status</option>
-                    <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Aktif</option>
-                    <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Draft</option>
-                </select>
-            </div>
-
             {{-- SORT --}}
             <div>
                 <select name="sort"

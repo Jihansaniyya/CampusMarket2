@@ -40,9 +40,6 @@
                         x-text="'Rp ' + Number($store.quickView.product.sale_price ?? $store.quickView.product.price).toLocaleString('id-ID')"></span>
                 </div>
                 <div class="flex gap-3 pt-4">
-                    <button
-                        class="flex-1 bg-blue-600 text-white rounded-full py-3 font-semibold hover:bg-blue-500 transition">Tambah
-                        ke Keranjang</button>
                     <a :href="`/product/${$store.quickView.product.slug}`"
                         class="px-6 py-3 border border-gray-200 rounded-full font-semibold text-gray-700 hover:border-blue-500 hover:text-blue-600 transition">Lihat
                         Produk</a>

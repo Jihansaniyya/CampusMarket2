@@ -10,6 +10,8 @@
     <link rel="icon" type="image/png" href="{{ asset('assets/logo1.png') }}">
     <title>@yield('title', 'CampusMarket | Belanja Online')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous" />
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         document.addEventListener('alpine:init', () => {

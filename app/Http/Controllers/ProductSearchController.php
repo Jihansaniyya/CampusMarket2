@@ -21,6 +21,7 @@ class ProductSearchController extends Controller
         $productName = $request->query('product_name');
         $province = $request->query('province');
         $city = $request->query('city');
+        $showRefineSearch = $request->query('refine') === '1';
 
         // Apply filters
         $query->byStoreName($storeName)
@@ -46,6 +47,17 @@ class ProductSearchController extends Controller
         // Paginate results
         $products = $query->with(['category', 'seller'])->paginate(12);
 
-        return view('search', compact('products', 'categories', 'provinces', 'cities', 'storeName', 'categoryId', 'productName', 'province', 'city'));
+        return view('search', compact(
+            'products',
+            'categories',
+            'provinces',
+            'cities',
+            'storeName',
+            'categoryId',
+            'productName',
+            'province',
+            'city',
+            'showRefineSearch'
+        ));
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -67,27 +68,45 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'price'       => 'required|numeric|min:0',
+            'sale_price'  => 'nullable|numeric|min:0|lt:price',
             'stock'       => 'required|integer|min:0',
-            'thumbnail'   => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'thumbnails'  => 'required|array|min:1',
+            'thumbnails.*' => 'image|mimes:jpeg,jpg,png|max:2048',
+        ], [
+            'thumbnails.required' => 'Minimal upload 1 foto produk.',
+            'thumbnails.min' => 'Minimal upload 1 foto produk.',
+            'thumbnails.*.image' => 'File yang diupload harus berupa gambar.',
+            'thumbnails.*.mimes' => 'Format foto harus JPG atau PNG.',
+            'thumbnails.*.max' => 'Ukuran setiap foto maksimal 2MB.',
         ]);
 
-        // Upload thumbnail if provided
-        $thumbnailPath = null;
-        if ($request->hasFile('thumbnail')) {
-            $thumbnailPath = $request->file('thumbnail')->store('products', 'public');
-        }
+        DB::transaction(function () use ($request) {
+            $uploadedPaths = [];
 
-        Product::create([
-            'seller_id'     => auth()->id(),
-            'category_id'   => $request->category_id,
-            'name'          => $request->name,
-            'slug'          => Str::slug($request->name) . '-' . Str::random(6),
-            'description'   => $request->description,
-            'price'         => $request->price,
-            'stock'         => $request->stock,
-            'thumbnail'     => $thumbnailPath,
-            'is_active'     => $request->submit_type == 'publish' ? true : false,
-        ]);
+            foreach ($request->file('thumbnails', []) as $file) {
+                $uploadedPaths[] = $file->store('products', 'public');
+            }
+
+            $product = Product::create([
+                'seller_id'     => auth()->id(),
+                'category_id'   => $request->category_id,
+                'name'          => $request->name,
+                'slug'          => Str::slug($request->name) . '-' . Str::random(6),
+                'description'   => $request->description,
+                'price'         => $request->price,
+                'sale_price'    => $request->sale_price ?: null,
+                'stock'         => $request->stock,
+                'thumbnail'     => $uploadedPaths[0] ?? null,
+                'is_active'     => $request->submit_type == 'publish' ? true : false,
+            ]);
+
+            foreach ($uploadedPaths as $index => $path) {
+                $product->images()->create([
+                    'path' => $path,
+                    'sort_order' => $index,
+                ]);
+            }
+        });
 
         return redirect()->route('seller.products.index')
             ->with('success', 'Produk berhasil ditambahkan!');
@@ -122,29 +141,74 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'description' => 'nullable|string',
             'price'       => 'required|numeric|min:0',
+            'sale_price'  => 'nullable|numeric|min:0|lt:price',
             'stock'       => 'required|integer|min:0',
-            'thumbnail'   => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'thumbnails'  => 'nullable|array|min:1',
+            'thumbnails.*' => 'image|mimes:jpeg,jpg,png|max:2048',
+            'remove_existing_images' => 'nullable|array',
+            'remove_existing_images.*' => 'integer|exists:product_images,id',
+        ], [
+            'thumbnails.min' => 'Minimal upload 1 foto produk.',
+            'thumbnails.*.image' => 'File yang diupload harus berupa gambar.',
+            'thumbnails.*.mimes' => 'Format foto harus JPG atau PNG.',
+            'thumbnails.*.max' => 'Ukuran setiap foto maksimal 2MB.',
         ]);
 
-        // Handle thumbnail upload
-        if ($request->hasFile('thumbnail')) {
-            // Delete old thumbnail if exists
-            if ($product->thumbnail) {
-                Storage::disk('public')->delete($product->thumbnail);
+        DB::transaction(function () use ($request, $product) {
+            $updatePayload = [
+                'name'        => $request->name,
+                'category_id' => $request->category_id,
+                'slug'        => Str::slug($request->name) . '-' . Str::random(6),
+                'description' => $request->description,
+                'price'       => $request->price,
+                'sale_price'  => $request->sale_price ?: null,
+                'stock'       => $request->stock,
+                'is_active'   => $request->submit_type == 'publish' ? true : false,
+            ];
+
+            $removedPaths = [];
+            $removeImageIds = array_map('intval', $request->input('remove_existing_images', []));
+            $removeImageIds = array_values(array_unique($removeImageIds));
+
+            if (!empty($removeImageIds)) {
+                $imagesToRemove = $product->images()->whereIn('id', $removeImageIds)->get(['id', 'path']);
+                $removedPaths = $imagesToRemove->pluck('path')->filter()->values()->all();
+
+                if (!empty($removedPaths)) {
+                    Storage::disk('public')->delete($removedPaths);
+                }
+
+                if ($imagesToRemove->isNotEmpty()) {
+                    $product->images()->whereIn('id', $imagesToRemove->pluck('id'))->delete();
+                }
             }
-            $thumbnailPath = $request->file('thumbnail')->store('products', 'public');
-            $product->thumbnail = $thumbnailPath;
-        }
 
-        $product->update([
-            'name'          => $request->name,
-            'category_id'   => $request->category_id,
-            'slug'          => Str::slug($request->name) . '-' . Str::random(6),
-            'description'   => $request->description,
-            'price'         => $request->price,
-            'stock'         => $request->stock,
-            'is_active'     => $request->submit_type == 'publish' ? true : false,
-        ]);
+            if ($request->hasFile('thumbnails')) {
+                $lastOrder = (int) $product->images()->max('sort_order');
+                $nextOrder = $product->images()->exists() ? $lastOrder + 1 : 0;
+
+                $newPaths = [];
+                foreach ($request->file('thumbnails', []) as $file) {
+                    $path = $file->store('products', 'public');
+                    $newPaths[] = $path;
+
+                    $product->images()->create([
+                        'path' => $path,
+                        'sort_order' => $nextOrder++,
+                    ]);
+                }
+            }
+
+            $remainingPaths = $product->images()->pluck('path')->filter()->values()->all();
+
+            if ($product->thumbnail && in_array($product->thumbnail, $removedPaths, true)) {
+                $updatePayload['thumbnail'] = $remainingPaths[0] ?? null;
+            } elseif (!$product->thumbnail && !empty($remainingPaths)) {
+                $updatePayload['thumbnail'] = $remainingPaths[0];
+            }
+
+            $product->update($updatePayload);
+        });
 
         return redirect()->route('seller.products.index')
             ->with('success', 'Produk berhasil diperbarui!');
@@ -160,7 +224,17 @@ class ProductController extends Controller
                           ->where('seller_id', auth()->id())
                           ->firstOrFail();
 
-        Storage::disk('public')->delete($product->thumbnail);
+        $imagePaths = $product->images()->pluck('path')->toArray();
+        if ($product->thumbnail) {
+            $imagePaths[] = $product->thumbnail;
+        }
+
+        $imagePaths = array_values(array_unique(array_filter($imagePaths)));
+        if (!empty($imagePaths)) {
+            Storage::disk('public')->delete($imagePaths);
+        }
+
+        $product->images()->delete();
         $product->delete();
 
         return redirect()->route('seller.products.index')

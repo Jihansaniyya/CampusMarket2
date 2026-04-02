@@ -22,6 +22,11 @@
             font-family: 'Rubik', sans-serif;
         }
 
+        :root {
+            --seller-top-height: 80px;
+            --seller-bottom-height: 100px;
+        }
+
         .sidebar-active {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white !important;
@@ -29,6 +34,14 @@
 
         .sidebar-active i {
             color: white !important;
+        }
+
+        .seller-top-height {
+            height: var(--seller-top-height);
+        }
+
+        .seller-nav-height {
+            height: calc(100vh - var(--seller-top-height) - var(--seller-bottom-height));
         }
     </style>
 </head>
@@ -41,7 +54,7 @@
 
             {{-- LOGO --}}
             <div
-                class="h-20 flex items-center justify-center border-b border-gray-200 bg-linear-to-r from-blue-600 to-blue-700">
+                class="seller-top-height flex items-center justify-center border-b border-gray-200 bg-linear-to-r from-blue-600 to-blue-700">
                 <a href="{{ route('seller.dashboard') }}" class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-md p-1">
                         <img src="{{ asset('assets/logo1.png') }}" alt="CampusMarket"
@@ -55,7 +68,7 @@
             </div>
 
             {{-- MENU --}}
-            <nav class="p-4 space-y-2 overflow-y-auto" style="height: calc(100vh - 180px);">
+            <nav class="p-4 space-y-2 overflow-y-auto seller-nav-height">
 
                 {{-- Dashboard --}}
                 <a href="{{ route('seller.dashboard') }}"
@@ -143,7 +156,7 @@
 
             {{-- TOP BAR --}}
             <header class="bg-white shadow-sm sticky top-0 z-40">
-                <div class="px-6 py-4 flex items-center justify-between">
+                <div class="px-6 seller-top-height flex items-center justify-between">
                     <div>
                         <h1 class="text-2xl font-bold text-gray-900">
                             @yield('page-title', 'Dashboard Penjual')

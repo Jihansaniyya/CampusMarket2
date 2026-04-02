@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Product;
@@ -91,10 +89,12 @@ class HomeController extends Controller
                 'price' => $product->price,
                 'sale_price' => $product->sale_price,
                 'rating' => round($actualRating, 1),
+                'rating_count' => $actualReviewsCount,
                 'reviews_count' => $actualReviewsCount,
                 'image_url' => $imageUrl,
                 'category_id' => $product->category_id,
                 'badge' => $product->sale_price ? 'Sale' : null,
+                'store_name' => $product->seller->store_name ?? null,
                 'location' => $product->seller->kota_kab ?? ($product->seller->provinsi ?? null),
             ];
         });
@@ -132,10 +132,12 @@ class HomeController extends Controller
                 'price' => $product->price,
                 'sale_price' => $product->sale_price,
                 'rating' => round($actualRating, 1),
+                'rating_count' => $actualReviewsCount,
                 'reviews_count' => $actualReviewsCount,
                 'image_url' => $imageUrl,
                 'category_id' => $product->category_id,
                 'badge' => $product->sale_price ? 'Sale' : null,
+                'store_name' => $product->seller->store_name ?? null,
                 'location' => $product->seller->kota_kab ?? ($product->seller->provinsi ?? null),
             ];
         });

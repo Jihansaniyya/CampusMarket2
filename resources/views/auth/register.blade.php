@@ -377,6 +377,8 @@
                             <label class="block text-xs font-medium text-gray-600 mb-1">
                                 Provinsi <span class="text-rose-600">*</span>
                             </label>
+                            <input type="text" id="search_provinsi" autocomplete="off" placeholder="Cari Provinsi..."
+                                class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white text-sm mb-2">
                             <select id="provinsi" name="provinsi" required
                                 class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2
                                     focus:ring-blue-200 px-4 py-3 bg-white text-sm"
@@ -390,6 +392,9 @@
                             <label class="block text-xs font-medium text-gray-600 mb-1">
                                 Kabupaten/Kota <span class="text-rose-600">*</span>
                             </label>
+                            <input type="text" id="search_kota_kab" autocomplete="off"
+                                placeholder="Cari Kabupaten/Kota..."
+                                class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white text-sm mb-2">
                             <select id="kota_kab" name="kota_kab" required
                                 class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2
                                     focus:ring-blue-200 px-4 py-3 bg-white text-sm"
@@ -403,6 +408,9 @@
                             <label class="block text-xs font-medium text-gray-600 mb-1">
                                 Kecamatan <span class="text-rose-600">*</span>
                             </label>
+                            <input type="text" id="search_kecamatan" autocomplete="off"
+                                placeholder="Cari Kecamatan..."
+                                class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white text-sm mb-2">
                             <select id="kecamatan" name="kecamatan" required
                                 class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2
                                     focus:ring-blue-200 px-4 py-3 bg-white text-sm"
@@ -416,6 +424,9 @@
                             <label class="block text-xs font-medium text-gray-600 mb-1">
                                 Kelurahan/Desa <span class="text-rose-600">*</span>
                             </label>
+                            <input type="text" id="search_kelurahan" autocomplete="off"
+                                placeholder="Cari Kelurahan/Desa..."
+                                class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2 focus:ring-blue-200 px-4 py-2 bg-white text-sm mb-2">
                             <select id="kelurahan" name="kelurahan" required
                                 class="w-full rounded-xl border-2 border-gray-300 focus:border-blue-600 focus:ring-2
                                     focus:ring-blue-200 px-4 py-3 bg-white text-sm"
@@ -822,100 +833,183 @@
 
         // ================= API wilayah - EMSIFA ================= //
 
-        // Simpan mapping ID ke nama untuk cascading dropdown
-        let provinceIdMap = {};
+        // Simpan data wilayah untuk fitur pencarian
+        const wilayahOptions = {
+            provinsi: [],
+            kota_kab: [],
+            kecamatan: [],
+            kelurahan: []
+        };
+
+        const wilayahBaseUrls = [
+            'https://www.emsifa.com/api-wilayah-indonesia/api',
+            'https://raw.githubusercontent.com/emsifa/api-wilayah-indonesia/master/api'
+        ];
+
+        async function fetchWilayahData(path) {
+            let lastError = null;
+
+            for (const baseUrl of wilayahBaseUrls) {
+                try {
+                    const res = await fetch(`${baseUrl}/${path}`, {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (!res.ok) {
+                        throw new Error(`HTTP ${res.status} dari ${baseUrl}`);
+                    }
+
+                    const data = await res.json();
+                    if (!Array.isArray(data)) {
+                        throw new Error(`Format data tidak valid dari ${baseUrl}`);
+                    }
+
+                    return data;
+                } catch (error) {
+                    lastError = error;
+                }
+            }
+
+            throw lastError ?? new Error('Gagal memuat data wilayah');
+        }
+
+        function setSelectOptions(selectId, options, defaultLabel) {
+            const select = document.getElementById(selectId);
+            if (!select) return;
+
+            select.innerHTML = `<option value="">${defaultLabel}</option>`;
+
+            options.forEach(item => {
+                select.innerHTML += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
+            });
+        }
+
+        function filterWilayahOptions(selectId, searchInputId, defaultLabel) {
+            const searchInput = document.getElementById(searchInputId);
+            const keyword = (searchInput?.value || '').trim().toLowerCase();
+            const source = wilayahOptions[selectId] || [];
+
+            if (!keyword) {
+                setSelectOptions(selectId, source, defaultLabel);
+                return;
+            }
+
+            const filtered = source.filter(item => item.name.toLowerCase().includes(keyword));
+            setSelectOptions(selectId, filtered, defaultLabel);
+        }
 
         async function loadProvinces() {
             try {
-                const res = await fetch("https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json");
-                const data = await res.json();
-
-                const provSel = document.getElementById("provinsi");
-                provSel.innerHTML = `<option value="">Pilih Provinsi</option>`;
-
-                // Reset map
-                provinceIdMap = {};
-
-                data.forEach(item => {
-                    provinceIdMap[item.name] = item.id;
-                    // Simpan NAMA sebagai value (bukan ID), ID disimpan di data attribute
-                    provSel.innerHTML +=
-                        `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
-                });
+                const data = await fetchWilayahData('provinces.json');
+                wilayahOptions.provinsi = data;
+                filterWilayahOptions('provinsi', 'search_provinsi', 'Pilih Provinsi');
 
             } catch (err) {
                 console.error(err);
+                document.getElementById("provinsi").innerHTML = `<option value="">Gagal memuat provinsi</option>`;
                 alert("Gagal memuat data provinsi.");
             }
         }
 
         async function loadRegencies(provinceId) {
-            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`);
-            const data = await res.json();
-
             const el = document.getElementById("kota_kab");
-            el.innerHTML = `<option value="">Pilih Kabupaten/Kota</option>`;
-
-            data.forEach(item => {
-                // Simpan NAMA sebagai value
-                el.innerHTML += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
-            });
+            try {
+                const data = await fetchWilayahData(`regencies/${provinceId}.json`);
+                wilayahOptions.kota_kab = data;
+                filterWilayahOptions('kota_kab', 'search_kota_kab', 'Pilih Kabupaten/Kota');
+            } catch (err) {
+                console.error(err);
+                el.innerHTML = `<option value="">Gagal memuat Kabupaten/Kota</option>`;
+            }
         }
 
         async function loadDistricts(regencyId) {
-            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`);
-            const data = await res.json();
-
             const el = document.getElementById("kecamatan");
-            el.innerHTML = `<option value="">Pilih Kecamatan</option>`;
-
-            data.forEach(item => {
-                el.innerHTML += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
-            });
+            try {
+                const data = await fetchWilayahData(`districts/${regencyId}.json`);
+                wilayahOptions.kecamatan = data;
+                filterWilayahOptions('kecamatan', 'search_kecamatan', 'Pilih Kecamatan');
+            } catch (err) {
+                console.error(err);
+                el.innerHTML = `<option value="">Gagal memuat Kecamatan</option>`;
+            }
         }
 
         async function loadVillages(districtId) {
-            const res = await fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/villages/${districtId}.json`);
-            const data = await res.json();
-
             const el = document.getElementById("kelurahan");
-            el.innerHTML = `<option value="">Pilih Kelurahan/Desa</option>`;
-
-            data.forEach(item => {
-                el.innerHTML += `<option value="${item.name}" data-id="${item.id}">${item.name}</option>`;
-            });
+            try {
+                const data = await fetchWilayahData(`villages/${districtId}.json`);
+                wilayahOptions.kelurahan = data;
+                filterWilayahOptions('kelurahan', 'search_kelurahan', 'Pilih Kelurahan/Desa');
+            } catch (err) {
+                console.error(err);
+                el.innerHTML = `<option value="">Gagal memuat Kelurahan/Desa</option>`;
+            }
         }
 
         // Event Binding
         document.addEventListener("DOMContentLoaded", function() {
             loadProvinces();
 
+            document.getElementById("search_provinsi").addEventListener("input", function() {
+                filterWilayahOptions('provinsi', 'search_provinsi', 'Pilih Provinsi');
+            });
+
+            document.getElementById("search_kota_kab").addEventListener("input", function() {
+                filterWilayahOptions('kota_kab', 'search_kota_kab', 'Pilih Kabupaten/Kota');
+            });
+
+            document.getElementById("search_kecamatan").addEventListener("input", function() {
+                filterWilayahOptions('kecamatan', 'search_kecamatan', 'Pilih Kecamatan');
+            });
+
+            document.getElementById("search_kelurahan").addEventListener("input", function() {
+                filterWilayahOptions('kelurahan', 'search_kelurahan', 'Pilih Kelurahan/Desa');
+            });
+
             document.getElementById("provinsi").addEventListener("change", function() {
                 const selectedOption = this.options[this.selectedIndex];
                 const provinceId = selectedOption.getAttribute('data-id');
+
+                wilayahOptions.kota_kab = [];
+                wilayahOptions.kecamatan = [];
+                wilayahOptions.kelurahan = [];
+                document.getElementById("search_kota_kab").value = '';
+                document.getElementById("search_kecamatan").value = '';
+                document.getElementById("search_kelurahan").value = '';
 
                 if (provinceId) {
                     loadRegencies(provinceId);
                 }
                 document.getElementById("kota_kab").innerHTML = `<option>Loading...</option>`;
                 document.getElementById("kecamatan").innerHTML = `<option>Pilih Kecamatan</option>`;
-                document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
+                document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan/Desa</option>`;
             });
 
             document.getElementById("kota_kab").addEventListener("change", function() {
                 const selectedOption = this.options[this.selectedIndex];
                 const regencyId = selectedOption.getAttribute('data-id');
 
+                wilayahOptions.kecamatan = [];
+                wilayahOptions.kelurahan = [];
+                document.getElementById("search_kecamatan").value = '';
+                document.getElementById("search_kelurahan").value = '';
+
                 if (regencyId) {
                     loadDistricts(regencyId);
                 }
                 document.getElementById("kecamatan").innerHTML = `<option>Loading...</option>`;
-                document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan</option>`;
+                document.getElementById("kelurahan").innerHTML = `<option>Pilih Kelurahan/Desa</option>`;
             });
 
             document.getElementById("kecamatan").addEventListener("change", function() {
                 const selectedOption = this.options[this.selectedIndex];
                 const districtId = selectedOption.getAttribute('data-id');
+
+                wilayahOptions.kelurahan = [];
+                document.getElementById("search_kelurahan").value = '';
 
                 if (districtId) {
                     loadVillages(districtId);

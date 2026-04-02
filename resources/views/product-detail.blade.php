@@ -21,20 +21,53 @@
             <div class="grid lg:grid-cols-5 gap-0">
                 <!-- Product Image -->
                 <div class="lg:col-span-2 p-6 lg:p-8">
-                    <div class="aspect-square rounded-xl overflow-hidden bg-gray-50">
-                        @php
-                            $imageUrl =
+                    @php
+                        $galleryImages = [];
+
+                        if ($product->images && $product->images->count() > 0) {
+                            foreach ($product->images as $image) {
+                                if (!empty($image->path)) {
+                                    $galleryImages[] = str_starts_with($image->path, 'http')
+                                        ? $image->path
+                                        : asset('storage/' . $image->path);
+                                }
+                            }
+                        }
+
+                        if (empty($galleryImages) && $product->thumbnail) {
+                            $galleryImages[] = str_starts_with($product->thumbnail, 'http')
+                                ? $product->thumbnail
+                                : asset('storage/' . $product->thumbnail);
+                        }
+
+                        if (empty($galleryImages)) {
+                            $galleryImages[] =
                                 'https://placehold.co/500x500/f8fafc/64748b?text=' .
                                 urlencode(substr($product->name, 0, 15));
-                            if ($product->thumbnail) {
-                                $imageUrl = str_starts_with($product->thumbnail, 'http')
-                                    ? $product->thumbnail
-                                    : asset('storage/' . $product->thumbnail);
-                            }
-                        @endphp
-                        <img src="{{ $imageUrl }}" alt="{{ $product->name }}"
-                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                            onerror="this.src='https://placehold.co/500x500/f8fafc/64748b?text=No+Image'">
+                        }
+
+                        $galleryImages = array_values(array_unique($galleryImages));
+                    @endphp
+
+                    <div x-data="{ selectedImage: '{{ $galleryImages[0] }}' }" class="space-y-3">
+                        <div class="aspect-square rounded-xl overflow-hidden bg-gray-50">
+                            <img :src="selectedImage" alt="{{ $product->name }}"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                onerror="this.src='https://placehold.co/500x500/f8fafc/64748b?text=No+Image'">
+                        </div>
+
+                        @if (count($galleryImages) > 1)
+                            <div class="grid grid-cols-4 gap-2">
+                                @foreach ($galleryImages as $imageUrl)
+                                    <button type="button" @click="selectedImage = '{{ $imageUrl }}'"
+                                        class="aspect-square rounded-lg overflow-hidden border border-gray-200 hover:border-blue-400 transition">
+                                        <img src="{{ $imageUrl }}" alt="Thumbnail {{ $loop->iteration }}"
+                                            class="w-full h-full object-cover"
+                                            onerror="this.src='https://placehold.co/120x120/f8fafc/64748b?text=No+Image'">
+                                    </button>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
 

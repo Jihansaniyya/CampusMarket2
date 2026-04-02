@@ -22,6 +22,11 @@
             font-family: 'Rubik', sans-serif;
         }
 
+        :root {
+            --admin-top-height: 80px;
+            --admin-bottom-height: 100px;
+        }
+
         .sidebar-active {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white;
@@ -29,6 +34,14 @@
 
         .sidebar-active i {
             color: white;
+        }
+
+        .admin-top-height {
+            height: var(--admin-top-height);
+        }
+
+        .admin-nav-height {
+            height: calc(100vh - var(--admin-top-height) - var(--admin-bottom-height));
         }
     </style>
 </head>
@@ -39,7 +52,7 @@
         <aside class="fixed inset-y-0 left-0 w-64 bg-white shadow-xl z-50">
             {{-- Logo --}}
             <div
-                class="h-20 flex items-center justify-center border-b border-gray-200 bg-linear-to-r from-blue-600 to-blue-700">
+                class="admin-top-height flex items-center justify-center border-b border-gray-200 bg-linear-to-r from-blue-600 to-blue-700">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-md p-1">
                         <img src="{{ asset('assets/logo1.png') }}" alt="CampusMarket"
@@ -53,7 +66,7 @@
             </div>
 
             {{-- Navigation --}}
-            <nav class="p-4 space-y-2 overflow-y-auto" style="height: calc(100vh - 180px);">
+            <nav class="p-4 space-y-2 overflow-y-auto admin-nav-height">
                 {{-- Dashboard --}}
                 <a href="{{ route('admin.dashboard') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'sidebar-active shadow-lg' : 'text-gray-700 hover:bg-blue-50' }}">
@@ -120,7 +133,7 @@
         <div class="flex-1 ml-64">
             {{-- Top Bar --}}
             <header class="bg-white shadow-sm sticky top-0 z-40">
-                <div class="px-6 py-4 flex items-center justify-between">
+                <div class="px-6 admin-top-height flex items-center justify-between">
                     <div>
                         <h1 class="text-2xl font-bold text-gray-900">@yield('page-title', 'Dashboard Admin')</h1>
                         <p class="text-sm text-gray-600">@yield('page-description', 'Selamat datang di CampusMarket Admin')</p>

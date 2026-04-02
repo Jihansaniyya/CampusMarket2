@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-{{-- ini yg aku ubah --}}
-
 @section('title', 'CampusMarket | Homepage')
 
 @push('head')
@@ -34,19 +32,15 @@
             this.play();
         }
     }">
-        <div class="relative rounded-3xl overflow-hidden shadow-xl" aria-label="Hero carousel">
+        <div class="group relative rounded-3xl overflow-hidden shadow-xl" aria-label="Hero carousel">
             <div class="relative h-72 md:h-96">
                 <template x-for="(banner, index) in banners" :key="index">
-                    <div 
-                        x-show="current === index" 
-                        x-transition:enter="transition ease-out duration-500"
+                    <div x-show="current === index" x-transition:enter="transition ease-out duration-500"
                         x-transition:enter-start="opacity-0 transform translate-x-full"
                         x-transition:enter-end="opacity-100 transform translate-x-0"
                         x-transition:leave="transition ease-in duration-300"
                         x-transition:leave-start="opacity-100 transform translate-x-0"
-                        x-transition:leave-end="opacity-0 transform -translate-x-full"
-                        class="absolute inset-0"
-                    >
+                        x-transition:leave-end="opacity-0 transform -translate-x-full" class="absolute inset-0">
                         <img :src="banner.image_url" :alt="banner.title" class="w-full h-full object-cover bg-gray-200"
                             loading="lazy">
                         <div class="absolute inset-0 bg-linear-to-r from-black/70 to-transparent"></div>
@@ -63,7 +57,8 @@
                 </template>
             </div>
 
-            <div class="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-4">
+            <div
+                class="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto">
                 <button @click="go((current - 1 + banners.length) % banners.length)"
                     class="bg-white/70 hover:bg-white rounded-full p-2" aria-label="Banner sebelumnya">
                     <svg class="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" stroke-width="1.8"
@@ -109,7 +104,7 @@
                 @endif
             </div>
             @if ($featuredProducts->count() > 0)
-                <div class="grid gap-6 md:grid-cols-3">
+                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
                     @foreach ($featuredProducts as $product)
                         @include('components.product-card', ['product' => $product])
                     @endforeach
@@ -149,7 +144,7 @@
                 </h2>
                 <div class="text-sm text-gray-500">Total {{ number_format($products->total()) }} produk</div>
             </div>
-            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                 @forelse ($products as $product)
                     @include('components.product-card', ['product' => $product])
                 @empty

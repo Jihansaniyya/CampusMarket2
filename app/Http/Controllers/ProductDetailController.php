@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use Illuminate\Http\Request;
 
 class ProductDetailController extends Controller
 {
@@ -15,8 +14,9 @@ class ProductDetailController extends Controller
         $product = Product::where('slug', $slug)
             ->where('is_active', true)
             ->with([
-                'category', 
-                'seller', 
+                'category',
+                'seller',
+                'images',
                 'reviews' => function ($query) {
                     $query->latest();
                 },

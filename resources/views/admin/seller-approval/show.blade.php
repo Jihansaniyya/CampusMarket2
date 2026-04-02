@@ -199,21 +199,42 @@
                     Identitas & Dokumen
                 </h2>
 
+                <div class="mb-4">
+                    <label class="text-sm font-medium text-gray-500">No. KTP</label>
+                    <p class="text-gray-900 font-medium">{{ $seller->no_ktp ?: '-' }}</p>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="text-sm font-medium text-gray-500">No. KTP</label>
-                        <p class="text-gray-900 font-medium mb-3">{{ $seller->no_ktp ?: '-' }}</p>
-
                         @if ($seller->file_ktp)
                             <label class="text-sm font-medium text-gray-500 block mb-2">Foto KTP</label>
-                            @if (Str::endsWith($seller->file_ktp, ['.jpg', '.jpeg', '.png']))
-                                <img src="{{ Storage::url($seller->file_ktp) }}" alt="KTP {{ $seller->store_name }}"
-                                    class="max-w-full h-auto rounded-lg border border-gray-200 shadow-sm">
+                            @if (Str::endsWith(Str::lower($seller->file_ktp), ['.jpg', '.jpeg', '.png']))
+                                @if ($seller->ktp_url)
+                                    <a href="{{ $seller->ktp_url }}" target="_blank" rel="noopener noreferrer"
+                                        class="block w-full">
+                                        <div
+                                            class="w-full h-72 bg-gray-50 rounded-xl border border-gray-200 shadow-sm overflow-hidden flex items-center justify-center p-2">
+                                            <img src="{{ $seller->ktp_url }}" alt="KTP {{ $seller->store_name }}"
+                                                class="w-full h-full object-contain rounded-lg">
+                                        </div>
+                                    </a>
+                                @else
+                                    <div
+                                        class="w-full h-72 bg-gray-50 rounded-xl border border-gray-200 shadow-sm flex flex-col items-center justify-center text-gray-500">
+                                        <i class="fas fa-image text-4xl mb-3 text-gray-300"></i>
+                                        <p class="text-sm font-medium">File KTP tidak ditemukan</p>
+                                        <p class="text-xs text-gray-400 mt-1">Cek path file di data seller</p>
+                                    </div>
+                                @endif
                             @else
-                                <a href="{{ Storage::url($seller->file_ktp) }}" target="_blank"
-                                    class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
-                                    <i class="fas fa-file-pdf mr-2"></i>Lihat Dokumen KTP
-                                </a>
+                                @if ($seller->ktp_url)
+                                    <a href="{{ $seller->ktp_url }}" target="_blank"
+                                        class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+                                        <i class="fas fa-file-pdf mr-2"></i>Lihat Dokumen KTP
+                                    </a>
+                                @else
+                                    <p class="text-gray-400 italic">File dokumen KTP tidak ditemukan</p>
+                                @endif
                             @endif
                         @else
                             <p class="text-gray-400 italic">Tidak ada file KTP</p>
@@ -222,11 +243,25 @@
 
                     <div>
                         <label class="text-sm font-medium text-gray-500 block mb-2">Foto PIC</label>
-                        @if ($seller->avatar)
-                            <img src="{{ Storage::url($seller->avatar) }}" alt="Foto {{ $seller->pic_name }}"
-                                class="w-48 h-48 object-cover rounded-xl border border-gray-200 shadow-sm">
+                        @if ($seller->avatar && $seller->avatar_url)
+                            <a href="{{ $seller->avatar_url }}" target="_blank" rel="noopener noreferrer"
+                                class="block w-full">
+                                <div
+                                    class="w-full h-72 bg-gray-50 rounded-xl border border-gray-200 shadow-sm overflow-hidden flex items-center justify-center p-2">
+                                    <img src="{{ $seller->avatar_url }}" alt="Foto {{ $seller->pic_name }}"
+                                        class="w-full h-full object-cover object-top rounded-lg">
+                                </div>
+                            </a>
+                        @elseif ($seller->avatar)
+                            <div
+                                class="w-full h-72 bg-gray-50 rounded-xl border border-gray-200 shadow-sm flex flex-col items-center justify-center text-gray-500">
+                                <i class="fas fa-image text-4xl mb-3 text-gray-300"></i>
+                                <p class="text-sm font-medium">Foto PIC tidak ditemukan</p>
+                                <p class="text-xs text-gray-400 mt-1">Cek path file di data seller</p>
+                            </div>
                         @else
-                            <div class="w-48 h-48 bg-gray-100 rounded-xl flex items-center justify-center">
+                            <div
+                                class="w-full h-72 bg-gray-100 rounded-xl border border-gray-200 flex items-center justify-center">
                                 <i class="fas fa-user text-gray-300 text-6xl"></i>
                             </div>
                         @endif

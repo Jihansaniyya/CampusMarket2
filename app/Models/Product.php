@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\ProductImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -62,6 +63,14 @@ class Product extends Model
     }
 
     /**
+     * Product images relation.
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+    }
+
+    /**
      * Scope to filter products by store name.
      */
     public function scopeByStoreName($query, ?string $storeName)
@@ -86,12 +95,21 @@ class Product extends Model
     }
 
     /**
-     * Scope to filter products by name.
+     * Scope to filter products by universal keyword
+     * (product name, store name, or category name).
      */
     public function scopeByProductName($query, ?string $productName)
     {
         if ($productName) {
-            return $query->where('name', 'like', '%' . $productName . '%');
+            return $query->where(function ($q) use ($productName) {
+                $q->where('name', 'like', '%' . $productName . '%')
+                    ->orWhereHas('seller', function ($sellerQuery) use ($productName) {
+                        $sellerQuery->where('store_name', 'like', '%' . $productName . '%');
+                    })
+                    ->orWhereHas('category', function ($categoryQuery) use ($productName) {
+                        $categoryQuery->where('name', 'like', '%' . $productName . '%');
+                    });
+            });
         }
         return $query;
     }

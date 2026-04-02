@@ -9,19 +9,85 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const input = document.getElementById('thumbnail');
+            const input = document.getElementById('thumbnails');
             const previewContainer = document.getElementById('preview');
+            const existingImagesContainer = document.getElementById('existing-images');
+            const removeExistingInputs = document.getElementById('remove-existing-inputs');
+            const maxFileSize = 2 * 1024 * 1024;
+            let selectedFiles = [];
+
+            if (!input || !previewContainer) return;
+
+            function syncInputFiles() {
+                const transfer = new DataTransfer();
+                selectedFiles.forEach(file => transfer.items.add(file));
+                input.files = transfer.files;
+            }
+
+            function renderPreview() {
+                previewContainer.innerHTML = '';
+
+                selectedFiles.forEach((file, index) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'relative w-40 h-40 rounded-xl border overflow-hidden';
+
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.className = 'w-full h-full object-cover';
+
+                    const removeButton = document.createElement('button');
+                    removeButton.type = 'button';
+                    removeButton.className =
+                        'absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 hover:bg-black text-white text-sm flex items-center justify-center';
+                    removeButton.innerHTML = '&times;';
+                    removeButton.addEventListener('click', function() {
+                        selectedFiles.splice(index, 1);
+                        syncInputFiles();
+                        renderPreview();
+                    });
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeButton);
+                    previewContainer.appendChild(wrapper);
+                });
+            }
 
             input.addEventListener('change', function() {
-                previewContainer.innerHTML = "";
+                if (input.files && input.files.length > 0) {
+                    const oversizedFile = Array.from(input.files).find(file => file.size > maxFileSize);
+                    if (oversizedFile) {
+                        alert('Ukuran foto lebih dari 2MB. Maksimal 2MB per foto.');
+                        input.value = '';
+                        return;
+                    }
 
-                if (input.files && input.files[0]) {
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(input.files[0]);
-                    img.className = "w-40 h-40 object-cover rounded-xl border mt-2";
-                    previewContainer.appendChild(img);
+                    selectedFiles = selectedFiles.concat(Array.from(input.files));
+                    syncInputFiles();
+                    renderPreview();
                 }
             });
+
+            if (existingImagesContainer && removeExistingInputs) {
+                existingImagesContainer.addEventListener('click', function(event) {
+                    const button = event.target.closest('[data-remove-existing]');
+                    if (!button) return;
+
+                    const imageId = button.getAttribute('data-remove-existing');
+                    const card = button.closest('[data-existing-card]');
+
+                    if (card) {
+                        card.remove();
+                    }
+
+                    if (!removeExistingInputs.querySelector(`input[value="${imageId}"]`)) {
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = 'remove_existing_images[]';
+                        hiddenInput.value = imageId;
+                        removeExistingInputs.appendChild(hiddenInput);
+                    }
+                });
+            }
         });
     </script>
 @endpush
@@ -44,6 +110,7 @@
         class="space-y-6">
         @csrf
         @method('PUT')
+        <div id="remove-existing-inputs"></div>
 
         {{-- ================= FOTO PRODUK ================= --}}
         <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
@@ -54,12 +121,27 @@
                 </div>
                 <div>
                     <h2 class="text-lg font-bold text-gray-900">Foto Produk</h2>
-                    <p class="text-sm text-gray-500">Update foto produk jika diperlukan</p>
+                    <p class="text-sm text-gray-500">Update foto produk jika diperlukan (bisa pilih lebih dari 1)</p>
+                    <p class="text-xs text-gray-400">Maksimal 2MB per foto (JPG/PNG)</p>
                 </div>
             </div>
 
             {{-- Foto Saat Ini --}}
-            @if ($product->thumbnail)
+            @if ($product->images->count() > 0)
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600 mb-2">Foto Saat Ini:</p>
+                    <div id="existing-images" class="flex flex-wrap gap-3">
+                        @foreach ($product->images as $image)
+                            <div class="relative w-40 h-40 rounded-xl border overflow-hidden" data-existing-card>
+                                <img src="{{ asset('storage/' . $image->path) }}" alt="Current Product Image"
+                                    class="w-full h-full object-cover">
+                                <button type="button" data-remove-existing="{{ $image->id }}"
+                                    class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 hover:bg-black text-white text-sm flex items-center justify-center">&times;</button>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @elseif ($product->thumbnail)
                 <div class="mb-4">
                     <p class="text-sm text-gray-600 mb-2">Foto Saat Ini:</p>
                     <img src="{{ asset('storage/' . $product->thumbnail) }}" alt="Current Product"
@@ -68,16 +150,16 @@
             @endif
 
             {{-- TILE TAMBAH FOTO --}}
-            <label for="thumbnail"
+            <label for="thumbnails"
                 class="w-40 h-40 border-2 border-dashed border-red-300 rounded-xl flex flex-col items-center justify-center text-red-500 cursor-pointer hover:bg-red-50 transition">
                 <span class="text-2xl font-bold">+</span>
-                <span class="text-sm font-semibold">Ganti Foto</span>
+                <span class="text-sm font-semibold">Tambah Foto</span>
             </label>
 
-            <input type="file" id="thumbnail" name="thumbnail" accept="image/*" class="hidden">
+            <input type="file" id="thumbnails" name="thumbnails[]" accept="image/*" multiple class="hidden">
 
             {{-- PREVIEW --}}
-            <div id="preview" class="mt-3"></div>
+            <div id="preview" class="mt-3 flex flex-wrap gap-3"></div>
         </div>
 
         {{-- ============== INFORMASI PRODUK ============== --}}
@@ -174,6 +256,19 @@
                                focus:border-blue-500 focus:ring-2 focus:ring-blue-200
                                text-sm px-3 py-2.5 transition"
                         placeholder="Contoh: 50">
+                </div>
+
+                {{-- Harga Diskon / Sale (opsional) --}}
+                <div class="md:col-span-2 mt-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Harga Sale (Rp) <span class="text-gray-400 text-xs">(Opsional)</span>
+                    </label>
+                    <input type="number" name="sale_price" value="{{ old('sale_price', $product->sale_price) }}"
+                        class="w-full rounded-xl border border-gray-300 bg-white
+                               focus:border-blue-500 focus:ring-2 focus:ring-blue-200
+                               text-sm px-3 py-2.5 transition"
+                        placeholder="Contoh: 120000">
+                    <p class="text-xs text-gray-400 mt-1">Biarkan kosong jika tidak ada harga promo.</p>
                 </div>
             </div>
         </div>

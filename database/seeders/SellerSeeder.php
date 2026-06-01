@@ -15,6 +15,14 @@ class SellerSeeder extends Seeder
         // Create 5 sellers with different locations
         $sellers = [
             [
+                'name' => 'Budi Santoso',
+                'email' => 'budi.santoso@gmail.com',
+                'password' => 'Password123!',
+                'store_name' => 'Toko Budi Santoso',
+                'kota_kab' => 'Jakarta',
+                'provinsi' => 'DKI Jakarta',
+            ],
+            [
                 'name' => 'Seller Demo',
                 'email' => 'sellerdemo@gmail.com',
                 'store_name' => 'Toko Demo',
@@ -52,11 +60,12 @@ class SellerSeeder extends Seeder
         ];
 
         foreach ($sellers as $sellerData) {
+            $password = $sellerData['password'] ?? 'seller123';
             $seller = User::firstOrCreate(
                 ['email' => $sellerData['email']],
                 [
                     'name' => $sellerData['name'],
-                    'password' => Hash::make('seller123'),
+                    'password' => Hash::make($password),
                     'role' => 'seller',
                     'phone' => '08' . rand(100000000, 999999999),
                     'address' => 'Jl. ' . $sellerData['store_name'] . ' No. 1',
@@ -99,88 +108,174 @@ class SellerSeeder extends Seeder
 
     private function getProductsWithImages($storeName, $sellerId)
     {
-        $baseProducts = [
-            [
-                'name' => 'Wireless Earbuds Premium',
-                'category' => 'Electronics',
-                'price' => 1200000,
-                'sale_price' => 990000,
-                'stock' => 50,
-                'image' => 'https://picsum.photos/seed/earbuds' . $sellerId . '/400/400',
-            ],
-            [
-                'name' => 'Smartwatch Lite',
-                'category' => 'Electronics',
-                'price' => 1750000,
-                'sale_price' => null,
-                'stock' => 35,
-                'image' => 'https://picsum.photos/seed/smartwatch' . $sellerId . '/400/400',
-            ],
-            [
-                'name' => 'Organic Face Serum',
-                'category' => 'Health & Beauty',
-                'price' => 320000,
-                'sale_price' => 280000,
-                'stock' => 100,
-                'image' => 'https://picsum.photos/seed/serum' . $sellerId . '/400/400',
-            ],
-            [
-                'name' => 'Minimalist Backpack',
-                'category' => 'Fashion',
-                'price' => 450000,
-                'sale_price' => 399000,
-                'stock' => 75,
-                'image' => 'https://picsum.photos/seed/backpack' . $sellerId . '/400/400',
-            ],
-            [
-                'name' => 'Coffee Maker Otomatis',
-                'category' => 'Home & Living',
-                'price' => 850000,
-                'sale_price' => 750000,
-                'stock' => 30,
-                'image' => 'https://picsum.photos/seed/coffee' . $sellerId . '/400/400',
-            ],
-            [
-                'name' => 'Organic Green Tea Set',
-                'category' => 'Groceries',
-                'price' => 180000,
-                'sale_price' => 150000,
-                'stock' => 200,
-                'image' => 'https://picsum.photos/seed/tea' . $sellerId . '/400/400',
-            ],
-            [
-                'name' => 'Laptop Stand Aluminum',
-                'category' => 'Electronics',
-                'price' => 250000,
-                'sale_price' => 199000,
-                'stock' => 60,
-                'image' => 'https://picsum.photos/seed/laptop' . $sellerId . '/400/400',
-            ],
-            [
-                'name' => 'Kaos Polos Premium Cotton',
-                'category' => 'Fashion',
-                'price' => 150000,
-                'sale_price' => 120000,
-                'stock' => 150,
-                'image' => 'https://picsum.photos/seed/shirt' . $sellerId . '/400/400',
-            ],
-            [
-                'name' => 'Aromatherapy Essential Oil',
-                'category' => 'Health & Beauty',
-                'price' => 200000,
-                'sale_price' => 170000,
-                'stock' => 80,
-                'image' => 'https://picsum.photos/seed/oil' . $sellerId . '/400/400',
-            ],
-            [
-                'name' => 'Premium Bed Sheets Set',
-                'category' => 'Home & Living',
-                'price' => 350000,
-                'sale_price' => 299000,
-                'stock' => 45,
-                'image' => 'https://picsum.photos/seed/bedsheets' . $sellerId . '/400/400',
-            ],
-        ];
+        $normalizedStore = strtolower($storeName);
+        if (str_contains($normalizedStore, 'budi santoso')) {
+            $baseProducts = [
+                [
+                    'name' => 'Buku Algoritma dan Struktur Data',
+                    'category' => 'Books',
+                    'price' => 125000,
+                    'sale_price' => 99000,
+                    'stock' => 80,
+                    'image' => 'https://picsum.photos/seed/book-algo' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Buku Pemrograman Web Laravel',
+                    'category' => 'Books',
+                    'price' => 150000,
+                    'sale_price' => 125000,
+                    'stock' => 70,
+                    'image' => 'https://picsum.photos/seed/book-laravel' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Buku Basis Data Relasional',
+                    'category' => 'Books',
+                    'price' => 110000,
+                    'sale_price' => null,
+                    'stock' => 60,
+                    'image' => 'https://picsum.photos/seed/book-db' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Buku Jaringan Komputer Dasar',
+                    'category' => 'Books',
+                    'price' => 105000,
+                    'sale_price' => 95000,
+                    'stock' => 90,
+                    'image' => 'https://picsum.photos/seed/book-network' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Buku Rekayasa Perangkat Lunak',
+                    'category' => 'Books',
+                    'price' => 135000,
+                    'sale_price' => 115000,
+                    'stock' => 75,
+                    'image' => 'https://picsum.photos/seed/book-rpl' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Buku Matematika Diskrit',
+                    'category' => 'Books',
+                    'price' => 120000,
+                    'sale_price' => null,
+                    'stock' => 85,
+                    'image' => 'https://picsum.photos/seed/book-discrete' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Buku Sistem Operasi',
+                    'category' => 'Books',
+                    'price' => 130000,
+                    'sale_price' => 109000,
+                    'stock' => 65,
+                    'image' => 'https://picsum.photos/seed/book-os' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Buku Keamanan Informasi',
+                    'category' => 'Books',
+                    'price' => 140000,
+                    'sale_price' => 119000,
+                    'stock' => 55,
+                    'image' => 'https://picsum.photos/seed/book-security' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Buku Pemrograman Python Dasar',
+                    'category' => 'Books',
+                    'price' => 115000,
+                    'sale_price' => 99000,
+                    'stock' => 95,
+                    'image' => 'https://picsum.photos/seed/book-python' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Buku Pemrograman Java OOP',
+                    'category' => 'Books',
+                    'price' => 145000,
+                    'sale_price' => 129000,
+                    'stock' => 50,
+                    'image' => 'https://picsum.photos/seed/book-java' . $sellerId . '/400/400',
+                ],
+            ];
+        } else {
+            $baseProducts = [
+                [
+                    'name' => 'Wireless Earbuds Premium',
+                    'category' => 'Electronics',
+                    'price' => 1200000,
+                    'sale_price' => 990000,
+                    'stock' => 50,
+                    'image' => 'https://picsum.photos/seed/earbuds' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Smartwatch Lite',
+                    'category' => 'Electronics',
+                    'price' => 1750000,
+                    'sale_price' => null,
+                    'stock' => 35,
+                    'image' => 'https://picsum.photos/seed/smartwatch' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Organic Face Serum',
+                    'category' => 'Health & Beauty',
+                    'price' => 320000,
+                    'sale_price' => 280000,
+                    'stock' => 100,
+                    'image' => 'https://picsum.photos/seed/serum' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Minimalist Backpack',
+                    'category' => 'Fashion',
+                    'price' => 450000,
+                    'sale_price' => 399000,
+                    'stock' => 75,
+                    'image' => 'https://picsum.photos/seed/backpack' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Coffee Maker Otomatis',
+                    'category' => 'Home & Living',
+                    'price' => 850000,
+                    'sale_price' => 750000,
+                    'stock' => 30,
+                    'image' => 'https://picsum.photos/seed/coffee' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Organic Green Tea Set',
+                    'category' => 'Groceries',
+                    'price' => 180000,
+                    'sale_price' => 150000,
+                    'stock' => 200,
+                    'image' => 'https://picsum.photos/seed/tea' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Laptop Stand Aluminum',
+                    'category' => 'Electronics',
+                    'price' => 250000,
+                    'sale_price' => 199000,
+                    'stock' => 60,
+                    'image' => 'https://picsum.photos/seed/laptop' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Kaos Polos Premium Cotton',
+                    'category' => 'Fashion',
+                    'price' => 150000,
+                    'sale_price' => 120000,
+                    'stock' => 150,
+                    'image' => 'https://picsum.photos/seed/shirt' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Aromatherapy Essential Oil',
+                    'category' => 'Health & Beauty',
+                    'price' => 200000,
+                    'sale_price' => 170000,
+                    'stock' => 80,
+                    'image' => 'https://picsum.photos/seed/oil' . $sellerId . '/400/400',
+                ],
+                [
+                    'name' => 'Premium Bed Sheets Set',
+                    'category' => 'Home & Living',
+                    'price' => 350000,
+                    'sale_price' => 299000,
+                    'stock' => 45,
+                    'image' => 'https://picsum.photos/seed/bedsheets' . $sellerId . '/400/400',
+                ],
+            ];
+        }
 
         $products = [];
         $categories = Category::all()->keyBy('name');

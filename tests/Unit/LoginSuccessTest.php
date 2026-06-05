@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\Hash;
 it('allows valid user login', function () {
 
     $user = User::create([
-        'name' => 'Buyer Test',
-        'email' => 'buyer@example.com',
+        'name' => 'Seller Test',
+        'email' => 'seller@example.com',
         'password' => Hash::make('password123'),
         'email_verified_at' => now(),
-        'role' => 'buyer'
+        'role' => 'seller'
     ]);
 
     $response = $this->post('/login', [
